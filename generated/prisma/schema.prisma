@@ -15,6 +15,34 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Listing System Enums
+enum ListingStatus {
+  DRAFT
+  PENDING_REVIEW
+  PUBLISHED
+  RESERVED
+  SOLD
+  ARCHIVED
+}
+
+enum AvailabilityStatus {
+  AVAILABLE
+  RESERVED
+  SOLD
+  UNAVAILABLE
+}
+
+enum MediaFileType {
+  IMAGE
+  VIDEO
+  DOCUMENT
+}
+
+enum StorageProvider {
+  FIREBASE
+  AWS
+}
+
 model Post {
   id        String   @id @default(cuid())
   name      String
@@ -38,6 +66,7 @@ model User {
   sessions      Session[]
   accounts      Account[]
   posts         Post[]
+  listings      Listing[]
 
   @@unique([email])
   @@map("user")
@@ -86,4 +115,126 @@ model Verification {
   updatedAt  DateTime @default(now()) @updatedAt
 
   @@map("verification")
+}
+
+// Contact Information Model
+// Stores contact details for listings - can be shared across multiple listings
+model ContactInfo {
+  id               String    @id @default(cuid())
+  contactName      String
+  companyName      String?
+  addressLine1     String
+  addressLine2     String?
+  city             String
+  stateProvince    String
+  postalCode       String?
+  country          String
+  phone            String
+  email            String
+  website          String?
+  hearAboutUs      String[]
+  hearAboutUsOther String?
+  acceptTerms      Boolean   @default(false)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  listings         Listing[]
+
+  @@index([email])
+  @@map("contact_info")
+}
+
+// Listing Details Model
+// Stores optional detailed information about the equipment
+model ListingDetails {
+  id                      String   @id @default(cuid())
+  generalDescription      String?
+  locatingSystems         String?
+  mixingSystems           String?
+  accessories             String?
+  trailers                String?
+  recentWorkModifications String?
+  additionalInformation   String?
+  pipe                    String?
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+  listing                 Listing?
+
+  @@map("listing_details")
+}
+
+// Listing Model
+// Main model for equipment listings with status tracking and availability
+model Listing {
+  id                     String             @id @default(cuid())
+  status                 ListingStatus      @default(DRAFT)
+  availabilityStatus     AvailabilityStatus @default(UNAVAILABLE)
+  // Pricing fields
+  askingPrice            Decimal            @db.Decimal(10, 2)
+  currency               String
+  soldPrice              Decimal?           @db.Decimal(10, 2)
+  // Equipment fields
+  year                   String
+  manufacturer           String
+  model                  String
+  condition              String
+  serialNumber           String
+  hours                  String?
+  miles                  String?
+  repossessed            Boolean            @default(false)
+  // Location fields
+  equipmentCity          String?
+  equipmentStateProvince String?
+  equipmentPostalCode    String?
+  equipmentCountry       String?
+  // Availability tracking
+  soldAt                 DateTime?
+  reservedAt             DateTime?
+  reservedUntil          DateTime?
+  soldTo                 String?
+  soldNotes              String?
+  // Timestamps
+  createdAt              DateTime           @default(now())
+  updatedAt              DateTime           @updatedAt
+  // Relations
+  userId                 String
+  user                   User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  contactInfoId          String
+  contactInfo            ContactInfo        @relation(fields: [contactInfoId], references: [id], onDelete: Cascade)
+  listingDetailsId       String?            @unique
+  listingDetails         ListingDetails?    @relation(fields: [listingDetailsId], references: [id], onDelete: Cascade)
+  mediaAttachments       MediaAttachment[]
+
+  @@index([status, availabilityStatus])
+  @@index([availabilityStatus])
+  @@index([status])
+  @@index([soldAt])
+  @@index([createdAt])
+  @@index([manufacturer])
+  @@index([model])
+  @@index([year])
+  @@map("listing")
+}
+
+// Media Attachment Model
+// Stores references to uploaded media files (images, videos, documents)
+model MediaAttachment {
+  id              String          @id @default(cuid())
+  listingId       String
+  fileName        String
+  fileType        MediaFileType
+  mimeType        String
+  fileSize        Int
+  storageProvider StorageProvider @default(FIREBASE)
+  storagePath     String
+  thumbnailUrl    String?
+  displayOrder    Int             @default(0)
+  uploadedAt      DateTime        @default(now())
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  listing         Listing         @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  @@index([listingId])
+  @@index([storageProvider])
+  @@index([listingId, displayOrder])
+  @@map("media_attachment")
 }

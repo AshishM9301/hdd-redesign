@@ -210,12 +210,14 @@ export default function ListingInfoStep() {
           </FieldContent>
         </Field>
 
-        <div className="border-t pt-6">
-          <h3 className="mb-4 text-lg font-semibold">EQUIPMENT LOCATION</h3>
-          <p className="mb-4 text-sm text-muted-foreground">
-            Please be advised your location will not be disclosed to our
-            clients and is mainly used for creating shipping quotes.
-          </p>
+        <div className="border-t pt-6 flex flex-col gap-4">
+          <div className="flex flex-col gap-2">
+            <h3 className="text-lg font-semibold">EQUIPMENT LOCATION</h3>
+            <p className="text-sm text-muted-foreground">
+              Please be advised your location will not be disclosed to our
+              clients and is mainly used for creating shipping quotes.
+            </p>
+          </div>
 
           <Field>
             <FieldContent>

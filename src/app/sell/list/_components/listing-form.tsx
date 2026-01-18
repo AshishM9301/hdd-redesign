@@ -12,9 +12,23 @@ import AttachmentsStep from "./steps/attachments-step";
 import ReviewStep from "./steps/review-step";
 import StepIndicator from "./step-indicator";
 import { useRouter } from "next/navigation";
-import { Wand2, Loader2 } from "lucide-react";
+import { Wand2, Loader2, Copy, CheckCircle2 } from "lucide-react";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
+import { useAuth } from "@/hooks/use-auth";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import Link from "next/link";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 // Form schema - we'll make it comprehensive
 const listingFormSchema = z.object({
@@ -91,16 +105,20 @@ function fileToBase64(file: File): Promise<string> {
 export default function ListingForm() {
   const [currentStep, setCurrentStep] = React.useState(1);
   const [visitedSteps, setVisitedSteps] = React.useState<number[]>([1]); // Step 1 is visited by default
+  const [referenceNumber, setReferenceNumber] = React.useState<string | null>(null);
+  const [copied, setCopied] = React.useState(false);
+  const [showAnonymousDialog, setShowAnonymousDialog] = React.useState(false);
+  const [showAuthenticatedDialog, setShowAuthenticatedDialog] = React.useState(false);
+  const [shouldPublish, setShouldPublish] = React.useState(true); // Default to publish (true = don't save as draft)
   const router = useRouter();
+  const { isAuthenticated } = useAuth();
 
   // tRPC mutations
   const createListing = api.listing.create.useMutation({
     onSuccess: async (data) => {
-      toast.success("Listing created successfully!");
-
-      // Upload media files if any
+      // Upload media files if any (only if user is authenticated)
       const attachments = form.getValues("attachments");
-      if (attachments && attachments.length > 0) {
+      if (attachments && attachments.length > 0 && data.userId) {
         try {
           const files = await Promise.all(
             attachments.map(async (file) => ({
@@ -122,12 +140,37 @@ export default function ListingForm() {
         }
       }
 
-      // Redirect to listings page
-      router.push("/sell/listings");
+      // Reset shouldPublish flag after successful submission
+      setShouldPublish(false);
+
+      // All listings default to PUBLISHED (authenticated or anonymous)
+      if (data.userId) {
+        if (data.status === "DRAFT") {
+          toast.success("Listing created as draft. You can publish it later.");
+          router.push("/sell/listings");
+        } else {
+          toast.success("Listing created and published successfully!");
+          router.push("/sell/listings");
+        }
+      } else {
+        // Anonymous listing - published by default
+        toast.success(
+          `Listing published successfully! Your reference number: ${data.referenceNumber ?? ""}`,
+          {
+            duration: 10000,
+          },
+        );
+        // Store reference number in form state for display
+        setReferenceNumber(data.referenceNumber ?? null);
+      }
     },
     onError: (error) => {
       console.error("Error creating listing:", error);
       toast.error(error.message || "Failed to create listing");
+      // Reset dialog states on error
+      setShowAnonymousDialog(false);
+      setShowAuthenticatedDialog(false);
+      setShouldPublish(true);
     },
   });
 
@@ -135,6 +178,19 @@ export default function ListingForm() {
     onError: (error) => {
       console.error("Error uploading media:", error);
       toast.error(error.message || "Failed to upload files");
+    },
+  });
+
+  const publishListing = api.listing.publish.useMutation({
+    onSuccess: () => {
+      setShouldPublish(false);
+      toast.success("Listing published successfully!");
+      router.push("/sell/listings");
+    },
+    onError: (error) => {
+      console.error("Error publishing listing:", error);
+      toast.error(error.message || "Failed to publish listing");
+      setShouldPublish(false);
     },
   });
 
@@ -272,6 +328,9 @@ export default function ListingForm() {
         pipe: data.pipe,
       };
 
+      // Determine status: default is PUBLISHED, but authenticated users can choose DRAFT
+      const status = isAuthenticated && !shouldPublish ? "DRAFT" : undefined;
+
       // Create listing (media will be uploaded after)
       await createListing.mutateAsync({
         contactInfo,
@@ -279,6 +338,7 @@ export default function ListingForm() {
         listingDetails: Object.values(listingDetails).some((v) => v)
           ? listingDetails
           : undefined,
+        status,
       });
     } catch (error) {
       // Error handling is done in mutation callbacks
@@ -290,8 +350,25 @@ export default function ListingForm() {
     if (currentStep < STEPS.length) {
       await handleNext();
     } else {
-      await form.handleSubmit(onSubmit)();
+      // For review step, show dialog based on authentication status
+      if (isAuthenticated) {
+        setShowAuthenticatedDialog(true);
+      } else {
+        // Anonymous users: show confirmation dialog before publishing
+        setShowAnonymousDialog(true);
+      }
     }
+  };
+
+  const handleConfirmAnonymousSubmit = async () => {
+    setShowAnonymousDialog(false);
+    await form.handleSubmit(onSubmit)();
+  };
+
+  const handleConfirmAuthenticatedSubmit = async (publish: boolean) => {
+    setShowAuthenticatedDialog(false);
+    setShouldPublish(publish);
+    await form.handleSubmit(onSubmit)();
   };
 
   // Check if a step is completed (has valid data) - only for steps with required fields
@@ -347,6 +424,15 @@ export default function ListingForm() {
       }
       return prev;
     });
+  };
+
+  const handleCopyReference = async () => {
+    if (referenceNumber) {
+      await navigator.clipboard.writeText(referenceNumber);
+      setCopied(true);
+      toast.success("Reference number copied to clipboard!");
+      setTimeout(() => setCopied(false), 2000);
+    }
   };
 
   const handleAutoFill = () => {
@@ -446,6 +532,91 @@ export default function ListingForm() {
     });
   };
 
+  // If reference number is set (anonymous listing created), show success message
+  if (referenceNumber && !isAuthenticated) {
+    return (
+      <div className="space-y-6">
+        <Card className="border-green-500 bg-green-50 dark:bg-green-950">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-green-700 dark:text-green-400">
+              <CheckCircle2 className="h-5 w-5" />
+              Listing Published Successfully!
+            </CardTitle>
+            <CardDescription className="text-green-600 dark:text-green-300">
+              Your listing has been published and is now visible to buyers. Please save your reference number to access and manage your listing later.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <label className="mb-2 block text-sm font-medium text-background">Your Reference Number</label>
+              <div className="flex gap-2">
+                <Input
+                  value={referenceNumber}
+                  readOnly
+                  className="font-mono text-lg font-bold text-background bg-secondary"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleCopyReference}
+                  className="shrink-0"
+                >
+                  {copied ? (
+                    <CheckCircle2 className="h-4 w-4 text-green-600" />
+                  ) : (
+                    <Copy className="h-4 w-4" />
+                  )}
+                </Button>
+              </div>
+            </div>
+            <div className="rounded-lg bg-yellow-50 p-4 dark:bg-yellow-950">
+              <p className="text-sm text-yellow-800 dark:text-yellow-200">
+                <strong>Important:</strong> Save this reference number in a safe place. You&apos;ll need it to access
+                your listing later. You can use it to view your listing at{" "}
+                <Link href="/listings/access" className="underline hover:no-underline">
+                  /listings/access
+                </Link>
+              </p>
+            </div>
+            <div className="flex gap-4">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setReferenceNumber(null);
+                  form.reset();
+                  setCurrentStep(1);
+                }}
+              >
+                Create Another Listing
+              </Button>
+              <Button
+                type="button"
+                asChild
+              >
+                <Link href={`/listings/${referenceNumber}`}>
+                  View Your Listing
+                </Link>
+              </Button>
+              {!isAuthenticated && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="text-background bg-secondary"
+                  asChild
+                >
+                  <Link href="/login">
+                    Login to Manage This Listing
+                  </Link>
+                </Button>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -495,13 +666,14 @@ export default function ListingForm() {
               currentStep === STEPS.length
                 ? form.formState.isSubmitting ||
                   createListing.isPending ||
-                  uploadMedia.isPending
+                  uploadMedia.isPending ||
+                  publishListing.isPending
                 : !isCurrentStepValid
             }
             className={`${currentStep === STEPS.length ? "text-background bg-yellow-400 hover:bg-yellow-500 active:bg-yellow-600" : isCurrentStepValid ? "bg-primary/90 hover:bg-primary-foreground/10 border border-white/20 hover:border-white" : ""}`}
           >
             {currentStep === STEPS.length ? (
-              createListing.isPending || uploadMedia.isPending ? (
+              createListing.isPending || uploadMedia.isPending || publishListing.isPending ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Submitting...
@@ -515,6 +687,97 @@ export default function ListingForm() {
           </Button>
         </div>
       </form>
+
+      {/* Anonymous User Dialog */}
+      <AlertDialog
+        open={showAnonymousDialog}
+        onOpenChange={(open) => {
+          setShowAnonymousDialog(open);
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Publish Your Listing?</AlertDialogTitle>
+            <AlertDialogDescription asChild>
+              <div className="space-y-2">
+                <div>Your listing will be published and visible to all buyers.</div>
+                <div>
+                  To edit your listing after publishing, you&apos;ll need to login or register.
+                </div>
+                <div>
+                  <strong>Save your reference number</strong> to manage your listing later.
+                </div>
+              </div>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleConfirmAnonymousSubmit}
+              disabled={createListing.isPending}
+            >
+              {createListing.isPending ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Publishing...
+                </>
+              ) : (
+                "Publish Listing"
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Authenticated User Dialog */}
+      <AlertDialog
+        open={showAuthenticatedDialog}
+        onOpenChange={(open) => {
+          setShowAuthenticatedDialog(open);
+          if (!open) {
+            setShouldPublish(false);
+          }
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Publish Listing Now?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure? Your listing will be published and visible to all buyers immediately.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => handleConfirmAuthenticatedSubmit(false)}
+              disabled={createListing.isPending || publishListing.isPending}
+              className="border bg-background text-foreground shadow-sm hover:bg-accent hover:text-accent-foreground"
+            >
+              {createListing.isPending || publishListing.isPending ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                "Save as Draft"
+              )}
+            </AlertDialogAction>
+            <AlertDialogAction
+              onClick={() => handleConfirmAuthenticatedSubmit(true)}
+              disabled={createListing.isPending || publishListing.isPending}
+            >
+              {createListing.isPending || publishListing.isPending ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Publishing...
+                </>
+              ) : (
+                "Publish"
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </FormProvider>
   );
 }

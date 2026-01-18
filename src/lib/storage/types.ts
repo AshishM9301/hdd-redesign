@@ -84,3 +84,5 @@ export const DEFAULT_STORAGE_CONFIG: StorageConfig = {
   generateThumbnails: true,
 } as const;
 
+
+

@@ -161,6 +161,7 @@ export default function ListingsPage() {
                 <TableHead>Equipment</TableHead>
                 <TableHead>Price</TableHead>
                 <TableHead>Status</TableHead>
+                <TableHead>Reference Number</TableHead>
                 <TableHead>Created</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
@@ -183,6 +184,15 @@ export default function ListingsPage() {
                   </TableCell>
                   <TableCell>
                     <ListingStatusBadge status={listing.status} />
+                  </TableCell>
+                  <TableCell>
+                    {listing.referenceNumber ? (
+                      <span className="font-mono text-sm">
+                        {listing.referenceNumber}
+                      </span>
+                    ) : (
+                      <span className="text-muted-foreground text-sm">-</span>
+                    )}
                   </TableCell>
                   <TableCell>{formatDate(listing.createdAt)}</TableCell>
                   <TableCell className="text-right">
@@ -282,4 +292,6 @@ export default function ListingsPage() {
     </div>
   );
 }
+
+
 

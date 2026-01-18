@@ -57,3 +57,5 @@ export interface IStorageProvider {
   validateFile?(file: StorageFile): Promise<{ valid: boolean; error?: string }>;
 }
 
+
+

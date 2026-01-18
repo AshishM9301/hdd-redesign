@@ -51,7 +51,14 @@ export function ListingCard({ listing }: Props) {
           <CardTitle className="line-clamp-1 text-base">
             {listing.manufacturer} {listing.model}
           </CardTitle>
-          <ListingStatusBadge status={listing.status} />
+          <div className="flex items-center gap-1">
+            {listing.assured && (
+              <Badge variant="default" className="bg-green-600 text-xs">
+                Assured
+              </Badge>
+            )}
+            <ListingStatusBadge status={listing.status} />
+          </div>
         </div>
         <div className="text-muted-foreground text-xs">
           {listing.year} • {listing.condition}

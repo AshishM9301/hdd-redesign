@@ -28,6 +28,7 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "@/server/api/trpc";
+import { generateUniqueReferenceNumber } from "@/lib/utils";
 import {
   sanitizeText,
   validateFile,
@@ -262,6 +263,7 @@ const createListingSchema = z.object({
   contactInfo: contactInfoSchema,
   listingInfo: listingInfoSchema,
   listingDetails: listingDetailsSchema.optional(),
+  status: z.enum(["DRAFT", "PUBLISHED"]).optional(),
 });
 
 // Update schemas - manually define optional fields since .partial() doesn't work with transforms
@@ -364,6 +366,8 @@ const getAvailableSchema = z.object({
     .string()
     .optional()
     .transform((val) => (val ? parseFloat(val) : undefined)),
+  assured: z.boolean().optional(),
+  sortBy: z.enum(["createdAt", "assured"]).optional().default("createdAt"),
   page: z.number().int().positive().default(1),
   limit: z.number().int().positive().max(100).default(20),
 });
@@ -389,12 +393,33 @@ const deleteMediaSchema = z.object({
   mediaId: z.string().min(1),
 });
 
+const linkListingToAccountSchema = z.object({
+  referenceNumber: z.string().min(1, "Reference number is required"),
+});
+
+const requestListingConnectionSchema = z.object({
+  referenceNumber: z.string().min(1, "Reference number is required"),
+  proofDocument: z
+    .object({
+      data: z.string(),
+      fileName: z.string(),
+      mimeType: z.string(),
+    })
+    .optional(),
+  proofNotes: z.string().optional(),
+});
+
+const cancelConnectionRequestSchema = z.object({
+  requestId: z.string().min(1, "Request ID is required"),
+});
+
 // ============================================================================
 // Helper Functions
 // ============================================================================
 
 /**
  * Verifies that the user owns the listing
+ * Allows access if listing userId matches current user OR if listing userId is null (anonymous listing)
  */
 async function verifyListingOwnership(
   dbInstance: typeof db,
@@ -413,7 +438,8 @@ async function verifyListingOwnership(
     });
   }
 
-  if (listing.userId !== userId) {
+  // Allow if user owns the listing OR if listing is anonymous (userId is null)
+  if (listing.userId !== null && listing.userId !== userId) {
     throw new TRPCError({
       code: "FORBIDDEN",
       message: "You do not have permission to access this listing",
@@ -594,11 +620,15 @@ async function processFileUpload(
 export const listingRouter = createTRPCRouter({
   /**
    * Create a new listing
+   * Now supports anonymous listings with reference numbers
    */
-  create: protectedProcedure
+  create: publicProcedure
     .input(createListingSchema)
     .mutation(async ({ ctx, input }) => {
-      const userId = ctx.session.user.id;
+      const userId = ctx.session?.user?.id ?? null;
+
+      // Generate unique reference number
+      const referenceNumber = await generateUniqueReferenceNumber(ctx.db);
 
       // Create ContactInfo
       const contactInfo = await ctx.db.contactInfo.create({
@@ -637,11 +667,26 @@ export const listingRouter = createTRPCRouter({
         });
       }
 
+      // Determine listing status
+      // Default: All listings are PUBLISHED and AVAILABLE (authenticated or anonymous)
+      // Users can optionally specify DRAFT if they want to save without publishing
+      let listingStatus: ListingStatus = ListingStatus.PUBLISHED;
+      let availabilityStatus: AvailabilityStatus = AvailabilityStatus.AVAILABLE;
+
+      if (input.status) {
+        // Allow users to specify DRAFT if they want to save without publishing
+        if (input.status === "DRAFT") {
+          listingStatus = ListingStatus.DRAFT;
+          availabilityStatus = AvailabilityStatus.UNAVAILABLE;
+        }
+        // PUBLISHED is the default, so no need to change if explicitly set
+      }
+
       // Create Listing
       const listing = await ctx.db.listing.create({
         data: {
-          status: ListingStatus.DRAFT,
-          availabilityStatus: AvailabilityStatus.UNAVAILABLE,
+          status: listingStatus,
+          availabilityStatus,
           year: input.listingInfo.year,
           manufacturer: input.listingInfo.manufacturer,
           model: input.listingInfo.model,
@@ -657,6 +702,7 @@ export const listingRouter = createTRPCRouter({
           equipmentPostalCode: input.listingInfo.equipmentPostalCode,
           equipmentCountry: input.listingInfo.equipmentCountry,
           userId,
+          referenceNumber,
           contactInfoId: contactInfo.id,
           listingDetailsId: listingDetails?.id,
         },
@@ -1267,6 +1313,13 @@ export const listingRouter = createTRPCRouter({
           mediaAttachments: {
             orderBy: { displayOrder: "asc" },
           },
+          assuredBy: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            },
+          },
         },
       });
 
@@ -1279,6 +1332,65 @@ export const listingRouter = createTRPCRouter({
 
       // Public queries only return PUBLISHED + AVAILABLE listings
       // If user is authenticated and owns the listing, they can see it regardless of status
+      const userId = ctx.session?.user?.id;
+      const isOwner = userId && listing.userId === userId;
+
+      if (
+        !isOwner &&
+        (listing.status !== ListingStatus.PUBLISHED ||
+          listing.availabilityStatus !== AvailabilityStatus.AVAILABLE)
+      ) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Listing not found",
+        });
+      }
+
+      return listing;
+    }),
+
+  /**
+   * Get listing by reference number
+   * Public queries only return PUBLISHED + AVAILABLE listings
+   * Owners can see all statuses if authenticated
+   */
+  getByReference: publicProcedure
+    .input(z.object({ referenceNumber: z.string().min(1) }))
+    .query(async ({ ctx, input }) => {
+      const listing = await ctx.db.listing.findUnique({
+        where: { referenceNumber: input.referenceNumber },
+        include: {
+          contactInfo: true,
+          listingDetails: true,
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            },
+          },
+          mediaAttachments: {
+            orderBy: { displayOrder: "asc" },
+          },
+          assuredBy: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            },
+          },
+        },
+      });
+
+      if (!listing) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Listing not found",
+        });
+      }
+
+      // Public queries only return PUBLISHED + AVAILABLE listings
+      // If user is authenticated and owns listing, show all statuses
       const userId = ctx.session?.user?.id;
       const isOwner = userId && listing.userId === userId;
 
@@ -1336,6 +1448,7 @@ export const listingRouter = createTRPCRouter({
         year?: string;
         condition?: string;
         askingPrice?: { gte?: number; lte?: number };
+        assured?: boolean;
       } = {
         status: ListingStatus.PUBLISHED,
         availabilityStatus: AvailabilityStatus.AVAILABLE,
@@ -1373,6 +1486,16 @@ export const listingRouter = createTRPCRouter({
         }
       }
 
+      if (input.assured !== undefined) {
+        where.assured = input.assured;
+      }
+
+      // Build orderBy based on sortBy
+      const orderBy =
+        input.sortBy === "assured"
+          ? [{ assured: "desc" as const }, { createdAt: "desc" as const }]
+          : { createdAt: "desc" as const };
+
       const [listings, total] = await Promise.all([
         ctx.db.listing.findMany({
           where,
@@ -1390,7 +1513,7 @@ export const listingRouter = createTRPCRouter({
               orderBy: { displayOrder: "asc" },
             },
           },
-          orderBy: { createdAt: "desc" },
+          orderBy,
           skip: (input.page - 1) * input.limit,
           take: input.limit,
         }),
@@ -1557,6 +1680,352 @@ export const listingRouter = createTRPCRouter({
       return {
         success: true,
         message: "Media deleted successfully",
+      };
+    }),
+
+  /**
+   * Link an anonymous listing to the current user's account
+   * Now creates a connection request instead of directly linking
+   */
+  linkListingToAccount: protectedProcedure
+    .input(linkListingToAccountSchema)
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+
+      // Find listing by reference number
+      const listing = await ctx.db.listing.findUnique({
+        where: { referenceNumber: input.referenceNumber },
+      });
+
+      if (!listing) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Listing not found with the provided reference number",
+        });
+      }
+
+      // Check if userId is null (anonymous listing)
+      if (listing.userId === null) {
+        // Check if request already exists
+        const existingRequest = await ctx.db.listingConnectionRequest.findUnique({
+          where: {
+            listingId_userId: {
+              listingId: listing.id,
+              userId,
+            },
+          },
+        });
+
+        if (existingRequest) {
+          return existingRequest;
+        }
+
+        // Create connection request with status "PENDING"
+        const connectionRequest = await ctx.db.listingConnectionRequest.create({
+          data: {
+            listingId: listing.id,
+            userId,
+            status: "PENDING",
+          },
+          include: {
+            listing: {
+              include: {
+                contactInfo: true,
+                listingDetails: true,
+                mediaAttachments: {
+                  orderBy: { displayOrder: "asc" },
+                },
+              },
+            },
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+              },
+            },
+          },
+        });
+
+        return connectionRequest;
+      }
+
+      // If not null, check if already owned by user
+      if (listing.userId === userId) {
+        // Return success - listing already linked
+        return listing;
+      }
+
+      // If owned by different user, return error
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "This listing is already linked to another account",
+      });
+    }),
+
+  /**
+   * Request connection to an anonymous listing with optional proof document
+   */
+  requestListingConnection: protectedProcedure
+    .input(requestListingConnectionSchema)
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+
+      // Find listing by reference number
+      const listing = await ctx.db.listing.findUnique({
+        where: { referenceNumber: input.referenceNumber },
+      });
+
+      if (!listing) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Listing not found with the provided reference number",
+        });
+      }
+
+      // Verify listing userId is null (anonymous listing)
+      if (listing.userId !== null) {
+        if (listing.userId === userId) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "This listing is already linked to your account",
+          });
+        }
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "This listing is already linked to another account",
+        });
+      }
+
+      // Check for existing request
+      const existingRequest = await ctx.db.listingConnectionRequest.findUnique({
+        where: {
+          listingId_userId: {
+            listingId: listing.id,
+            userId,
+          },
+        },
+      });
+
+      if (existingRequest) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "A connection request for this listing already exists",
+        });
+      }
+
+      let proofDocumentUrl: string | null = null;
+
+      // Upload proof document if provided
+      if (input.proofDocument) {
+        // Validate file type (images and PDFs only)
+        const allowedMimeTypes = [
+          "image/jpeg",
+          "image/jpg",
+          "image/png",
+          "image/webp",
+          "application/pdf",
+        ];
+        if (!validateMimeType(input.proofDocument.mimeType, allowedMimeTypes)) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Proof document must be an image (JPEG, PNG, WebP) or PDF",
+          });
+        }
+
+        // Validate file size (max 10MB)
+        const maxSize = 10 * 1024 * 1024; // 10MB
+        const fileBuffer = base64ToBuffer(input.proofDocument.data);
+        if (!validateFileSize(fileBuffer, maxSize)) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Proof document must be 10MB or smaller",
+          });
+        }
+
+        // Validate file extension
+        if (!validateFileExtension(input.proofDocument.fileName)) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: `File ${input.proofDocument.fileName} has an executable extension and is not allowed`,
+          });
+        }
+
+        // Create request first to get ID for storage path
+        const tempRequest = await ctx.db.listingConnectionRequest.create({
+          data: {
+            listingId: listing.id,
+            userId,
+            status: "PENDING",
+            proofNotes: input.proofNotes,
+          },
+        });
+
+        // Generate storage path using request ID
+        const storagePath = generateStoragePath(
+          "listings/connection-proofs",
+          input.proofDocument.fileName,
+          tempRequest.id,
+        );
+
+        // Get storage provider
+        const storageProvider = StorageFactory.getProvider();
+
+        // Upload file
+        try {
+          const uploadResult = await storageProvider.upload(fileBuffer, storagePath, {
+            contentType: input.proofDocument.mimeType,
+          });
+          proofDocumentUrl = uploadResult.url;
+
+          // Update request with proof document URL
+          const connectionRequest = await ctx.db.listingConnectionRequest.update({
+            where: { id: tempRequest.id },
+            data: { proofDocument: proofDocumentUrl },
+            include: {
+              listing: {
+                include: {
+                  contactInfo: true,
+                  listingDetails: true,
+                  mediaAttachments: {
+                    orderBy: { displayOrder: "asc" },
+                  },
+                },
+              },
+              user: {
+                select: {
+                  id: true,
+                  name: true,
+                  email: true,
+                },
+              },
+            },
+          });
+
+          return connectionRequest;
+        } catch (error) {
+          // Rollback: delete request if upload fails
+          await ctx.db.listingConnectionRequest.delete({
+            where: { id: tempRequest.id },
+          });
+
+          console.error("Proof document upload error:", {
+            requestId: tempRequest.id,
+            fileName: input.proofDocument.fileName,
+            error: error instanceof Error ? error.message : "Unknown error",
+          });
+
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to upload proof document. Please try again later.",
+          });
+        }
+      } else {
+        // Create request without proof document
+        const connectionRequest = await ctx.db.listingConnectionRequest.create({
+          data: {
+            listingId: listing.id,
+            userId,
+            status: "PENDING",
+            proofNotes: input.proofNotes,
+          },
+          include: {
+            listing: {
+              include: {
+                contactInfo: true,
+                listingDetails: true,
+                mediaAttachments: {
+                  orderBy: { displayOrder: "asc" },
+                },
+              },
+            },
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+              },
+            },
+          },
+        });
+
+        return connectionRequest;
+      }
+    }),
+
+  /**
+   * Get current user's connection requests
+   */
+  getMyConnectionRequests: protectedProcedure.query(async ({ ctx }) => {
+    const userId = ctx.session.user.id;
+
+    const requests = await ctx.db.listingConnectionRequest.findMany({
+      where: { userId },
+      include: {
+        listing: {
+          select: {
+            id: true,
+            referenceNumber: true,
+            manufacturer: true,
+            model: true,
+            year: true,
+            condition: true,
+            askingPrice: true,
+            currency: true,
+            status: true,
+          },
+        },
+      },
+      orderBy: { createdAt: "desc" },
+    });
+
+    return requests;
+  }),
+
+  /**
+   * Cancel a pending connection request
+   */
+  cancelConnectionRequest: protectedProcedure
+    .input(cancelConnectionRequestSchema)
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+
+      // Find request
+      const request = await ctx.db.listingConnectionRequest.findUnique({
+        where: { id: input.requestId },
+      });
+
+      if (!request) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Connection request not found",
+        });
+      }
+
+      // Verify request belongs to current user
+      if (request.userId !== userId) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You can only cancel your own connection requests",
+        });
+      }
+
+      // Only allow canceling pending requests
+      if (request.status !== "PENDING") {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Only pending requests can be canceled",
+        });
+      }
+
+      // Delete request (proof document will remain in storage, but that's okay)
+      await ctx.db.listingConnectionRequest.delete({
+        where: { id: input.requestId },
+      });
+
+      return {
+        success: true,
+        message: "Connection request canceled successfully",
       };
     }),
 });

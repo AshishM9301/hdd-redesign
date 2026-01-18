@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Edit, Video } from "lucide-react";
 import MediaPreviewDialog from "@/components/media-preview-dialog";
 import type { MediaPreviewFile } from "@/components/media-preview-dialog";
+import { useAuth } from "@/hooks/use-auth";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 type ReviewStepProps = {
   onEdit?: (step: number) => void;
@@ -16,6 +18,7 @@ type ReviewStepProps = {
 export default function ReviewStep({ onEdit }: ReviewStepProps) {
   const { watch } = useFormContext<ListingFormData>();
   const formData = watch();
+  const { isAuthenticated } = useAuth();
   const [previewFiles, setPreviewFiles] = React.useState<MediaPreviewFile[]>(
     [],
   );
@@ -47,11 +50,26 @@ export default function ReviewStep({ onEdit }: ReviewStepProps) {
 
   return (
     <div className="space-y-6">
-      <p className="text-muted-foreground">
-        Please review your listing and make sure all information is accurate. If
-        you need to make changes, click the Edit button to go to that section to
-        make the necessary changes.
-      </p>
+      <div className="space-y-2">
+        <p className="text-muted-foreground">
+          Please review your listing and make sure all information is accurate. If
+          you need to make changes, click the Edit button to go to that section to
+          make the necessary changes.
+        </p>
+        {isAuthenticated ? (
+          <Alert>
+            <AlertDescription>
+              You can publish this listing immediately after submission or save it as a draft to publish later.
+            </AlertDescription>
+          </Alert>
+        ) : (
+          <Alert>
+            <AlertDescription>
+              Your listing will be saved as a draft and is not visible to buyers yet. Log in later to publish it and make it available to buyers.
+            </AlertDescription>
+          </Alert>
+        )}
+      </div>
 
       <div className="space-y-4">
         <Card>

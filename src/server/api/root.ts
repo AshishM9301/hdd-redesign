@@ -1,5 +1,6 @@
 import { postRouter } from "@/server/api/routers/post";
 import { listingRouter } from "@/server/api/routers/listing";
+import { adminRouter } from "@/server/api/routers/admin";
 import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
 
 /**
@@ -10,6 +11,7 @@ import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
 export const appRouter = createTRPCRouter({
   post: postRouter,
   listing: listingRouter,
+  admin: adminRouter,
 });
 
 // export type definition of API

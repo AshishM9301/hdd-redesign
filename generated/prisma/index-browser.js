@@ -135,6 +135,7 @@ exports.Prisma.UserScalarFieldEnum = {
   email: 'email',
   emailVerified: 'emailVerified',
   image: 'image',
+  role: 'role',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -235,6 +236,10 @@ exports.Prisma.ListingScalarFieldEnum = {
   soldNotes: 'soldNotes',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  referenceNumber: 'referenceNumber',
+  assured: 'assured',
+  assuredAt: 'assuredAt',
+  assuredById: 'assuredById',
   userId: 'userId',
   contactInfoId: 'contactInfoId',
   listingDetailsId: 'listingDetailsId'
@@ -252,6 +257,20 @@ exports.Prisma.MediaAttachmentScalarFieldEnum = {
   thumbnailUrl: 'thumbnailUrl',
   displayOrder: 'displayOrder',
   uploadedAt: 'uploadedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ListingConnectionRequestScalarFieldEnum = {
+  id: 'id',
+  listingId: 'listingId',
+  userId: 'userId',
+  status: 'status',
+  proofDocument: 'proofDocument',
+  proofNotes: 'proofNotes',
+  rejectionReason: 'rejectionReason',
+  reviewedById: 'reviewedById',
+  reviewedAt: 'reviewedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -306,7 +325,8 @@ exports.Prisma.ModelName = {
   ContactInfo: 'ContactInfo',
   ListingDetails: 'ListingDetails',
   Listing: 'Listing',
-  MediaAttachment: 'MediaAttachment'
+  MediaAttachment: 'MediaAttachment',
+  ListingConnectionRequest: 'ListingConnectionRequest'
 };
 
 /**

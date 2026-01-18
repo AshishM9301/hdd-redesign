@@ -41,7 +41,7 @@ const navItems = [
   },
   {
     label: "Go to Listing",
-    href: "/rent",
+    href: "/listings/access",
   },
 ];
 

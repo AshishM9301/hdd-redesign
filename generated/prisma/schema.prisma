@@ -56,17 +56,21 @@ model Post {
 }
 
 model User {
-  id            String    @id
-  name          String //@db.Text
-  email         String
-  emailVerified Boolean   @default(false)
-  image         String? //@db.Text
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @default(now()) @updatedAt
-  sessions      Session[]
-  accounts      Account[]
-  posts         Post[]
-  listings      Listing[]
+  id                         String                     @id
+  name                       String //@db.Text
+  email                      String
+  emailVerified              Boolean                    @default(false)
+  image                      String? //@db.Text
+  role                       String                     @default("user") // "user" | "admin"
+  createdAt                  DateTime                   @default(now())
+  updatedAt                  DateTime                   @default(now()) @updatedAt
+  sessions                   Session[]
+  accounts                   Account[]
+  posts                      Post[]
+  listings                   Listing[]
+  assuredListings            Listing[]                  @relation("AssuredListings")
+  listingConnectionRequests  ListingConnectionRequest[] @relation("ConnectionRequestUser")
+  reviewedConnectionRequests ListingConnectionRequest[] @relation("ConnectionRequestReviewer")
 
   @@unique([email])
   @@map("user")
@@ -165,13 +169,13 @@ model ListingDetails {
 // Listing Model
 // Main model for equipment listings with status tracking and availability
 model Listing {
-  id                     String             @id @default(cuid())
-  status                 ListingStatus      @default(DRAFT)
-  availabilityStatus     AvailabilityStatus @default(UNAVAILABLE)
+  id                     String                     @id @default(cuid())
+  status                 ListingStatus              @default(DRAFT)
+  availabilityStatus     AvailabilityStatus         @default(UNAVAILABLE)
   // Pricing fields
-  askingPrice            Decimal            @db.Decimal(10, 2)
+  askingPrice            Decimal                    @db.Decimal(10, 2)
   currency               String
-  soldPrice              Decimal?           @db.Decimal(10, 2)
+  soldPrice              Decimal?                   @db.Decimal(10, 2)
   // Equipment fields
   year                   String
   manufacturer           String
@@ -180,7 +184,7 @@ model Listing {
   serialNumber           String
   hours                  String?
   miles                  String?
-  repossessed            Boolean            @default(false)
+  repossessed            Boolean                    @default(false)
   // Location fields
   equipmentCity          String?
   equipmentStateProvince String?
@@ -193,16 +197,24 @@ model Listing {
   soldTo                 String?
   soldNotes              String?
   // Timestamps
-  createdAt              DateTime           @default(now())
-  updatedAt              DateTime           @updatedAt
+  createdAt              DateTime                   @default(now())
+  updatedAt              DateTime                   @updatedAt
+  // Reference number for anonymous access
+  referenceNumber        String?                    @unique
+  // Assurance fields
+  assured                Boolean                    @default(false)
+  assuredAt              DateTime?
+  assuredById            String?
+  assuredBy              User?                      @relation("AssuredListings", fields: [assuredById], references: [id])
   // Relations
-  userId                 String
-  user                   User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                 String?
+  user                   User?                      @relation(fields: [userId], references: [id], onDelete: Cascade)
   contactInfoId          String
-  contactInfo            ContactInfo        @relation(fields: [contactInfoId], references: [id], onDelete: Cascade)
-  listingDetailsId       String?            @unique
-  listingDetails         ListingDetails?    @relation(fields: [listingDetailsId], references: [id], onDelete: Cascade)
+  contactInfo            ContactInfo                @relation(fields: [contactInfoId], references: [id], onDelete: Cascade)
+  listingDetailsId       String?                    @unique
+  listingDetails         ListingDetails?            @relation(fields: [listingDetailsId], references: [id], onDelete: Cascade)
   mediaAttachments       MediaAttachment[]
+  connectionRequests     ListingConnectionRequest[]
 
   @@index([status, availabilityStatus])
   @@index([availabilityStatus])
@@ -212,6 +224,8 @@ model Listing {
   @@index([manufacturer])
   @@index([model])
   @@index([year])
+  @@index([referenceNumber])
+  @@index([assured])
   @@map("listing")
 }
 
@@ -237,4 +251,28 @@ model MediaAttachment {
   @@index([storageProvider])
   @@index([listingId, displayOrder])
   @@map("media_attachment")
+}
+
+// Listing Connection Request Model
+// Stores requests from users to link anonymous listings to their accounts
+model ListingConnectionRequest {
+  id              String    @id @default(cuid())
+  listingId       String
+  listing         Listing   @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  userId          String
+  user            User      @relation("ConnectionRequestUser", fields: [userId], references: [id], onDelete: Cascade)
+  status          String    @default("PENDING") // "PENDING" | "APPROVED" | "REJECTED"
+  proofDocument   String? // URL to uploaded proof document
+  proofNotes      String? // Optional notes from user
+  rejectionReason String? // Optional reason for rejection from admin
+  reviewedById    String? // Admin user ID
+  reviewedBy      User?     @relation("ConnectionRequestReviewer", fields: [reviewedById], references: [id])
+  reviewedAt      DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@unique([listingId, userId])
+  @@index([status])
+  @@index([userId])
+  @@map("listing_connection_request")
 }

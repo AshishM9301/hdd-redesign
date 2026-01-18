@@ -5,10 +5,11 @@ import { useParams, useRouter } from "next/navigation";
 import { api } from "@/trpc/react";
 import { ListingStatusBadge } from "@/components/listing-status-badge";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
-import { Loader2, ArrowLeft, CheckCircle2, Archive } from "lucide-react";
+import { Loader2, ArrowLeft, CheckCircle2, Archive, Link as LinkIcon } from "lucide-react";
 import Image from "next/image";
 import MediaPreviewDialog from "@/components/media-preview-dialog";
 import {
@@ -26,20 +27,37 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ListingStatus, MediaFileType } from "@/types/listing";
+import { useAuth } from "@/hooks/use-auth";
 
 export default function ListingDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const listingId = params.id as string;
+  const identifier = params.id as string; // Can be ID or reference number
+  const { user } = useAuth();
 
-  const { data: listing, isLoading, error } = api.listing.getById.useQuery({
-    listingId,
-  });
+  // Check if identifier looks like a reference number (starts with REF-)
+  const isReferenceNumber = identifier.startsWith("REF-");
+
+  // Try getById first if it's not a reference number
+  const getByIdQuery = api.listing.getById.useQuery(
+    { listingId: identifier },
+    { enabled: !isReferenceNumber },
+  );
+
+  // Try getByReference if it looks like a reference number
+  const getByReferenceQuery = api.listing.getByReference.useQuery(
+    { referenceNumber: identifier },
+    { enabled: isReferenceNumber },
+  );
+
+  // Use the appropriate query result
+  const listingQuery = isReferenceNumber ? getByReferenceQuery : getByIdQuery;
+  const { data: listing, isLoading, error } = listingQuery;
 
   const markAsSoldMutation = api.listing.markAsSold.useMutation({
     onSuccess: () => {
       toast.success("Listing marked as sold!");
-      void router.refresh();
+      void listingQuery.refetch();
     },
     onError: (error) => {
       toast.error(error.message || "Failed to mark listing as sold");
@@ -49,10 +67,20 @@ export default function ListingDetailPage() {
   const archiveMutation = api.listing.archive.useMutation({
     onSuccess: () => {
       toast.success("Listing archived!");
-      void router.refresh();
+      void listingQuery.refetch();
     },
     onError: (error) => {
       toast.error(error.message || "Failed to archive listing");
+    },
+  });
+
+  const linkListingMutation = api.listing.linkListingToAccount.useMutation({
+    onSuccess: () => {
+      toast.success("Listing successfully linked to your account!");
+      void listingQuery.refetch();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to link listing to account");
     },
   });
 
@@ -62,8 +90,9 @@ export default function ListingDetailPage() {
   const [previewIndex, setPreviewIndex] = React.useState<number | null>(null);
 
   const handleMarkAsSold = () => {
+    if (!listing) return;
     markAsSoldMutation.mutate({
-      listingId,
+      listingId: listing.id,
       soldPrice: soldPrice || undefined,
       soldTo: soldTo || undefined,
       soldNotes: soldNotes || undefined,
@@ -71,7 +100,8 @@ export default function ListingDetailPage() {
   };
 
   const handleArchive = () => {
-    archiveMutation.mutate({ listingId });
+    if (!listing) return;
+    archiveMutation.mutate({ listingId: listing.id });
   };
 
   const formatPrice = (price: number, currency: string) => {
@@ -136,8 +166,11 @@ export default function ListingDetailPage() {
     (m) => m.fileType === MediaFileType.DOCUMENT
   ) || [];
 
-  // TODO: Check if current user is owner (need to get session)
-  const isOwner = false; // Placeholder - implement auth check
+  // Check if current user is owner
+  const isOwner = user && listing?.userId && user.id === listing.userId;
+  
+  // Check if listing can be linked (user is logged in, listing is anonymous, user doesn't own it)
+  const canLinkListing = user && !listing.userId && !isOwner;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -191,11 +224,16 @@ export default function ListingDetailPage() {
         {/* Listing Info */}
         <div className="space-y-6">
           <div>
-            <div className="mb-2 flex items-center gap-2">
+            <div className="mb-2 flex items-center gap-2 flex-wrap">
               <h1 className="text-3xl font-bold">
                 {listing.manufacturer} {listing.model}
               </h1>
               <ListingStatusBadge status={listing.status} />
+              {listing.assured && (
+                <Badge variant="default" className="bg-green-600">
+                  Assured
+                </Badge>
+              )}
             </div>
             <p className="text-muted-foreground text-lg">
               {listing.year} • {listing.condition}
@@ -203,6 +241,20 @@ export default function ListingDetailPage() {
             <p className="mt-2 text-3xl font-semibold">
               {formatPrice(listing.askingPrice, listing.currency)}
             </p>
+            {listing.assured && listing.assuredAt && (
+              <div className="mt-3 text-sm text-muted-foreground">
+                <span className="font-medium">Assured on {formatDate(listing.assuredAt)}</span>
+                {listing.assuredBy && (
+                  <span> by {listing.assuredBy.name}</span>
+                )}
+              </div>
+            )}
+            {isOwner && listing.referenceNumber && (
+              <div className="mt-4 rounded-lg bg-muted p-3">
+                <p className="text-sm font-medium text-muted-foreground">Reference Number</p>
+                <p className="mt-1 font-mono text-lg font-bold">{listing.referenceNumber}</p>
+              </div>
+            )}
           </div>
 
           {/* Equipment Details */}
@@ -280,6 +332,34 @@ export default function ListingDetailPage() {
                 )}
               </CardContent>
             </Card>
+          )}
+
+          {/* Link to Account Button */}
+          {canLinkListing && listing.referenceNumber && (
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={() => {
+                if (listing.referenceNumber) {
+                  linkListingMutation.mutate({
+                    referenceNumber: listing.referenceNumber,
+                  });
+                }
+              }}
+              disabled={linkListingMutation.isPending}
+            >
+              {linkListingMutation.isPending ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Linking...
+                </>
+              ) : (
+                <>
+                  <LinkIcon className="mr-2 h-4 w-4" />
+                  Link to Account
+                </>
+              )}
+            </Button>
           )}
 
           {/* Owner Actions */}

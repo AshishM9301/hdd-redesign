@@ -135,5 +135,7 @@ export function validateCanPublish(currentStatus: ListingStatus): void {
       message: "Cannot publish an archived listing",
     });
   }
+
+  // DRAFT and PENDING_REVIEW can be published
 }
 

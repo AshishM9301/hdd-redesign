@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "listing" ALTER COLUMN "status" SET DEFAULT 'PUBLISHED',
+ALTER COLUMN "availabilityStatus" SET DEFAULT 'AVAILABLE';

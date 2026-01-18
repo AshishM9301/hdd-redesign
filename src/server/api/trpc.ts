@@ -132,3 +132,28 @@ export const protectedProcedure = t.procedure
       },
     });
   });
+
+/**
+ * Admin (authenticated + admin role) procedure
+ *
+ * Extends protectedProcedure and verifies the user has admin role.
+ * Throws FORBIDDEN if user is not an admin.
+ *
+ * @see https://trpc.io/docs/procedures
+ */
+export const adminProcedure = protectedProcedure.use(async ({ ctx, next }) => {
+  // Fetch user from database to check role
+  const user = await ctx.db.user.findUnique({
+    where: { id: ctx.session.user.id },
+    select: { role: true },
+  });
+
+  if (!user || user.role !== "admin") {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "Admin access required",
+    });
+  }
+
+  return next({ ctx });
+});

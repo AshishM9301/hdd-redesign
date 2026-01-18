@@ -58,6 +58,11 @@ export type Listing = $Result.DefaultSelection<Prisma.$ListingPayload>
  * 
  */
 export type MediaAttachment = $Result.DefaultSelection<Prisma.$MediaAttachmentPayload>
+/**
+ * Model ListingConnectionRequest
+ * 
+ */
+export type ListingConnectionRequest = $Result.DefaultSelection<Prisma.$ListingConnectionRequestPayload>
 
 /**
  * Enums
@@ -326,6 +331,16 @@ export class PrismaClient<
     * ```
     */
   get mediaAttachment(): Prisma.MediaAttachmentDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.listingConnectionRequest`: Exposes CRUD operations for the **ListingConnectionRequest** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ListingConnectionRequests
+    * const listingConnectionRequests = await prisma.listingConnectionRequest.findMany()
+    * ```
+    */
+  get listingConnectionRequest(): Prisma.ListingConnectionRequestDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -775,7 +790,8 @@ export namespace Prisma {
     ContactInfo: 'ContactInfo',
     ListingDetails: 'ListingDetails',
     Listing: 'Listing',
-    MediaAttachment: 'MediaAttachment'
+    MediaAttachment: 'MediaAttachment',
+    ListingConnectionRequest: 'ListingConnectionRequest'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -794,7 +810,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "post" | "user" | "session" | "account" | "verification" | "contactInfo" | "listingDetails" | "listing" | "mediaAttachment"
+      modelProps: "post" | "user" | "session" | "account" | "verification" | "contactInfo" | "listingDetails" | "listing" | "mediaAttachment" | "listingConnectionRequest"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1464,6 +1480,80 @@ export namespace Prisma {
           }
         }
       }
+      ListingConnectionRequest: {
+        payload: Prisma.$ListingConnectionRequestPayload<ExtArgs>
+        fields: Prisma.ListingConnectionRequestFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ListingConnectionRequestFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListingConnectionRequestPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ListingConnectionRequestFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListingConnectionRequestPayload>
+          }
+          findFirst: {
+            args: Prisma.ListingConnectionRequestFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListingConnectionRequestPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ListingConnectionRequestFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListingConnectionRequestPayload>
+          }
+          findMany: {
+            args: Prisma.ListingConnectionRequestFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListingConnectionRequestPayload>[]
+          }
+          create: {
+            args: Prisma.ListingConnectionRequestCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListingConnectionRequestPayload>
+          }
+          createMany: {
+            args: Prisma.ListingConnectionRequestCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ListingConnectionRequestCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListingConnectionRequestPayload>[]
+          }
+          delete: {
+            args: Prisma.ListingConnectionRequestDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListingConnectionRequestPayload>
+          }
+          update: {
+            args: Prisma.ListingConnectionRequestUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListingConnectionRequestPayload>
+          }
+          deleteMany: {
+            args: Prisma.ListingConnectionRequestDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ListingConnectionRequestUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ListingConnectionRequestUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListingConnectionRequestPayload>[]
+          }
+          upsert: {
+            args: Prisma.ListingConnectionRequestUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListingConnectionRequestPayload>
+          }
+          aggregate: {
+            args: Prisma.ListingConnectionRequestAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateListingConnectionRequest>
+          }
+          groupBy: {
+            args: Prisma.ListingConnectionRequestGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ListingConnectionRequestGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ListingConnectionRequestCountArgs<ExtArgs>
+            result: $Utils.Optional<ListingConnectionRequestCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1569,6 +1659,7 @@ export namespace Prisma {
     listingDetails?: ListingDetailsOmit
     listing?: ListingOmit
     mediaAttachment?: MediaAttachmentOmit
+    listingConnectionRequest?: ListingConnectionRequestOmit
   }
 
   /* Types for Logging */
@@ -1653,6 +1744,9 @@ export namespace Prisma {
     accounts: number
     posts: number
     listings: number
+    assuredListings: number
+    listingConnectionRequests: number
+    reviewedConnectionRequests: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1660,6 +1754,9 @@ export namespace Prisma {
     accounts?: boolean | UserCountOutputTypeCountAccountsArgs
     posts?: boolean | UserCountOutputTypeCountPostsArgs
     listings?: boolean | UserCountOutputTypeCountListingsArgs
+    assuredListings?: boolean | UserCountOutputTypeCountAssuredListingsArgs
+    listingConnectionRequests?: boolean | UserCountOutputTypeCountListingConnectionRequestsArgs
+    reviewedConnectionRequests?: boolean | UserCountOutputTypeCountReviewedConnectionRequestsArgs
   }
 
   // Custom InputTypes
@@ -1701,6 +1798,27 @@ export namespace Prisma {
     where?: ListingWhereInput
   }
 
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountAssuredListingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ListingWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountListingConnectionRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ListingConnectionRequestWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountReviewedConnectionRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ListingConnectionRequestWhereInput
+  }
+
 
   /**
    * Count Type ContactInfoCountOutputType
@@ -1739,10 +1857,12 @@ export namespace Prisma {
 
   export type ListingCountOutputType = {
     mediaAttachments: number
+    connectionRequests: number
   }
 
   export type ListingCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     mediaAttachments?: boolean | ListingCountOutputTypeCountMediaAttachmentsArgs
+    connectionRequests?: boolean | ListingCountOutputTypeCountConnectionRequestsArgs
   }
 
   // Custom InputTypes
@@ -1761,6 +1881,13 @@ export namespace Prisma {
    */
   export type ListingCountOutputTypeCountMediaAttachmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: MediaAttachmentWhereInput
+  }
+
+  /**
+   * ListingCountOutputType without action
+   */
+  export type ListingCountOutputTypeCountConnectionRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ListingConnectionRequestWhereInput
   }
 
 
@@ -2842,6 +2969,7 @@ export namespace Prisma {
     email: string | null
     emailVerified: boolean | null
     image: string | null
+    role: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -2852,6 +2980,7 @@ export namespace Prisma {
     email: string | null
     emailVerified: boolean | null
     image: string | null
+    role: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -2862,6 +2991,7 @@ export namespace Prisma {
     email: number
     emailVerified: number
     image: number
+    role: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -2874,6 +3004,7 @@ export namespace Prisma {
     email?: true
     emailVerified?: true
     image?: true
+    role?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -2884,6 +3015,7 @@ export namespace Prisma {
     email?: true
     emailVerified?: true
     image?: true
+    role?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -2894,6 +3026,7 @@ export namespace Prisma {
     email?: true
     emailVerified?: true
     image?: true
+    role?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -2977,6 +3110,7 @@ export namespace Prisma {
     email: string
     emailVerified: boolean
     image: string | null
+    role: string
     createdAt: Date
     updatedAt: Date
     _count: UserCountAggregateOutputType | null
@@ -3004,12 +3138,16 @@ export namespace Prisma {
     email?: boolean
     emailVerified?: boolean
     image?: boolean
+    role?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     sessions?: boolean | User$sessionsArgs<ExtArgs>
     accounts?: boolean | User$accountsArgs<ExtArgs>
     posts?: boolean | User$postsArgs<ExtArgs>
     listings?: boolean | User$listingsArgs<ExtArgs>
+    assuredListings?: boolean | User$assuredListingsArgs<ExtArgs>
+    listingConnectionRequests?: boolean | User$listingConnectionRequestsArgs<ExtArgs>
+    reviewedConnectionRequests?: boolean | User$reviewedConnectionRequestsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -3019,6 +3157,7 @@ export namespace Prisma {
     email?: boolean
     emailVerified?: boolean
     image?: boolean
+    role?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
@@ -3029,6 +3168,7 @@ export namespace Prisma {
     email?: boolean
     emailVerified?: boolean
     image?: boolean
+    role?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
@@ -3039,16 +3179,20 @@ export namespace Prisma {
     email?: boolean
     emailVerified?: boolean
     image?: boolean
+    role?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "role" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     sessions?: boolean | User$sessionsArgs<ExtArgs>
     accounts?: boolean | User$accountsArgs<ExtArgs>
     posts?: boolean | User$postsArgs<ExtArgs>
     listings?: boolean | User$listingsArgs<ExtArgs>
+    assuredListings?: boolean | User$assuredListingsArgs<ExtArgs>
+    listingConnectionRequests?: boolean | User$listingConnectionRequestsArgs<ExtArgs>
+    reviewedConnectionRequests?: boolean | User$reviewedConnectionRequestsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -3061,6 +3205,9 @@ export namespace Prisma {
       accounts: Prisma.$AccountPayload<ExtArgs>[]
       posts: Prisma.$PostPayload<ExtArgs>[]
       listings: Prisma.$ListingPayload<ExtArgs>[]
+      assuredListings: Prisma.$ListingPayload<ExtArgs>[]
+      listingConnectionRequests: Prisma.$ListingConnectionRequestPayload<ExtArgs>[]
+      reviewedConnectionRequests: Prisma.$ListingConnectionRequestPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3068,6 +3215,7 @@ export namespace Prisma {
       email: string
       emailVerified: boolean
       image: string | null
+      role: string
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["user"]>
@@ -3468,6 +3616,9 @@ export namespace Prisma {
     accounts<T extends User$accountsArgs<ExtArgs> = {}>(args?: Subset<T, User$accountsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     posts<T extends User$postsArgs<ExtArgs> = {}>(args?: Subset<T, User$postsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     listings<T extends User$listingsArgs<ExtArgs> = {}>(args?: Subset<T, User$listingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ListingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    assuredListings<T extends User$assuredListingsArgs<ExtArgs> = {}>(args?: Subset<T, User$assuredListingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ListingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    listingConnectionRequests<T extends User$listingConnectionRequestsArgs<ExtArgs> = {}>(args?: Subset<T, User$listingConnectionRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ListingConnectionRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    reviewedConnectionRequests<T extends User$reviewedConnectionRequestsArgs<ExtArgs> = {}>(args?: Subset<T, User$reviewedConnectionRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ListingConnectionRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3502,6 +3653,7 @@ export namespace Prisma {
     readonly email: FieldRef<"User", 'String'>
     readonly emailVerified: FieldRef<"User", 'Boolean'>
     readonly image: FieldRef<"User", 'String'>
+    readonly role: FieldRef<"User", 'String'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
   }
@@ -3985,6 +4137,78 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ListingScalarFieldEnum | ListingScalarFieldEnum[]
+  }
+
+  /**
+   * User.assuredListings
+   */
+  export type User$assuredListingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Listing
+     */
+    select?: ListingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Listing
+     */
+    omit?: ListingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListingInclude<ExtArgs> | null
+    where?: ListingWhereInput
+    orderBy?: ListingOrderByWithRelationInput | ListingOrderByWithRelationInput[]
+    cursor?: ListingWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ListingScalarFieldEnum | ListingScalarFieldEnum[]
+  }
+
+  /**
+   * User.listingConnectionRequests
+   */
+  export type User$listingConnectionRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListingConnectionRequest
+     */
+    select?: ListingConnectionRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ListingConnectionRequest
+     */
+    omit?: ListingConnectionRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListingConnectionRequestInclude<ExtArgs> | null
+    where?: ListingConnectionRequestWhereInput
+    orderBy?: ListingConnectionRequestOrderByWithRelationInput | ListingConnectionRequestOrderByWithRelationInput[]
+    cursor?: ListingConnectionRequestWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ListingConnectionRequestScalarFieldEnum | ListingConnectionRequestScalarFieldEnum[]
+  }
+
+  /**
+   * User.reviewedConnectionRequests
+   */
+  export type User$reviewedConnectionRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListingConnectionRequest
+     */
+    select?: ListingConnectionRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ListingConnectionRequest
+     */
+    omit?: ListingConnectionRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListingConnectionRequestInclude<ExtArgs> | null
+    where?: ListingConnectionRequestWhereInput
+    orderBy?: ListingConnectionRequestOrderByWithRelationInput | ListingConnectionRequestOrderByWithRelationInput[]
+    cursor?: ListingConnectionRequestWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ListingConnectionRequestScalarFieldEnum | ListingConnectionRequestScalarFieldEnum[]
   }
 
   /**
@@ -9684,6 +9908,10 @@ export namespace Prisma {
     soldNotes: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    referenceNumber: string | null
+    assured: boolean | null
+    assuredAt: Date | null
+    assuredById: string | null
     userId: string | null
     contactInfoId: string | null
     listingDetailsId: string | null
@@ -9715,6 +9943,10 @@ export namespace Prisma {
     soldNotes: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    referenceNumber: string | null
+    assured: boolean | null
+    assuredAt: Date | null
+    assuredById: string | null
     userId: string | null
     contactInfoId: string | null
     listingDetailsId: string | null
@@ -9746,6 +9978,10 @@ export namespace Prisma {
     soldNotes: number
     createdAt: number
     updatedAt: number
+    referenceNumber: number
+    assured: number
+    assuredAt: number
+    assuredById: number
     userId: number
     contactInfoId: number
     listingDetailsId: number
@@ -9789,6 +10025,10 @@ export namespace Prisma {
     soldNotes?: true
     createdAt?: true
     updatedAt?: true
+    referenceNumber?: true
+    assured?: true
+    assuredAt?: true
+    assuredById?: true
     userId?: true
     contactInfoId?: true
     listingDetailsId?: true
@@ -9820,6 +10060,10 @@ export namespace Prisma {
     soldNotes?: true
     createdAt?: true
     updatedAt?: true
+    referenceNumber?: true
+    assured?: true
+    assuredAt?: true
+    assuredById?: true
     userId?: true
     contactInfoId?: true
     listingDetailsId?: true
@@ -9851,6 +10095,10 @@ export namespace Prisma {
     soldNotes?: true
     createdAt?: true
     updatedAt?: true
+    referenceNumber?: true
+    assured?: true
+    assuredAt?: true
+    assuredById?: true
     userId?: true
     contactInfoId?: true
     listingDetailsId?: true
@@ -9969,7 +10217,11 @@ export namespace Prisma {
     soldNotes: string | null
     createdAt: Date
     updatedAt: Date
-    userId: string
+    referenceNumber: string | null
+    assured: boolean
+    assuredAt: Date | null
+    assuredById: string | null
+    userId: string | null
     contactInfoId: string
     listingDetailsId: string | null
     _count: ListingCountAggregateOutputType | null
@@ -10019,13 +10271,19 @@ export namespace Prisma {
     soldNotes?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    referenceNumber?: boolean
+    assured?: boolean
+    assuredAt?: boolean
+    assuredById?: boolean
     userId?: boolean
     contactInfoId?: boolean
     listingDetailsId?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
+    assuredBy?: boolean | Listing$assuredByArgs<ExtArgs>
+    user?: boolean | Listing$userArgs<ExtArgs>
     contactInfo?: boolean | ContactInfoDefaultArgs<ExtArgs>
     listingDetails?: boolean | Listing$listingDetailsArgs<ExtArgs>
     mediaAttachments?: boolean | Listing$mediaAttachmentsArgs<ExtArgs>
+    connectionRequests?: boolean | Listing$connectionRequestsArgs<ExtArgs>
     _count?: boolean | ListingCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["listing"]>
 
@@ -10055,10 +10313,15 @@ export namespace Prisma {
     soldNotes?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    referenceNumber?: boolean
+    assured?: boolean
+    assuredAt?: boolean
+    assuredById?: boolean
     userId?: boolean
     contactInfoId?: boolean
     listingDetailsId?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
+    assuredBy?: boolean | Listing$assuredByArgs<ExtArgs>
+    user?: boolean | Listing$userArgs<ExtArgs>
     contactInfo?: boolean | ContactInfoDefaultArgs<ExtArgs>
     listingDetails?: boolean | Listing$listingDetailsArgs<ExtArgs>
   }, ExtArgs["result"]["listing"]>
@@ -10089,10 +10352,15 @@ export namespace Prisma {
     soldNotes?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    referenceNumber?: boolean
+    assured?: boolean
+    assuredAt?: boolean
+    assuredById?: boolean
     userId?: boolean
     contactInfoId?: boolean
     listingDetailsId?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
+    assuredBy?: boolean | Listing$assuredByArgs<ExtArgs>
+    user?: boolean | Listing$userArgs<ExtArgs>
     contactInfo?: boolean | ContactInfoDefaultArgs<ExtArgs>
     listingDetails?: boolean | Listing$listingDetailsArgs<ExtArgs>
   }, ExtArgs["result"]["listing"]>
@@ -10123,26 +10391,34 @@ export namespace Prisma {
     soldNotes?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    referenceNumber?: boolean
+    assured?: boolean
+    assuredAt?: boolean
+    assuredById?: boolean
     userId?: boolean
     contactInfoId?: boolean
     listingDetailsId?: boolean
   }
 
-  export type ListingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "status" | "availabilityStatus" | "askingPrice" | "currency" | "soldPrice" | "year" | "manufacturer" | "model" | "condition" | "serialNumber" | "hours" | "miles" | "repossessed" | "equipmentCity" | "equipmentStateProvince" | "equipmentPostalCode" | "equipmentCountry" | "soldAt" | "reservedAt" | "reservedUntil" | "soldTo" | "soldNotes" | "createdAt" | "updatedAt" | "userId" | "contactInfoId" | "listingDetailsId", ExtArgs["result"]["listing"]>
+  export type ListingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "status" | "availabilityStatus" | "askingPrice" | "currency" | "soldPrice" | "year" | "manufacturer" | "model" | "condition" | "serialNumber" | "hours" | "miles" | "repossessed" | "equipmentCity" | "equipmentStateProvince" | "equipmentPostalCode" | "equipmentCountry" | "soldAt" | "reservedAt" | "reservedUntil" | "soldTo" | "soldNotes" | "createdAt" | "updatedAt" | "referenceNumber" | "assured" | "assuredAt" | "assuredById" | "userId" | "contactInfoId" | "listingDetailsId", ExtArgs["result"]["listing"]>
   export type ListingInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
+    assuredBy?: boolean | Listing$assuredByArgs<ExtArgs>
+    user?: boolean | Listing$userArgs<ExtArgs>
     contactInfo?: boolean | ContactInfoDefaultArgs<ExtArgs>
     listingDetails?: boolean | Listing$listingDetailsArgs<ExtArgs>
     mediaAttachments?: boolean | Listing$mediaAttachmentsArgs<ExtArgs>
+    connectionRequests?: boolean | Listing$connectionRequestsArgs<ExtArgs>
     _count?: boolean | ListingCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ListingIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
+    assuredBy?: boolean | Listing$assuredByArgs<ExtArgs>
+    user?: boolean | Listing$userArgs<ExtArgs>
     contactInfo?: boolean | ContactInfoDefaultArgs<ExtArgs>
     listingDetails?: boolean | Listing$listingDetailsArgs<ExtArgs>
   }
   export type ListingIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
+    assuredBy?: boolean | Listing$assuredByArgs<ExtArgs>
+    user?: boolean | Listing$userArgs<ExtArgs>
     contactInfo?: boolean | ContactInfoDefaultArgs<ExtArgs>
     listingDetails?: boolean | Listing$listingDetailsArgs<ExtArgs>
   }
@@ -10150,10 +10426,12 @@ export namespace Prisma {
   export type $ListingPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Listing"
     objects: {
-      user: Prisma.$UserPayload<ExtArgs>
+      assuredBy: Prisma.$UserPayload<ExtArgs> | null
+      user: Prisma.$UserPayload<ExtArgs> | null
       contactInfo: Prisma.$ContactInfoPayload<ExtArgs>
       listingDetails: Prisma.$ListingDetailsPayload<ExtArgs> | null
       mediaAttachments: Prisma.$MediaAttachmentPayload<ExtArgs>[]
+      connectionRequests: Prisma.$ListingConnectionRequestPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -10181,7 +10459,11 @@ export namespace Prisma {
       soldNotes: string | null
       createdAt: Date
       updatedAt: Date
-      userId: string
+      referenceNumber: string | null
+      assured: boolean
+      assuredAt: Date | null
+      assuredById: string | null
+      userId: string | null
       contactInfoId: string
       listingDetailsId: string | null
     }, ExtArgs["result"]["listing"]>
@@ -10578,10 +10860,12 @@ export namespace Prisma {
    */
   export interface Prisma__ListingClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    assuredBy<T extends Listing$assuredByArgs<ExtArgs> = {}>(args?: Subset<T, Listing$assuredByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    user<T extends Listing$userArgs<ExtArgs> = {}>(args?: Subset<T, Listing$userArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     contactInfo<T extends ContactInfoDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ContactInfoDefaultArgs<ExtArgs>>): Prisma__ContactInfoClient<$Result.GetResult<Prisma.$ContactInfoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     listingDetails<T extends Listing$listingDetailsArgs<ExtArgs> = {}>(args?: Subset<T, Listing$listingDetailsArgs<ExtArgs>>): Prisma__ListingDetailsClient<$Result.GetResult<Prisma.$ListingDetailsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     mediaAttachments<T extends Listing$mediaAttachmentsArgs<ExtArgs> = {}>(args?: Subset<T, Listing$mediaAttachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MediaAttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    connectionRequests<T extends Listing$connectionRequestsArgs<ExtArgs> = {}>(args?: Subset<T, Listing$connectionRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ListingConnectionRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10636,6 +10920,10 @@ export namespace Prisma {
     readonly soldNotes: FieldRef<"Listing", 'String'>
     readonly createdAt: FieldRef<"Listing", 'DateTime'>
     readonly updatedAt: FieldRef<"Listing", 'DateTime'>
+    readonly referenceNumber: FieldRef<"Listing", 'String'>
+    readonly assured: FieldRef<"Listing", 'Boolean'>
+    readonly assuredAt: FieldRef<"Listing", 'DateTime'>
+    readonly assuredById: FieldRef<"Listing", 'String'>
     readonly userId: FieldRef<"Listing", 'String'>
     readonly contactInfoId: FieldRef<"Listing", 'String'>
     readonly listingDetailsId: FieldRef<"Listing", 'String'>
@@ -11035,6 +11323,44 @@ export namespace Prisma {
   }
 
   /**
+   * Listing.assuredBy
+   */
+  export type Listing$assuredByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * Listing.user
+   */
+  export type Listing$userArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
    * Listing.listingDetails
    */
   export type Listing$listingDetailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -11075,6 +11401,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: MediaAttachmentScalarFieldEnum | MediaAttachmentScalarFieldEnum[]
+  }
+
+  /**
+   * Listing.connectionRequests
+   */
+  export type Listing$connectionRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListingConnectionRequest
+     */
+    select?: ListingConnectionRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ListingConnectionRequest
+     */
+    omit?: ListingConnectionRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListingConnectionRequestInclude<ExtArgs> | null
+    where?: ListingConnectionRequestWhereInput
+    orderBy?: ListingConnectionRequestOrderByWithRelationInput | ListingConnectionRequestOrderByWithRelationInput[]
+    cursor?: ListingConnectionRequestWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ListingConnectionRequestScalarFieldEnum | ListingConnectionRequestScalarFieldEnum[]
   }
 
   /**
@@ -12297,6 +12647,1177 @@ export namespace Prisma {
 
 
   /**
+   * Model ListingConnectionRequest
+   */
+
+  export type AggregateListingConnectionRequest = {
+    _count: ListingConnectionRequestCountAggregateOutputType | null
+    _min: ListingConnectionRequestMinAggregateOutputType | null
+    _max: ListingConnectionRequestMaxAggregateOutputType | null
+  }
+
+  export type ListingConnectionRequestMinAggregateOutputType = {
+    id: string | null
+    listingId: string | null
+    userId: string | null
+    status: string | null
+    proofDocument: string | null
+    proofNotes: string | null
+    rejectionReason: string | null
+    reviewedById: string | null
+    reviewedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ListingConnectionRequestMaxAggregateOutputType = {
+    id: string | null
+    listingId: string | null
+    userId: string | null
+    status: string | null
+    proofDocument: string | null
+    proofNotes: string | null
+    rejectionReason: string | null
+    reviewedById: string | null
+    reviewedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ListingConnectionRequestCountAggregateOutputType = {
+    id: number
+    listingId: number
+    userId: number
+    status: number
+    proofDocument: number
+    proofNotes: number
+    rejectionReason: number
+    reviewedById: number
+    reviewedAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ListingConnectionRequestMinAggregateInputType = {
+    id?: true
+    listingId?: true
+    userId?: true
+    status?: true
+    proofDocument?: true
+    proofNotes?: true
+    rejectionReason?: true
+    reviewedById?: true
+    reviewedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ListingConnectionRequestMaxAggregateInputType = {
+    id?: true
+    listingId?: true
+    userId?: true
+    status?: true
+    proofDocument?: true
+    proofNotes?: true
+    rejectionReason?: true
+    reviewedById?: true
+    reviewedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ListingConnectionRequestCountAggregateInputType = {
+    id?: true
+    listingId?: true
+    userId?: true
+    status?: true
+    proofDocument?: true
+    proofNotes?: true
+    rejectionReason?: true
+    reviewedById?: true
+    reviewedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ListingConnectionRequestAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ListingConnectionRequest to aggregate.
+     */
+    where?: ListingConnectionRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ListingConnectionRequests to fetch.
+     */
+    orderBy?: ListingConnectionRequestOrderByWithRelationInput | ListingConnectionRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ListingConnectionRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ListingConnectionRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ListingConnectionRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ListingConnectionRequests
+    **/
+    _count?: true | ListingConnectionRequestCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ListingConnectionRequestMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ListingConnectionRequestMaxAggregateInputType
+  }
+
+  export type GetListingConnectionRequestAggregateType<T extends ListingConnectionRequestAggregateArgs> = {
+        [P in keyof T & keyof AggregateListingConnectionRequest]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateListingConnectionRequest[P]>
+      : GetScalarType<T[P], AggregateListingConnectionRequest[P]>
+  }
+
+
+
+
+  export type ListingConnectionRequestGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ListingConnectionRequestWhereInput
+    orderBy?: ListingConnectionRequestOrderByWithAggregationInput | ListingConnectionRequestOrderByWithAggregationInput[]
+    by: ListingConnectionRequestScalarFieldEnum[] | ListingConnectionRequestScalarFieldEnum
+    having?: ListingConnectionRequestScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ListingConnectionRequestCountAggregateInputType | true
+    _min?: ListingConnectionRequestMinAggregateInputType
+    _max?: ListingConnectionRequestMaxAggregateInputType
+  }
+
+  export type ListingConnectionRequestGroupByOutputType = {
+    id: string
+    listingId: string
+    userId: string
+    status: string
+    proofDocument: string | null
+    proofNotes: string | null
+    rejectionReason: string | null
+    reviewedById: string | null
+    reviewedAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    _count: ListingConnectionRequestCountAggregateOutputType | null
+    _min: ListingConnectionRequestMinAggregateOutputType | null
+    _max: ListingConnectionRequestMaxAggregateOutputType | null
+  }
+
+  type GetListingConnectionRequestGroupByPayload<T extends ListingConnectionRequestGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ListingConnectionRequestGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ListingConnectionRequestGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ListingConnectionRequestGroupByOutputType[P]>
+            : GetScalarType<T[P], ListingConnectionRequestGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ListingConnectionRequestSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    listingId?: boolean
+    userId?: boolean
+    status?: boolean
+    proofDocument?: boolean
+    proofNotes?: boolean
+    rejectionReason?: boolean
+    reviewedById?: boolean
+    reviewedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    listing?: boolean | ListingDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    reviewedBy?: boolean | ListingConnectionRequest$reviewedByArgs<ExtArgs>
+  }, ExtArgs["result"]["listingConnectionRequest"]>
+
+  export type ListingConnectionRequestSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    listingId?: boolean
+    userId?: boolean
+    status?: boolean
+    proofDocument?: boolean
+    proofNotes?: boolean
+    rejectionReason?: boolean
+    reviewedById?: boolean
+    reviewedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    listing?: boolean | ListingDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    reviewedBy?: boolean | ListingConnectionRequest$reviewedByArgs<ExtArgs>
+  }, ExtArgs["result"]["listingConnectionRequest"]>
+
+  export type ListingConnectionRequestSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    listingId?: boolean
+    userId?: boolean
+    status?: boolean
+    proofDocument?: boolean
+    proofNotes?: boolean
+    rejectionReason?: boolean
+    reviewedById?: boolean
+    reviewedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    listing?: boolean | ListingDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    reviewedBy?: boolean | ListingConnectionRequest$reviewedByArgs<ExtArgs>
+  }, ExtArgs["result"]["listingConnectionRequest"]>
+
+  export type ListingConnectionRequestSelectScalar = {
+    id?: boolean
+    listingId?: boolean
+    userId?: boolean
+    status?: boolean
+    proofDocument?: boolean
+    proofNotes?: boolean
+    rejectionReason?: boolean
+    reviewedById?: boolean
+    reviewedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ListingConnectionRequestOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "listingId" | "userId" | "status" | "proofDocument" | "proofNotes" | "rejectionReason" | "reviewedById" | "reviewedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["listingConnectionRequest"]>
+  export type ListingConnectionRequestInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    listing?: boolean | ListingDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    reviewedBy?: boolean | ListingConnectionRequest$reviewedByArgs<ExtArgs>
+  }
+  export type ListingConnectionRequestIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    listing?: boolean | ListingDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    reviewedBy?: boolean | ListingConnectionRequest$reviewedByArgs<ExtArgs>
+  }
+  export type ListingConnectionRequestIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    listing?: boolean | ListingDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    reviewedBy?: boolean | ListingConnectionRequest$reviewedByArgs<ExtArgs>
+  }
+
+  export type $ListingConnectionRequestPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ListingConnectionRequest"
+    objects: {
+      listing: Prisma.$ListingPayload<ExtArgs>
+      user: Prisma.$UserPayload<ExtArgs>
+      reviewedBy: Prisma.$UserPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      listingId: string
+      userId: string
+      status: string
+      proofDocument: string | null
+      proofNotes: string | null
+      rejectionReason: string | null
+      reviewedById: string | null
+      reviewedAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["listingConnectionRequest"]>
+    composites: {}
+  }
+
+  type ListingConnectionRequestGetPayload<S extends boolean | null | undefined | ListingConnectionRequestDefaultArgs> = $Result.GetResult<Prisma.$ListingConnectionRequestPayload, S>
+
+  type ListingConnectionRequestCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ListingConnectionRequestFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ListingConnectionRequestCountAggregateInputType | true
+    }
+
+  export interface ListingConnectionRequestDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ListingConnectionRequest'], meta: { name: 'ListingConnectionRequest' } }
+    /**
+     * Find zero or one ListingConnectionRequest that matches the filter.
+     * @param {ListingConnectionRequestFindUniqueArgs} args - Arguments to find a ListingConnectionRequest
+     * @example
+     * // Get one ListingConnectionRequest
+     * const listingConnectionRequest = await prisma.listingConnectionRequest.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ListingConnectionRequestFindUniqueArgs>(args: SelectSubset<T, ListingConnectionRequestFindUniqueArgs<ExtArgs>>): Prisma__ListingConnectionRequestClient<$Result.GetResult<Prisma.$ListingConnectionRequestPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ListingConnectionRequest that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ListingConnectionRequestFindUniqueOrThrowArgs} args - Arguments to find a ListingConnectionRequest
+     * @example
+     * // Get one ListingConnectionRequest
+     * const listingConnectionRequest = await prisma.listingConnectionRequest.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ListingConnectionRequestFindUniqueOrThrowArgs>(args: SelectSubset<T, ListingConnectionRequestFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ListingConnectionRequestClient<$Result.GetResult<Prisma.$ListingConnectionRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ListingConnectionRequest that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ListingConnectionRequestFindFirstArgs} args - Arguments to find a ListingConnectionRequest
+     * @example
+     * // Get one ListingConnectionRequest
+     * const listingConnectionRequest = await prisma.listingConnectionRequest.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ListingConnectionRequestFindFirstArgs>(args?: SelectSubset<T, ListingConnectionRequestFindFirstArgs<ExtArgs>>): Prisma__ListingConnectionRequestClient<$Result.GetResult<Prisma.$ListingConnectionRequestPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ListingConnectionRequest that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ListingConnectionRequestFindFirstOrThrowArgs} args - Arguments to find a ListingConnectionRequest
+     * @example
+     * // Get one ListingConnectionRequest
+     * const listingConnectionRequest = await prisma.listingConnectionRequest.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ListingConnectionRequestFindFirstOrThrowArgs>(args?: SelectSubset<T, ListingConnectionRequestFindFirstOrThrowArgs<ExtArgs>>): Prisma__ListingConnectionRequestClient<$Result.GetResult<Prisma.$ListingConnectionRequestPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ListingConnectionRequests that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ListingConnectionRequestFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ListingConnectionRequests
+     * const listingConnectionRequests = await prisma.listingConnectionRequest.findMany()
+     * 
+     * // Get first 10 ListingConnectionRequests
+     * const listingConnectionRequests = await prisma.listingConnectionRequest.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const listingConnectionRequestWithIdOnly = await prisma.listingConnectionRequest.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ListingConnectionRequestFindManyArgs>(args?: SelectSubset<T, ListingConnectionRequestFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ListingConnectionRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ListingConnectionRequest.
+     * @param {ListingConnectionRequestCreateArgs} args - Arguments to create a ListingConnectionRequest.
+     * @example
+     * // Create one ListingConnectionRequest
+     * const ListingConnectionRequest = await prisma.listingConnectionRequest.create({
+     *   data: {
+     *     // ... data to create a ListingConnectionRequest
+     *   }
+     * })
+     * 
+     */
+    create<T extends ListingConnectionRequestCreateArgs>(args: SelectSubset<T, ListingConnectionRequestCreateArgs<ExtArgs>>): Prisma__ListingConnectionRequestClient<$Result.GetResult<Prisma.$ListingConnectionRequestPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ListingConnectionRequests.
+     * @param {ListingConnectionRequestCreateManyArgs} args - Arguments to create many ListingConnectionRequests.
+     * @example
+     * // Create many ListingConnectionRequests
+     * const listingConnectionRequest = await prisma.listingConnectionRequest.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ListingConnectionRequestCreateManyArgs>(args?: SelectSubset<T, ListingConnectionRequestCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ListingConnectionRequests and returns the data saved in the database.
+     * @param {ListingConnectionRequestCreateManyAndReturnArgs} args - Arguments to create many ListingConnectionRequests.
+     * @example
+     * // Create many ListingConnectionRequests
+     * const listingConnectionRequest = await prisma.listingConnectionRequest.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ListingConnectionRequests and only return the `id`
+     * const listingConnectionRequestWithIdOnly = await prisma.listingConnectionRequest.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ListingConnectionRequestCreateManyAndReturnArgs>(args?: SelectSubset<T, ListingConnectionRequestCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ListingConnectionRequestPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ListingConnectionRequest.
+     * @param {ListingConnectionRequestDeleteArgs} args - Arguments to delete one ListingConnectionRequest.
+     * @example
+     * // Delete one ListingConnectionRequest
+     * const ListingConnectionRequest = await prisma.listingConnectionRequest.delete({
+     *   where: {
+     *     // ... filter to delete one ListingConnectionRequest
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ListingConnectionRequestDeleteArgs>(args: SelectSubset<T, ListingConnectionRequestDeleteArgs<ExtArgs>>): Prisma__ListingConnectionRequestClient<$Result.GetResult<Prisma.$ListingConnectionRequestPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ListingConnectionRequest.
+     * @param {ListingConnectionRequestUpdateArgs} args - Arguments to update one ListingConnectionRequest.
+     * @example
+     * // Update one ListingConnectionRequest
+     * const listingConnectionRequest = await prisma.listingConnectionRequest.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ListingConnectionRequestUpdateArgs>(args: SelectSubset<T, ListingConnectionRequestUpdateArgs<ExtArgs>>): Prisma__ListingConnectionRequestClient<$Result.GetResult<Prisma.$ListingConnectionRequestPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ListingConnectionRequests.
+     * @param {ListingConnectionRequestDeleteManyArgs} args - Arguments to filter ListingConnectionRequests to delete.
+     * @example
+     * // Delete a few ListingConnectionRequests
+     * const { count } = await prisma.listingConnectionRequest.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ListingConnectionRequestDeleteManyArgs>(args?: SelectSubset<T, ListingConnectionRequestDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ListingConnectionRequests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ListingConnectionRequestUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ListingConnectionRequests
+     * const listingConnectionRequest = await prisma.listingConnectionRequest.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ListingConnectionRequestUpdateManyArgs>(args: SelectSubset<T, ListingConnectionRequestUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ListingConnectionRequests and returns the data updated in the database.
+     * @param {ListingConnectionRequestUpdateManyAndReturnArgs} args - Arguments to update many ListingConnectionRequests.
+     * @example
+     * // Update many ListingConnectionRequests
+     * const listingConnectionRequest = await prisma.listingConnectionRequest.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ListingConnectionRequests and only return the `id`
+     * const listingConnectionRequestWithIdOnly = await prisma.listingConnectionRequest.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ListingConnectionRequestUpdateManyAndReturnArgs>(args: SelectSubset<T, ListingConnectionRequestUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ListingConnectionRequestPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ListingConnectionRequest.
+     * @param {ListingConnectionRequestUpsertArgs} args - Arguments to update or create a ListingConnectionRequest.
+     * @example
+     * // Update or create a ListingConnectionRequest
+     * const listingConnectionRequest = await prisma.listingConnectionRequest.upsert({
+     *   create: {
+     *     // ... data to create a ListingConnectionRequest
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ListingConnectionRequest we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ListingConnectionRequestUpsertArgs>(args: SelectSubset<T, ListingConnectionRequestUpsertArgs<ExtArgs>>): Prisma__ListingConnectionRequestClient<$Result.GetResult<Prisma.$ListingConnectionRequestPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ListingConnectionRequests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ListingConnectionRequestCountArgs} args - Arguments to filter ListingConnectionRequests to count.
+     * @example
+     * // Count the number of ListingConnectionRequests
+     * const count = await prisma.listingConnectionRequest.count({
+     *   where: {
+     *     // ... the filter for the ListingConnectionRequests we want to count
+     *   }
+     * })
+    **/
+    count<T extends ListingConnectionRequestCountArgs>(
+      args?: Subset<T, ListingConnectionRequestCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ListingConnectionRequestCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ListingConnectionRequest.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ListingConnectionRequestAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ListingConnectionRequestAggregateArgs>(args: Subset<T, ListingConnectionRequestAggregateArgs>): Prisma.PrismaPromise<GetListingConnectionRequestAggregateType<T>>
+
+    /**
+     * Group by ListingConnectionRequest.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ListingConnectionRequestGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ListingConnectionRequestGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ListingConnectionRequestGroupByArgs['orderBy'] }
+        : { orderBy?: ListingConnectionRequestGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ListingConnectionRequestGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetListingConnectionRequestGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ListingConnectionRequest model
+   */
+  readonly fields: ListingConnectionRequestFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ListingConnectionRequest.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ListingConnectionRequestClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    listing<T extends ListingDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ListingDefaultArgs<ExtArgs>>): Prisma__ListingClient<$Result.GetResult<Prisma.$ListingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    reviewedBy<T extends ListingConnectionRequest$reviewedByArgs<ExtArgs> = {}>(args?: Subset<T, ListingConnectionRequest$reviewedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ListingConnectionRequest model
+   */
+  interface ListingConnectionRequestFieldRefs {
+    readonly id: FieldRef<"ListingConnectionRequest", 'String'>
+    readonly listingId: FieldRef<"ListingConnectionRequest", 'String'>
+    readonly userId: FieldRef<"ListingConnectionRequest", 'String'>
+    readonly status: FieldRef<"ListingConnectionRequest", 'String'>
+    readonly proofDocument: FieldRef<"ListingConnectionRequest", 'String'>
+    readonly proofNotes: FieldRef<"ListingConnectionRequest", 'String'>
+    readonly rejectionReason: FieldRef<"ListingConnectionRequest", 'String'>
+    readonly reviewedById: FieldRef<"ListingConnectionRequest", 'String'>
+    readonly reviewedAt: FieldRef<"ListingConnectionRequest", 'DateTime'>
+    readonly createdAt: FieldRef<"ListingConnectionRequest", 'DateTime'>
+    readonly updatedAt: FieldRef<"ListingConnectionRequest", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ListingConnectionRequest findUnique
+   */
+  export type ListingConnectionRequestFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListingConnectionRequest
+     */
+    select?: ListingConnectionRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ListingConnectionRequest
+     */
+    omit?: ListingConnectionRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListingConnectionRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which ListingConnectionRequest to fetch.
+     */
+    where: ListingConnectionRequestWhereUniqueInput
+  }
+
+  /**
+   * ListingConnectionRequest findUniqueOrThrow
+   */
+  export type ListingConnectionRequestFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListingConnectionRequest
+     */
+    select?: ListingConnectionRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ListingConnectionRequest
+     */
+    omit?: ListingConnectionRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListingConnectionRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which ListingConnectionRequest to fetch.
+     */
+    where: ListingConnectionRequestWhereUniqueInput
+  }
+
+  /**
+   * ListingConnectionRequest findFirst
+   */
+  export type ListingConnectionRequestFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListingConnectionRequest
+     */
+    select?: ListingConnectionRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ListingConnectionRequest
+     */
+    omit?: ListingConnectionRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListingConnectionRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which ListingConnectionRequest to fetch.
+     */
+    where?: ListingConnectionRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ListingConnectionRequests to fetch.
+     */
+    orderBy?: ListingConnectionRequestOrderByWithRelationInput | ListingConnectionRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ListingConnectionRequests.
+     */
+    cursor?: ListingConnectionRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ListingConnectionRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ListingConnectionRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ListingConnectionRequests.
+     */
+    distinct?: ListingConnectionRequestScalarFieldEnum | ListingConnectionRequestScalarFieldEnum[]
+  }
+
+  /**
+   * ListingConnectionRequest findFirstOrThrow
+   */
+  export type ListingConnectionRequestFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListingConnectionRequest
+     */
+    select?: ListingConnectionRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ListingConnectionRequest
+     */
+    omit?: ListingConnectionRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListingConnectionRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which ListingConnectionRequest to fetch.
+     */
+    where?: ListingConnectionRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ListingConnectionRequests to fetch.
+     */
+    orderBy?: ListingConnectionRequestOrderByWithRelationInput | ListingConnectionRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ListingConnectionRequests.
+     */
+    cursor?: ListingConnectionRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ListingConnectionRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ListingConnectionRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ListingConnectionRequests.
+     */
+    distinct?: ListingConnectionRequestScalarFieldEnum | ListingConnectionRequestScalarFieldEnum[]
+  }
+
+  /**
+   * ListingConnectionRequest findMany
+   */
+  export type ListingConnectionRequestFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListingConnectionRequest
+     */
+    select?: ListingConnectionRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ListingConnectionRequest
+     */
+    omit?: ListingConnectionRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListingConnectionRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which ListingConnectionRequests to fetch.
+     */
+    where?: ListingConnectionRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ListingConnectionRequests to fetch.
+     */
+    orderBy?: ListingConnectionRequestOrderByWithRelationInput | ListingConnectionRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ListingConnectionRequests.
+     */
+    cursor?: ListingConnectionRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ListingConnectionRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ListingConnectionRequests.
+     */
+    skip?: number
+    distinct?: ListingConnectionRequestScalarFieldEnum | ListingConnectionRequestScalarFieldEnum[]
+  }
+
+  /**
+   * ListingConnectionRequest create
+   */
+  export type ListingConnectionRequestCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListingConnectionRequest
+     */
+    select?: ListingConnectionRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ListingConnectionRequest
+     */
+    omit?: ListingConnectionRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListingConnectionRequestInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ListingConnectionRequest.
+     */
+    data: XOR<ListingConnectionRequestCreateInput, ListingConnectionRequestUncheckedCreateInput>
+  }
+
+  /**
+   * ListingConnectionRequest createMany
+   */
+  export type ListingConnectionRequestCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ListingConnectionRequests.
+     */
+    data: ListingConnectionRequestCreateManyInput | ListingConnectionRequestCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ListingConnectionRequest createManyAndReturn
+   */
+  export type ListingConnectionRequestCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListingConnectionRequest
+     */
+    select?: ListingConnectionRequestSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ListingConnectionRequest
+     */
+    omit?: ListingConnectionRequestOmit<ExtArgs> | null
+    /**
+     * The data used to create many ListingConnectionRequests.
+     */
+    data: ListingConnectionRequestCreateManyInput | ListingConnectionRequestCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListingConnectionRequestIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ListingConnectionRequest update
+   */
+  export type ListingConnectionRequestUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListingConnectionRequest
+     */
+    select?: ListingConnectionRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ListingConnectionRequest
+     */
+    omit?: ListingConnectionRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListingConnectionRequestInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ListingConnectionRequest.
+     */
+    data: XOR<ListingConnectionRequestUpdateInput, ListingConnectionRequestUncheckedUpdateInput>
+    /**
+     * Choose, which ListingConnectionRequest to update.
+     */
+    where: ListingConnectionRequestWhereUniqueInput
+  }
+
+  /**
+   * ListingConnectionRequest updateMany
+   */
+  export type ListingConnectionRequestUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ListingConnectionRequests.
+     */
+    data: XOR<ListingConnectionRequestUpdateManyMutationInput, ListingConnectionRequestUncheckedUpdateManyInput>
+    /**
+     * Filter which ListingConnectionRequests to update
+     */
+    where?: ListingConnectionRequestWhereInput
+    /**
+     * Limit how many ListingConnectionRequests to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ListingConnectionRequest updateManyAndReturn
+   */
+  export type ListingConnectionRequestUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListingConnectionRequest
+     */
+    select?: ListingConnectionRequestSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ListingConnectionRequest
+     */
+    omit?: ListingConnectionRequestOmit<ExtArgs> | null
+    /**
+     * The data used to update ListingConnectionRequests.
+     */
+    data: XOR<ListingConnectionRequestUpdateManyMutationInput, ListingConnectionRequestUncheckedUpdateManyInput>
+    /**
+     * Filter which ListingConnectionRequests to update
+     */
+    where?: ListingConnectionRequestWhereInput
+    /**
+     * Limit how many ListingConnectionRequests to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListingConnectionRequestIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ListingConnectionRequest upsert
+   */
+  export type ListingConnectionRequestUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListingConnectionRequest
+     */
+    select?: ListingConnectionRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ListingConnectionRequest
+     */
+    omit?: ListingConnectionRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListingConnectionRequestInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ListingConnectionRequest to update in case it exists.
+     */
+    where: ListingConnectionRequestWhereUniqueInput
+    /**
+     * In case the ListingConnectionRequest found by the `where` argument doesn't exist, create a new ListingConnectionRequest with this data.
+     */
+    create: XOR<ListingConnectionRequestCreateInput, ListingConnectionRequestUncheckedCreateInput>
+    /**
+     * In case the ListingConnectionRequest was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ListingConnectionRequestUpdateInput, ListingConnectionRequestUncheckedUpdateInput>
+  }
+
+  /**
+   * ListingConnectionRequest delete
+   */
+  export type ListingConnectionRequestDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListingConnectionRequest
+     */
+    select?: ListingConnectionRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ListingConnectionRequest
+     */
+    omit?: ListingConnectionRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListingConnectionRequestInclude<ExtArgs> | null
+    /**
+     * Filter which ListingConnectionRequest to delete.
+     */
+    where: ListingConnectionRequestWhereUniqueInput
+  }
+
+  /**
+   * ListingConnectionRequest deleteMany
+   */
+  export type ListingConnectionRequestDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ListingConnectionRequests to delete
+     */
+    where?: ListingConnectionRequestWhereInput
+    /**
+     * Limit how many ListingConnectionRequests to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ListingConnectionRequest.reviewedBy
+   */
+  export type ListingConnectionRequest$reviewedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * ListingConnectionRequest without action
+   */
+  export type ListingConnectionRequestDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListingConnectionRequest
+     */
+    select?: ListingConnectionRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ListingConnectionRequest
+     */
+    omit?: ListingConnectionRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListingConnectionRequestInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -12327,6 +13848,7 @@ export namespace Prisma {
     email: 'email',
     emailVerified: 'emailVerified',
     image: 'image',
+    role: 'role',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -12445,6 +13967,10 @@ export namespace Prisma {
     soldNotes: 'soldNotes',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
+    referenceNumber: 'referenceNumber',
+    assured: 'assured',
+    assuredAt: 'assuredAt',
+    assuredById: 'assuredById',
     userId: 'userId',
     contactInfoId: 'contactInfoId',
     listingDetailsId: 'listingDetailsId'
@@ -12470,6 +13996,23 @@ export namespace Prisma {
   };
 
   export type MediaAttachmentScalarFieldEnum = (typeof MediaAttachmentScalarFieldEnum)[keyof typeof MediaAttachmentScalarFieldEnum]
+
+
+  export const ListingConnectionRequestScalarFieldEnum: {
+    id: 'id',
+    listingId: 'listingId',
+    userId: 'userId',
+    status: 'status',
+    proofDocument: 'proofDocument',
+    proofNotes: 'proofNotes',
+    rejectionReason: 'rejectionReason',
+    reviewedById: 'reviewedById',
+    reviewedAt: 'reviewedAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ListingConnectionRequestScalarFieldEnum = (typeof ListingConnectionRequestScalarFieldEnum)[keyof typeof ListingConnectionRequestScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -12701,12 +14244,16 @@ export namespace Prisma {
     email?: StringFilter<"User"> | string
     emailVerified?: BoolFilter<"User"> | boolean
     image?: StringNullableFilter<"User"> | string | null
+    role?: StringFilter<"User"> | string
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     sessions?: SessionListRelationFilter
     accounts?: AccountListRelationFilter
     posts?: PostListRelationFilter
     listings?: ListingListRelationFilter
+    assuredListings?: ListingListRelationFilter
+    listingConnectionRequests?: ListingConnectionRequestListRelationFilter
+    reviewedConnectionRequests?: ListingConnectionRequestListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -12715,12 +14262,16 @@ export namespace Prisma {
     email?: SortOrder
     emailVerified?: SortOrder
     image?: SortOrderInput | SortOrder
+    role?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     sessions?: SessionOrderByRelationAggregateInput
     accounts?: AccountOrderByRelationAggregateInput
     posts?: PostOrderByRelationAggregateInput
     listings?: ListingOrderByRelationAggregateInput
+    assuredListings?: ListingOrderByRelationAggregateInput
+    listingConnectionRequests?: ListingConnectionRequestOrderByRelationAggregateInput
+    reviewedConnectionRequests?: ListingConnectionRequestOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -12732,12 +14283,16 @@ export namespace Prisma {
     name?: StringFilter<"User"> | string
     emailVerified?: BoolFilter<"User"> | boolean
     image?: StringNullableFilter<"User"> | string | null
+    role?: StringFilter<"User"> | string
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     sessions?: SessionListRelationFilter
     accounts?: AccountListRelationFilter
     posts?: PostListRelationFilter
     listings?: ListingListRelationFilter
+    assuredListings?: ListingListRelationFilter
+    listingConnectionRequests?: ListingConnectionRequestListRelationFilter
+    reviewedConnectionRequests?: ListingConnectionRequestListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -12746,6 +14301,7 @@ export namespace Prisma {
     email?: SortOrder
     emailVerified?: SortOrder
     image?: SortOrderInput | SortOrder
+    role?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: UserCountOrderByAggregateInput
@@ -12762,6 +14318,7 @@ export namespace Prisma {
     email?: StringWithAggregatesFilter<"User"> | string
     emailVerified?: BoolWithAggregatesFilter<"User"> | boolean
     image?: StringNullableWithAggregatesFilter<"User"> | string | null
+    role?: StringWithAggregatesFilter<"User"> | string
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
@@ -13217,13 +14774,19 @@ export namespace Prisma {
     soldNotes?: StringNullableFilter<"Listing"> | string | null
     createdAt?: DateTimeFilter<"Listing"> | Date | string
     updatedAt?: DateTimeFilter<"Listing"> | Date | string
-    userId?: StringFilter<"Listing"> | string
+    referenceNumber?: StringNullableFilter<"Listing"> | string | null
+    assured?: BoolFilter<"Listing"> | boolean
+    assuredAt?: DateTimeNullableFilter<"Listing"> | Date | string | null
+    assuredById?: StringNullableFilter<"Listing"> | string | null
+    userId?: StringNullableFilter<"Listing"> | string | null
     contactInfoId?: StringFilter<"Listing"> | string
     listingDetailsId?: StringNullableFilter<"Listing"> | string | null
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    assuredBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     contactInfo?: XOR<ContactInfoScalarRelationFilter, ContactInfoWhereInput>
     listingDetails?: XOR<ListingDetailsNullableScalarRelationFilter, ListingDetailsWhereInput> | null
     mediaAttachments?: MediaAttachmentListRelationFilter
+    connectionRequests?: ListingConnectionRequestListRelationFilter
   }
 
   export type ListingOrderByWithRelationInput = {
@@ -13252,17 +14815,24 @@ export namespace Prisma {
     soldNotes?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    userId?: SortOrder
+    referenceNumber?: SortOrderInput | SortOrder
+    assured?: SortOrder
+    assuredAt?: SortOrderInput | SortOrder
+    assuredById?: SortOrderInput | SortOrder
+    userId?: SortOrderInput | SortOrder
     contactInfoId?: SortOrder
     listingDetailsId?: SortOrderInput | SortOrder
+    assuredBy?: UserOrderByWithRelationInput
     user?: UserOrderByWithRelationInput
     contactInfo?: ContactInfoOrderByWithRelationInput
     listingDetails?: ListingDetailsOrderByWithRelationInput
     mediaAttachments?: MediaAttachmentOrderByRelationAggregateInput
+    connectionRequests?: ListingConnectionRequestOrderByRelationAggregateInput
   }
 
   export type ListingWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    referenceNumber?: string
     listingDetailsId?: string
     AND?: ListingWhereInput | ListingWhereInput[]
     OR?: ListingWhereInput[]
@@ -13291,13 +14861,18 @@ export namespace Prisma {
     soldNotes?: StringNullableFilter<"Listing"> | string | null
     createdAt?: DateTimeFilter<"Listing"> | Date | string
     updatedAt?: DateTimeFilter<"Listing"> | Date | string
-    userId?: StringFilter<"Listing"> | string
+    assured?: BoolFilter<"Listing"> | boolean
+    assuredAt?: DateTimeNullableFilter<"Listing"> | Date | string | null
+    assuredById?: StringNullableFilter<"Listing"> | string | null
+    userId?: StringNullableFilter<"Listing"> | string | null
     contactInfoId?: StringFilter<"Listing"> | string
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    assuredBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     contactInfo?: XOR<ContactInfoScalarRelationFilter, ContactInfoWhereInput>
     listingDetails?: XOR<ListingDetailsNullableScalarRelationFilter, ListingDetailsWhereInput> | null
     mediaAttachments?: MediaAttachmentListRelationFilter
-  }, "id" | "listingDetailsId">
+    connectionRequests?: ListingConnectionRequestListRelationFilter
+  }, "id" | "referenceNumber" | "listingDetailsId">
 
   export type ListingOrderByWithAggregationInput = {
     id?: SortOrder
@@ -13325,7 +14900,11 @@ export namespace Prisma {
     soldNotes?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    userId?: SortOrder
+    referenceNumber?: SortOrderInput | SortOrder
+    assured?: SortOrder
+    assuredAt?: SortOrderInput | SortOrder
+    assuredById?: SortOrderInput | SortOrder
+    userId?: SortOrderInput | SortOrder
     contactInfoId?: SortOrder
     listingDetailsId?: SortOrderInput | SortOrder
     _count?: ListingCountOrderByAggregateInput
@@ -13364,7 +14943,11 @@ export namespace Prisma {
     soldNotes?: StringNullableWithAggregatesFilter<"Listing"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Listing"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Listing"> | Date | string
-    userId?: StringWithAggregatesFilter<"Listing"> | string
+    referenceNumber?: StringNullableWithAggregatesFilter<"Listing"> | string | null
+    assured?: BoolWithAggregatesFilter<"Listing"> | boolean
+    assuredAt?: DateTimeNullableWithAggregatesFilter<"Listing"> | Date | string | null
+    assuredById?: StringNullableWithAggregatesFilter<"Listing"> | string | null
+    userId?: StringNullableWithAggregatesFilter<"Listing"> | string | null
     contactInfoId?: StringWithAggregatesFilter<"Listing"> | string
     listingDetailsId?: StringNullableWithAggregatesFilter<"Listing"> | string | null
   }
@@ -13466,6 +15049,98 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"MediaAttachment"> | Date | string
   }
 
+  export type ListingConnectionRequestWhereInput = {
+    AND?: ListingConnectionRequestWhereInput | ListingConnectionRequestWhereInput[]
+    OR?: ListingConnectionRequestWhereInput[]
+    NOT?: ListingConnectionRequestWhereInput | ListingConnectionRequestWhereInput[]
+    id?: StringFilter<"ListingConnectionRequest"> | string
+    listingId?: StringFilter<"ListingConnectionRequest"> | string
+    userId?: StringFilter<"ListingConnectionRequest"> | string
+    status?: StringFilter<"ListingConnectionRequest"> | string
+    proofDocument?: StringNullableFilter<"ListingConnectionRequest"> | string | null
+    proofNotes?: StringNullableFilter<"ListingConnectionRequest"> | string | null
+    rejectionReason?: StringNullableFilter<"ListingConnectionRequest"> | string | null
+    reviewedById?: StringNullableFilter<"ListingConnectionRequest"> | string | null
+    reviewedAt?: DateTimeNullableFilter<"ListingConnectionRequest"> | Date | string | null
+    createdAt?: DateTimeFilter<"ListingConnectionRequest"> | Date | string
+    updatedAt?: DateTimeFilter<"ListingConnectionRequest"> | Date | string
+    listing?: XOR<ListingScalarRelationFilter, ListingWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    reviewedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }
+
+  export type ListingConnectionRequestOrderByWithRelationInput = {
+    id?: SortOrder
+    listingId?: SortOrder
+    userId?: SortOrder
+    status?: SortOrder
+    proofDocument?: SortOrderInput | SortOrder
+    proofNotes?: SortOrderInput | SortOrder
+    rejectionReason?: SortOrderInput | SortOrder
+    reviewedById?: SortOrderInput | SortOrder
+    reviewedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    listing?: ListingOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
+    reviewedBy?: UserOrderByWithRelationInput
+  }
+
+  export type ListingConnectionRequestWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    listingId_userId?: ListingConnectionRequestListingIdUserIdCompoundUniqueInput
+    AND?: ListingConnectionRequestWhereInput | ListingConnectionRequestWhereInput[]
+    OR?: ListingConnectionRequestWhereInput[]
+    NOT?: ListingConnectionRequestWhereInput | ListingConnectionRequestWhereInput[]
+    listingId?: StringFilter<"ListingConnectionRequest"> | string
+    userId?: StringFilter<"ListingConnectionRequest"> | string
+    status?: StringFilter<"ListingConnectionRequest"> | string
+    proofDocument?: StringNullableFilter<"ListingConnectionRequest"> | string | null
+    proofNotes?: StringNullableFilter<"ListingConnectionRequest"> | string | null
+    rejectionReason?: StringNullableFilter<"ListingConnectionRequest"> | string | null
+    reviewedById?: StringNullableFilter<"ListingConnectionRequest"> | string | null
+    reviewedAt?: DateTimeNullableFilter<"ListingConnectionRequest"> | Date | string | null
+    createdAt?: DateTimeFilter<"ListingConnectionRequest"> | Date | string
+    updatedAt?: DateTimeFilter<"ListingConnectionRequest"> | Date | string
+    listing?: XOR<ListingScalarRelationFilter, ListingWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    reviewedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }, "id" | "listingId_userId">
+
+  export type ListingConnectionRequestOrderByWithAggregationInput = {
+    id?: SortOrder
+    listingId?: SortOrder
+    userId?: SortOrder
+    status?: SortOrder
+    proofDocument?: SortOrderInput | SortOrder
+    proofNotes?: SortOrderInput | SortOrder
+    rejectionReason?: SortOrderInput | SortOrder
+    reviewedById?: SortOrderInput | SortOrder
+    reviewedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ListingConnectionRequestCountOrderByAggregateInput
+    _max?: ListingConnectionRequestMaxOrderByAggregateInput
+    _min?: ListingConnectionRequestMinOrderByAggregateInput
+  }
+
+  export type ListingConnectionRequestScalarWhereWithAggregatesInput = {
+    AND?: ListingConnectionRequestScalarWhereWithAggregatesInput | ListingConnectionRequestScalarWhereWithAggregatesInput[]
+    OR?: ListingConnectionRequestScalarWhereWithAggregatesInput[]
+    NOT?: ListingConnectionRequestScalarWhereWithAggregatesInput | ListingConnectionRequestScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ListingConnectionRequest"> | string
+    listingId?: StringWithAggregatesFilter<"ListingConnectionRequest"> | string
+    userId?: StringWithAggregatesFilter<"ListingConnectionRequest"> | string
+    status?: StringWithAggregatesFilter<"ListingConnectionRequest"> | string
+    proofDocument?: StringNullableWithAggregatesFilter<"ListingConnectionRequest"> | string | null
+    proofNotes?: StringNullableWithAggregatesFilter<"ListingConnectionRequest"> | string | null
+    rejectionReason?: StringNullableWithAggregatesFilter<"ListingConnectionRequest"> | string | null
+    reviewedById?: StringNullableWithAggregatesFilter<"ListingConnectionRequest"> | string | null
+    reviewedAt?: DateTimeNullableWithAggregatesFilter<"ListingConnectionRequest"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"ListingConnectionRequest"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ListingConnectionRequest"> | Date | string
+  }
+
   export type PostCreateInput = {
     id?: string
     name: string
@@ -13527,12 +15202,16 @@ export namespace Prisma {
     email: string
     emailVerified?: boolean
     image?: string | null
+    role?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     sessions?: SessionCreateNestedManyWithoutUserInput
     accounts?: AccountCreateNestedManyWithoutUserInput
     posts?: PostCreateNestedManyWithoutCreatedByInput
     listings?: ListingCreateNestedManyWithoutUserInput
+    assuredListings?: ListingCreateNestedManyWithoutAssuredByInput
+    listingConnectionRequests?: ListingConnectionRequestCreateNestedManyWithoutUserInput
+    reviewedConnectionRequests?: ListingConnectionRequestCreateNestedManyWithoutReviewedByInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -13541,12 +15220,16 @@ export namespace Prisma {
     email: string
     emailVerified?: boolean
     image?: string | null
+    role?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     posts?: PostUncheckedCreateNestedManyWithoutCreatedByInput
     listings?: ListingUncheckedCreateNestedManyWithoutUserInput
+    assuredListings?: ListingUncheckedCreateNestedManyWithoutAssuredByInput
+    listingConnectionRequests?: ListingConnectionRequestUncheckedCreateNestedManyWithoutUserInput
+    reviewedConnectionRequests?: ListingConnectionRequestUncheckedCreateNestedManyWithoutReviewedByInput
   }
 
   export type UserUpdateInput = {
@@ -13555,12 +15238,16 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sessions?: SessionUpdateManyWithoutUserNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
     posts?: PostUpdateManyWithoutCreatedByNestedInput
     listings?: ListingUpdateManyWithoutUserNestedInput
+    assuredListings?: ListingUpdateManyWithoutAssuredByNestedInput
+    listingConnectionRequests?: ListingConnectionRequestUpdateManyWithoutUserNestedInput
+    reviewedConnectionRequests?: ListingConnectionRequestUpdateManyWithoutReviewedByNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -13569,12 +15256,16 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     posts?: PostUncheckedUpdateManyWithoutCreatedByNestedInput
     listings?: ListingUncheckedUpdateManyWithoutUserNestedInput
+    assuredListings?: ListingUncheckedUpdateManyWithoutAssuredByNestedInput
+    listingConnectionRequests?: ListingConnectionRequestUncheckedUpdateManyWithoutUserNestedInput
+    reviewedConnectionRequests?: ListingConnectionRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -13583,6 +15274,7 @@ export namespace Prisma {
     email: string
     emailVerified?: boolean
     image?: string | null
+    role?: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -13593,6 +15285,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -13603,6 +15296,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -14129,10 +15823,15 @@ export namespace Prisma {
     soldNotes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutListingsInput
+    referenceNumber?: string | null
+    assured?: boolean
+    assuredAt?: Date | string | null
+    assuredBy?: UserCreateNestedOneWithoutAssuredListingsInput
+    user?: UserCreateNestedOneWithoutListingsInput
     contactInfo: ContactInfoCreateNestedOneWithoutListingsInput
     listingDetails?: ListingDetailsCreateNestedOneWithoutListingInput
     mediaAttachments?: MediaAttachmentCreateNestedManyWithoutListingInput
+    connectionRequests?: ListingConnectionRequestCreateNestedManyWithoutListingInput
   }
 
   export type ListingUncheckedCreateInput = {
@@ -14161,10 +15860,15 @@ export namespace Prisma {
     soldNotes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    userId: string
+    referenceNumber?: string | null
+    assured?: boolean
+    assuredAt?: Date | string | null
+    assuredById?: string | null
+    userId?: string | null
     contactInfoId: string
     listingDetailsId?: string | null
     mediaAttachments?: MediaAttachmentUncheckedCreateNestedManyWithoutListingInput
+    connectionRequests?: ListingConnectionRequestUncheckedCreateNestedManyWithoutListingInput
   }
 
   export type ListingUpdateInput = {
@@ -14193,10 +15897,15 @@ export namespace Prisma {
     soldNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutListingsNestedInput
+    referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    assured?: BoolFieldUpdateOperationsInput | boolean
+    assuredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assuredBy?: UserUpdateOneWithoutAssuredListingsNestedInput
+    user?: UserUpdateOneWithoutListingsNestedInput
     contactInfo?: ContactInfoUpdateOneRequiredWithoutListingsNestedInput
     listingDetails?: ListingDetailsUpdateOneWithoutListingNestedInput
     mediaAttachments?: MediaAttachmentUpdateManyWithoutListingNestedInput
+    connectionRequests?: ListingConnectionRequestUpdateManyWithoutListingNestedInput
   }
 
   export type ListingUncheckedUpdateInput = {
@@ -14225,10 +15934,15 @@ export namespace Prisma {
     soldNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    userId?: StringFieldUpdateOperationsInput | string
+    referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    assured?: BoolFieldUpdateOperationsInput | boolean
+    assuredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assuredById?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
     contactInfoId?: StringFieldUpdateOperationsInput | string
     listingDetailsId?: NullableStringFieldUpdateOperationsInput | string | null
     mediaAttachments?: MediaAttachmentUncheckedUpdateManyWithoutListingNestedInput
+    connectionRequests?: ListingConnectionRequestUncheckedUpdateManyWithoutListingNestedInput
   }
 
   export type ListingCreateManyInput = {
@@ -14257,7 +15971,11 @@ export namespace Prisma {
     soldNotes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    userId: string
+    referenceNumber?: string | null
+    assured?: boolean
+    assuredAt?: Date | string | null
+    assuredById?: string | null
+    userId?: string | null
     contactInfoId: string
     listingDetailsId?: string | null
   }
@@ -14288,6 +16006,9 @@ export namespace Prisma {
     soldNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    assured?: BoolFieldUpdateOperationsInput | boolean
+    assuredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ListingUncheckedUpdateManyInput = {
@@ -14316,7 +16037,11 @@ export namespace Prisma {
     soldNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    userId?: StringFieldUpdateOperationsInput | string
+    referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    assured?: BoolFieldUpdateOperationsInput | boolean
+    assuredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assuredById?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
     contactInfoId?: StringFieldUpdateOperationsInput | string
     listingDetailsId?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -14428,6 +16153,101 @@ export namespace Prisma {
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
     displayOrder?: IntFieldUpdateOperationsInput | number
     uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ListingConnectionRequestCreateInput = {
+    id?: string
+    status?: string
+    proofDocument?: string | null
+    proofNotes?: string | null
+    rejectionReason?: string | null
+    reviewedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    listing: ListingCreateNestedOneWithoutConnectionRequestsInput
+    user: UserCreateNestedOneWithoutListingConnectionRequestsInput
+    reviewedBy?: UserCreateNestedOneWithoutReviewedConnectionRequestsInput
+  }
+
+  export type ListingConnectionRequestUncheckedCreateInput = {
+    id?: string
+    listingId: string
+    userId: string
+    status?: string
+    proofDocument?: string | null
+    proofNotes?: string | null
+    rejectionReason?: string | null
+    reviewedById?: string | null
+    reviewedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ListingConnectionRequestUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    proofDocument?: NullableStringFieldUpdateOperationsInput | string | null
+    proofNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    listing?: ListingUpdateOneRequiredWithoutConnectionRequestsNestedInput
+    user?: UserUpdateOneRequiredWithoutListingConnectionRequestsNestedInput
+    reviewedBy?: UserUpdateOneWithoutReviewedConnectionRequestsNestedInput
+  }
+
+  export type ListingConnectionRequestUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    listingId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    proofDocument?: NullableStringFieldUpdateOperationsInput | string | null
+    proofNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewedById?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ListingConnectionRequestCreateManyInput = {
+    id?: string
+    listingId: string
+    userId: string
+    status?: string
+    proofDocument?: string | null
+    proofNotes?: string | null
+    rejectionReason?: string | null
+    reviewedById?: string | null
+    reviewedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ListingConnectionRequestUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    proofDocument?: NullableStringFieldUpdateOperationsInput | string | null
+    proofNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ListingConnectionRequestUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    listingId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    proofDocument?: NullableStringFieldUpdateOperationsInput | string | null
+    proofNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewedById?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -14563,6 +16383,12 @@ export namespace Prisma {
     none?: ListingWhereInput
   }
 
+  export type ListingConnectionRequestListRelationFilter = {
+    every?: ListingConnectionRequestWhereInput
+    some?: ListingConnectionRequestWhereInput
+    none?: ListingConnectionRequestWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -14584,12 +16410,17 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type ListingConnectionRequestOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type UserCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
     email?: SortOrder
     emailVerified?: SortOrder
     image?: SortOrder
+    role?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -14600,6 +16431,7 @@ export namespace Prisma {
     email?: SortOrder
     emailVerified?: SortOrder
     image?: SortOrder
+    role?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -14610,6 +16442,7 @@ export namespace Prisma {
     email?: SortOrder
     emailVerified?: SortOrder
     image?: SortOrder
+    role?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -14922,6 +16755,11 @@ export namespace Prisma {
     not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
   }
 
+  export type UserNullableScalarRelationFilter = {
+    is?: UserWhereInput | null
+    isNot?: UserWhereInput | null
+  }
+
   export type ContactInfoScalarRelationFilter = {
     is?: ContactInfoWhereInput
     isNot?: ContactInfoWhereInput
@@ -14968,6 +16806,10 @@ export namespace Prisma {
     soldNotes?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    referenceNumber?: SortOrder
+    assured?: SortOrder
+    assuredAt?: SortOrder
+    assuredById?: SortOrder
     userId?: SortOrder
     contactInfoId?: SortOrder
     listingDetailsId?: SortOrder
@@ -15004,6 +16846,10 @@ export namespace Prisma {
     soldNotes?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    referenceNumber?: SortOrder
+    assured?: SortOrder
+    assuredAt?: SortOrder
+    assuredById?: SortOrder
     userId?: SortOrder
     contactInfoId?: SortOrder
     listingDetailsId?: SortOrder
@@ -15035,6 +16881,10 @@ export namespace Prisma {
     soldNotes?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    referenceNumber?: SortOrder
+    assured?: SortOrder
+    assuredAt?: SortOrder
+    assuredById?: SortOrder
     userId?: SortOrder
     contactInfoId?: SortOrder
     listingDetailsId?: SortOrder
@@ -15221,6 +17071,53 @@ export namespace Prisma {
     _max?: NestedEnumStorageProviderFilter<$PrismaModel>
   }
 
+  export type ListingConnectionRequestListingIdUserIdCompoundUniqueInput = {
+    listingId: string
+    userId: string
+  }
+
+  export type ListingConnectionRequestCountOrderByAggregateInput = {
+    id?: SortOrder
+    listingId?: SortOrder
+    userId?: SortOrder
+    status?: SortOrder
+    proofDocument?: SortOrder
+    proofNotes?: SortOrder
+    rejectionReason?: SortOrder
+    reviewedById?: SortOrder
+    reviewedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ListingConnectionRequestMaxOrderByAggregateInput = {
+    id?: SortOrder
+    listingId?: SortOrder
+    userId?: SortOrder
+    status?: SortOrder
+    proofDocument?: SortOrder
+    proofNotes?: SortOrder
+    rejectionReason?: SortOrder
+    reviewedById?: SortOrder
+    reviewedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ListingConnectionRequestMinOrderByAggregateInput = {
+    id?: SortOrder
+    listingId?: SortOrder
+    userId?: SortOrder
+    status?: SortOrder
+    proofDocument?: SortOrder
+    proofNotes?: SortOrder
+    rejectionReason?: SortOrder
+    reviewedById?: SortOrder
+    reviewedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
   export type UserCreateNestedOneWithoutPostsInput = {
     create?: XOR<UserCreateWithoutPostsInput, UserUncheckedCreateWithoutPostsInput>
     connectOrCreate?: UserCreateOrConnectWithoutPostsInput
@@ -15271,6 +17168,27 @@ export namespace Prisma {
     connect?: ListingWhereUniqueInput | ListingWhereUniqueInput[]
   }
 
+  export type ListingCreateNestedManyWithoutAssuredByInput = {
+    create?: XOR<ListingCreateWithoutAssuredByInput, ListingUncheckedCreateWithoutAssuredByInput> | ListingCreateWithoutAssuredByInput[] | ListingUncheckedCreateWithoutAssuredByInput[]
+    connectOrCreate?: ListingCreateOrConnectWithoutAssuredByInput | ListingCreateOrConnectWithoutAssuredByInput[]
+    createMany?: ListingCreateManyAssuredByInputEnvelope
+    connect?: ListingWhereUniqueInput | ListingWhereUniqueInput[]
+  }
+
+  export type ListingConnectionRequestCreateNestedManyWithoutUserInput = {
+    create?: XOR<ListingConnectionRequestCreateWithoutUserInput, ListingConnectionRequestUncheckedCreateWithoutUserInput> | ListingConnectionRequestCreateWithoutUserInput[] | ListingConnectionRequestUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ListingConnectionRequestCreateOrConnectWithoutUserInput | ListingConnectionRequestCreateOrConnectWithoutUserInput[]
+    createMany?: ListingConnectionRequestCreateManyUserInputEnvelope
+    connect?: ListingConnectionRequestWhereUniqueInput | ListingConnectionRequestWhereUniqueInput[]
+  }
+
+  export type ListingConnectionRequestCreateNestedManyWithoutReviewedByInput = {
+    create?: XOR<ListingConnectionRequestCreateWithoutReviewedByInput, ListingConnectionRequestUncheckedCreateWithoutReviewedByInput> | ListingConnectionRequestCreateWithoutReviewedByInput[] | ListingConnectionRequestUncheckedCreateWithoutReviewedByInput[]
+    connectOrCreate?: ListingConnectionRequestCreateOrConnectWithoutReviewedByInput | ListingConnectionRequestCreateOrConnectWithoutReviewedByInput[]
+    createMany?: ListingConnectionRequestCreateManyReviewedByInputEnvelope
+    connect?: ListingConnectionRequestWhereUniqueInput | ListingConnectionRequestWhereUniqueInput[]
+  }
+
   export type SessionUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -15297,6 +17215,27 @@ export namespace Prisma {
     connectOrCreate?: ListingCreateOrConnectWithoutUserInput | ListingCreateOrConnectWithoutUserInput[]
     createMany?: ListingCreateManyUserInputEnvelope
     connect?: ListingWhereUniqueInput | ListingWhereUniqueInput[]
+  }
+
+  export type ListingUncheckedCreateNestedManyWithoutAssuredByInput = {
+    create?: XOR<ListingCreateWithoutAssuredByInput, ListingUncheckedCreateWithoutAssuredByInput> | ListingCreateWithoutAssuredByInput[] | ListingUncheckedCreateWithoutAssuredByInput[]
+    connectOrCreate?: ListingCreateOrConnectWithoutAssuredByInput | ListingCreateOrConnectWithoutAssuredByInput[]
+    createMany?: ListingCreateManyAssuredByInputEnvelope
+    connect?: ListingWhereUniqueInput | ListingWhereUniqueInput[]
+  }
+
+  export type ListingConnectionRequestUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<ListingConnectionRequestCreateWithoutUserInput, ListingConnectionRequestUncheckedCreateWithoutUserInput> | ListingConnectionRequestCreateWithoutUserInput[] | ListingConnectionRequestUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ListingConnectionRequestCreateOrConnectWithoutUserInput | ListingConnectionRequestCreateOrConnectWithoutUserInput[]
+    createMany?: ListingConnectionRequestCreateManyUserInputEnvelope
+    connect?: ListingConnectionRequestWhereUniqueInput | ListingConnectionRequestWhereUniqueInput[]
+  }
+
+  export type ListingConnectionRequestUncheckedCreateNestedManyWithoutReviewedByInput = {
+    create?: XOR<ListingConnectionRequestCreateWithoutReviewedByInput, ListingConnectionRequestUncheckedCreateWithoutReviewedByInput> | ListingConnectionRequestCreateWithoutReviewedByInput[] | ListingConnectionRequestUncheckedCreateWithoutReviewedByInput[]
+    connectOrCreate?: ListingConnectionRequestCreateOrConnectWithoutReviewedByInput | ListingConnectionRequestCreateOrConnectWithoutReviewedByInput[]
+    createMany?: ListingConnectionRequestCreateManyReviewedByInputEnvelope
+    connect?: ListingConnectionRequestWhereUniqueInput | ListingConnectionRequestWhereUniqueInput[]
   }
 
   export type BoolFieldUpdateOperationsInput = {
@@ -15363,6 +17302,48 @@ export namespace Prisma {
     deleteMany?: ListingScalarWhereInput | ListingScalarWhereInput[]
   }
 
+  export type ListingUpdateManyWithoutAssuredByNestedInput = {
+    create?: XOR<ListingCreateWithoutAssuredByInput, ListingUncheckedCreateWithoutAssuredByInput> | ListingCreateWithoutAssuredByInput[] | ListingUncheckedCreateWithoutAssuredByInput[]
+    connectOrCreate?: ListingCreateOrConnectWithoutAssuredByInput | ListingCreateOrConnectWithoutAssuredByInput[]
+    upsert?: ListingUpsertWithWhereUniqueWithoutAssuredByInput | ListingUpsertWithWhereUniqueWithoutAssuredByInput[]
+    createMany?: ListingCreateManyAssuredByInputEnvelope
+    set?: ListingWhereUniqueInput | ListingWhereUniqueInput[]
+    disconnect?: ListingWhereUniqueInput | ListingWhereUniqueInput[]
+    delete?: ListingWhereUniqueInput | ListingWhereUniqueInput[]
+    connect?: ListingWhereUniqueInput | ListingWhereUniqueInput[]
+    update?: ListingUpdateWithWhereUniqueWithoutAssuredByInput | ListingUpdateWithWhereUniqueWithoutAssuredByInput[]
+    updateMany?: ListingUpdateManyWithWhereWithoutAssuredByInput | ListingUpdateManyWithWhereWithoutAssuredByInput[]
+    deleteMany?: ListingScalarWhereInput | ListingScalarWhereInput[]
+  }
+
+  export type ListingConnectionRequestUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ListingConnectionRequestCreateWithoutUserInput, ListingConnectionRequestUncheckedCreateWithoutUserInput> | ListingConnectionRequestCreateWithoutUserInput[] | ListingConnectionRequestUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ListingConnectionRequestCreateOrConnectWithoutUserInput | ListingConnectionRequestCreateOrConnectWithoutUserInput[]
+    upsert?: ListingConnectionRequestUpsertWithWhereUniqueWithoutUserInput | ListingConnectionRequestUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ListingConnectionRequestCreateManyUserInputEnvelope
+    set?: ListingConnectionRequestWhereUniqueInput | ListingConnectionRequestWhereUniqueInput[]
+    disconnect?: ListingConnectionRequestWhereUniqueInput | ListingConnectionRequestWhereUniqueInput[]
+    delete?: ListingConnectionRequestWhereUniqueInput | ListingConnectionRequestWhereUniqueInput[]
+    connect?: ListingConnectionRequestWhereUniqueInput | ListingConnectionRequestWhereUniqueInput[]
+    update?: ListingConnectionRequestUpdateWithWhereUniqueWithoutUserInput | ListingConnectionRequestUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ListingConnectionRequestUpdateManyWithWhereWithoutUserInput | ListingConnectionRequestUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ListingConnectionRequestScalarWhereInput | ListingConnectionRequestScalarWhereInput[]
+  }
+
+  export type ListingConnectionRequestUpdateManyWithoutReviewedByNestedInput = {
+    create?: XOR<ListingConnectionRequestCreateWithoutReviewedByInput, ListingConnectionRequestUncheckedCreateWithoutReviewedByInput> | ListingConnectionRequestCreateWithoutReviewedByInput[] | ListingConnectionRequestUncheckedCreateWithoutReviewedByInput[]
+    connectOrCreate?: ListingConnectionRequestCreateOrConnectWithoutReviewedByInput | ListingConnectionRequestCreateOrConnectWithoutReviewedByInput[]
+    upsert?: ListingConnectionRequestUpsertWithWhereUniqueWithoutReviewedByInput | ListingConnectionRequestUpsertWithWhereUniqueWithoutReviewedByInput[]
+    createMany?: ListingConnectionRequestCreateManyReviewedByInputEnvelope
+    set?: ListingConnectionRequestWhereUniqueInput | ListingConnectionRequestWhereUniqueInput[]
+    disconnect?: ListingConnectionRequestWhereUniqueInput | ListingConnectionRequestWhereUniqueInput[]
+    delete?: ListingConnectionRequestWhereUniqueInput | ListingConnectionRequestWhereUniqueInput[]
+    connect?: ListingConnectionRequestWhereUniqueInput | ListingConnectionRequestWhereUniqueInput[]
+    update?: ListingConnectionRequestUpdateWithWhereUniqueWithoutReviewedByInput | ListingConnectionRequestUpdateWithWhereUniqueWithoutReviewedByInput[]
+    updateMany?: ListingConnectionRequestUpdateManyWithWhereWithoutReviewedByInput | ListingConnectionRequestUpdateManyWithWhereWithoutReviewedByInput[]
+    deleteMany?: ListingConnectionRequestScalarWhereInput | ListingConnectionRequestScalarWhereInput[]
+  }
+
   export type SessionUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -15417,6 +17398,48 @@ export namespace Prisma {
     update?: ListingUpdateWithWhereUniqueWithoutUserInput | ListingUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: ListingUpdateManyWithWhereWithoutUserInput | ListingUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: ListingScalarWhereInput | ListingScalarWhereInput[]
+  }
+
+  export type ListingUncheckedUpdateManyWithoutAssuredByNestedInput = {
+    create?: XOR<ListingCreateWithoutAssuredByInput, ListingUncheckedCreateWithoutAssuredByInput> | ListingCreateWithoutAssuredByInput[] | ListingUncheckedCreateWithoutAssuredByInput[]
+    connectOrCreate?: ListingCreateOrConnectWithoutAssuredByInput | ListingCreateOrConnectWithoutAssuredByInput[]
+    upsert?: ListingUpsertWithWhereUniqueWithoutAssuredByInput | ListingUpsertWithWhereUniqueWithoutAssuredByInput[]
+    createMany?: ListingCreateManyAssuredByInputEnvelope
+    set?: ListingWhereUniqueInput | ListingWhereUniqueInput[]
+    disconnect?: ListingWhereUniqueInput | ListingWhereUniqueInput[]
+    delete?: ListingWhereUniqueInput | ListingWhereUniqueInput[]
+    connect?: ListingWhereUniqueInput | ListingWhereUniqueInput[]
+    update?: ListingUpdateWithWhereUniqueWithoutAssuredByInput | ListingUpdateWithWhereUniqueWithoutAssuredByInput[]
+    updateMany?: ListingUpdateManyWithWhereWithoutAssuredByInput | ListingUpdateManyWithWhereWithoutAssuredByInput[]
+    deleteMany?: ListingScalarWhereInput | ListingScalarWhereInput[]
+  }
+
+  export type ListingConnectionRequestUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ListingConnectionRequestCreateWithoutUserInput, ListingConnectionRequestUncheckedCreateWithoutUserInput> | ListingConnectionRequestCreateWithoutUserInput[] | ListingConnectionRequestUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ListingConnectionRequestCreateOrConnectWithoutUserInput | ListingConnectionRequestCreateOrConnectWithoutUserInput[]
+    upsert?: ListingConnectionRequestUpsertWithWhereUniqueWithoutUserInput | ListingConnectionRequestUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ListingConnectionRequestCreateManyUserInputEnvelope
+    set?: ListingConnectionRequestWhereUniqueInput | ListingConnectionRequestWhereUniqueInput[]
+    disconnect?: ListingConnectionRequestWhereUniqueInput | ListingConnectionRequestWhereUniqueInput[]
+    delete?: ListingConnectionRequestWhereUniqueInput | ListingConnectionRequestWhereUniqueInput[]
+    connect?: ListingConnectionRequestWhereUniqueInput | ListingConnectionRequestWhereUniqueInput[]
+    update?: ListingConnectionRequestUpdateWithWhereUniqueWithoutUserInput | ListingConnectionRequestUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ListingConnectionRequestUpdateManyWithWhereWithoutUserInput | ListingConnectionRequestUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ListingConnectionRequestScalarWhereInput | ListingConnectionRequestScalarWhereInput[]
+  }
+
+  export type ListingConnectionRequestUncheckedUpdateManyWithoutReviewedByNestedInput = {
+    create?: XOR<ListingConnectionRequestCreateWithoutReviewedByInput, ListingConnectionRequestUncheckedCreateWithoutReviewedByInput> | ListingConnectionRequestCreateWithoutReviewedByInput[] | ListingConnectionRequestUncheckedCreateWithoutReviewedByInput[]
+    connectOrCreate?: ListingConnectionRequestCreateOrConnectWithoutReviewedByInput | ListingConnectionRequestCreateOrConnectWithoutReviewedByInput[]
+    upsert?: ListingConnectionRequestUpsertWithWhereUniqueWithoutReviewedByInput | ListingConnectionRequestUpsertWithWhereUniqueWithoutReviewedByInput[]
+    createMany?: ListingConnectionRequestCreateManyReviewedByInputEnvelope
+    set?: ListingConnectionRequestWhereUniqueInput | ListingConnectionRequestWhereUniqueInput[]
+    disconnect?: ListingConnectionRequestWhereUniqueInput | ListingConnectionRequestWhereUniqueInput[]
+    delete?: ListingConnectionRequestWhereUniqueInput | ListingConnectionRequestWhereUniqueInput[]
+    connect?: ListingConnectionRequestWhereUniqueInput | ListingConnectionRequestWhereUniqueInput[]
+    update?: ListingConnectionRequestUpdateWithWhereUniqueWithoutReviewedByInput | ListingConnectionRequestUpdateWithWhereUniqueWithoutReviewedByInput[]
+    updateMany?: ListingConnectionRequestUpdateManyWithWhereWithoutReviewedByInput | ListingConnectionRequestUpdateManyWithWhereWithoutReviewedByInput[]
+    deleteMany?: ListingConnectionRequestScalarWhereInput | ListingConnectionRequestScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutSessionsInput = {
@@ -15534,6 +17557,12 @@ export namespace Prisma {
     update?: XOR<XOR<ListingUpdateToOneWithWhereWithoutListingDetailsInput, ListingUpdateWithoutListingDetailsInput>, ListingUncheckedUpdateWithoutListingDetailsInput>
   }
 
+  export type UserCreateNestedOneWithoutAssuredListingsInput = {
+    create?: XOR<UserCreateWithoutAssuredListingsInput, UserUncheckedCreateWithoutAssuredListingsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAssuredListingsInput
+    connect?: UserWhereUniqueInput
+  }
+
   export type UserCreateNestedOneWithoutListingsInput = {
     create?: XOR<UserCreateWithoutListingsInput, UserUncheckedCreateWithoutListingsInput>
     connectOrCreate?: UserCreateOrConnectWithoutListingsInput
@@ -15559,11 +17588,25 @@ export namespace Prisma {
     connect?: MediaAttachmentWhereUniqueInput | MediaAttachmentWhereUniqueInput[]
   }
 
+  export type ListingConnectionRequestCreateNestedManyWithoutListingInput = {
+    create?: XOR<ListingConnectionRequestCreateWithoutListingInput, ListingConnectionRequestUncheckedCreateWithoutListingInput> | ListingConnectionRequestCreateWithoutListingInput[] | ListingConnectionRequestUncheckedCreateWithoutListingInput[]
+    connectOrCreate?: ListingConnectionRequestCreateOrConnectWithoutListingInput | ListingConnectionRequestCreateOrConnectWithoutListingInput[]
+    createMany?: ListingConnectionRequestCreateManyListingInputEnvelope
+    connect?: ListingConnectionRequestWhereUniqueInput | ListingConnectionRequestWhereUniqueInput[]
+  }
+
   export type MediaAttachmentUncheckedCreateNestedManyWithoutListingInput = {
     create?: XOR<MediaAttachmentCreateWithoutListingInput, MediaAttachmentUncheckedCreateWithoutListingInput> | MediaAttachmentCreateWithoutListingInput[] | MediaAttachmentUncheckedCreateWithoutListingInput[]
     connectOrCreate?: MediaAttachmentCreateOrConnectWithoutListingInput | MediaAttachmentCreateOrConnectWithoutListingInput[]
     createMany?: MediaAttachmentCreateManyListingInputEnvelope
     connect?: MediaAttachmentWhereUniqueInput | MediaAttachmentWhereUniqueInput[]
+  }
+
+  export type ListingConnectionRequestUncheckedCreateNestedManyWithoutListingInput = {
+    create?: XOR<ListingConnectionRequestCreateWithoutListingInput, ListingConnectionRequestUncheckedCreateWithoutListingInput> | ListingConnectionRequestCreateWithoutListingInput[] | ListingConnectionRequestUncheckedCreateWithoutListingInput[]
+    connectOrCreate?: ListingConnectionRequestCreateOrConnectWithoutListingInput | ListingConnectionRequestCreateOrConnectWithoutListingInput[]
+    createMany?: ListingConnectionRequestCreateManyListingInputEnvelope
+    connect?: ListingConnectionRequestWhereUniqueInput | ListingConnectionRequestWhereUniqueInput[]
   }
 
   export type EnumListingStatusFieldUpdateOperationsInput = {
@@ -15590,10 +17633,22 @@ export namespace Prisma {
     divide?: Decimal | DecimalJsLike | number | string
   }
 
-  export type UserUpdateOneRequiredWithoutListingsNestedInput = {
+  export type UserUpdateOneWithoutAssuredListingsNestedInput = {
+    create?: XOR<UserCreateWithoutAssuredListingsInput, UserUncheckedCreateWithoutAssuredListingsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAssuredListingsInput
+    upsert?: UserUpsertWithoutAssuredListingsInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAssuredListingsInput, UserUpdateWithoutAssuredListingsInput>, UserUncheckedUpdateWithoutAssuredListingsInput>
+  }
+
+  export type UserUpdateOneWithoutListingsNestedInput = {
     create?: XOR<UserCreateWithoutListingsInput, UserUncheckedCreateWithoutListingsInput>
     connectOrCreate?: UserCreateOrConnectWithoutListingsInput
     upsert?: UserUpsertWithoutListingsInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutListingsInput, UserUpdateWithoutListingsInput>, UserUncheckedUpdateWithoutListingsInput>
   }
@@ -15630,6 +17685,20 @@ export namespace Prisma {
     deleteMany?: MediaAttachmentScalarWhereInput | MediaAttachmentScalarWhereInput[]
   }
 
+  export type ListingConnectionRequestUpdateManyWithoutListingNestedInput = {
+    create?: XOR<ListingConnectionRequestCreateWithoutListingInput, ListingConnectionRequestUncheckedCreateWithoutListingInput> | ListingConnectionRequestCreateWithoutListingInput[] | ListingConnectionRequestUncheckedCreateWithoutListingInput[]
+    connectOrCreate?: ListingConnectionRequestCreateOrConnectWithoutListingInput | ListingConnectionRequestCreateOrConnectWithoutListingInput[]
+    upsert?: ListingConnectionRequestUpsertWithWhereUniqueWithoutListingInput | ListingConnectionRequestUpsertWithWhereUniqueWithoutListingInput[]
+    createMany?: ListingConnectionRequestCreateManyListingInputEnvelope
+    set?: ListingConnectionRequestWhereUniqueInput | ListingConnectionRequestWhereUniqueInput[]
+    disconnect?: ListingConnectionRequestWhereUniqueInput | ListingConnectionRequestWhereUniqueInput[]
+    delete?: ListingConnectionRequestWhereUniqueInput | ListingConnectionRequestWhereUniqueInput[]
+    connect?: ListingConnectionRequestWhereUniqueInput | ListingConnectionRequestWhereUniqueInput[]
+    update?: ListingConnectionRequestUpdateWithWhereUniqueWithoutListingInput | ListingConnectionRequestUpdateWithWhereUniqueWithoutListingInput[]
+    updateMany?: ListingConnectionRequestUpdateManyWithWhereWithoutListingInput | ListingConnectionRequestUpdateManyWithWhereWithoutListingInput[]
+    deleteMany?: ListingConnectionRequestScalarWhereInput | ListingConnectionRequestScalarWhereInput[]
+  }
+
   export type MediaAttachmentUncheckedUpdateManyWithoutListingNestedInput = {
     create?: XOR<MediaAttachmentCreateWithoutListingInput, MediaAttachmentUncheckedCreateWithoutListingInput> | MediaAttachmentCreateWithoutListingInput[] | MediaAttachmentUncheckedCreateWithoutListingInput[]
     connectOrCreate?: MediaAttachmentCreateOrConnectWithoutListingInput | MediaAttachmentCreateOrConnectWithoutListingInput[]
@@ -15642,6 +17711,20 @@ export namespace Prisma {
     update?: MediaAttachmentUpdateWithWhereUniqueWithoutListingInput | MediaAttachmentUpdateWithWhereUniqueWithoutListingInput[]
     updateMany?: MediaAttachmentUpdateManyWithWhereWithoutListingInput | MediaAttachmentUpdateManyWithWhereWithoutListingInput[]
     deleteMany?: MediaAttachmentScalarWhereInput | MediaAttachmentScalarWhereInput[]
+  }
+
+  export type ListingConnectionRequestUncheckedUpdateManyWithoutListingNestedInput = {
+    create?: XOR<ListingConnectionRequestCreateWithoutListingInput, ListingConnectionRequestUncheckedCreateWithoutListingInput> | ListingConnectionRequestCreateWithoutListingInput[] | ListingConnectionRequestUncheckedCreateWithoutListingInput[]
+    connectOrCreate?: ListingConnectionRequestCreateOrConnectWithoutListingInput | ListingConnectionRequestCreateOrConnectWithoutListingInput[]
+    upsert?: ListingConnectionRequestUpsertWithWhereUniqueWithoutListingInput | ListingConnectionRequestUpsertWithWhereUniqueWithoutListingInput[]
+    createMany?: ListingConnectionRequestCreateManyListingInputEnvelope
+    set?: ListingConnectionRequestWhereUniqueInput | ListingConnectionRequestWhereUniqueInput[]
+    disconnect?: ListingConnectionRequestWhereUniqueInput | ListingConnectionRequestWhereUniqueInput[]
+    delete?: ListingConnectionRequestWhereUniqueInput | ListingConnectionRequestWhereUniqueInput[]
+    connect?: ListingConnectionRequestWhereUniqueInput | ListingConnectionRequestWhereUniqueInput[]
+    update?: ListingConnectionRequestUpdateWithWhereUniqueWithoutListingInput | ListingConnectionRequestUpdateWithWhereUniqueWithoutListingInput[]
+    updateMany?: ListingConnectionRequestUpdateManyWithWhereWithoutListingInput | ListingConnectionRequestUpdateManyWithWhereWithoutListingInput[]
+    deleteMany?: ListingConnectionRequestScalarWhereInput | ListingConnectionRequestScalarWhereInput[]
   }
 
   export type ListingCreateNestedOneWithoutMediaAttachmentsInput = {
@@ -15672,6 +17755,50 @@ export namespace Prisma {
     upsert?: ListingUpsertWithoutMediaAttachmentsInput
     connect?: ListingWhereUniqueInput
     update?: XOR<XOR<ListingUpdateToOneWithWhereWithoutMediaAttachmentsInput, ListingUpdateWithoutMediaAttachmentsInput>, ListingUncheckedUpdateWithoutMediaAttachmentsInput>
+  }
+
+  export type ListingCreateNestedOneWithoutConnectionRequestsInput = {
+    create?: XOR<ListingCreateWithoutConnectionRequestsInput, ListingUncheckedCreateWithoutConnectionRequestsInput>
+    connectOrCreate?: ListingCreateOrConnectWithoutConnectionRequestsInput
+    connect?: ListingWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutListingConnectionRequestsInput = {
+    create?: XOR<UserCreateWithoutListingConnectionRequestsInput, UserUncheckedCreateWithoutListingConnectionRequestsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutListingConnectionRequestsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutReviewedConnectionRequestsInput = {
+    create?: XOR<UserCreateWithoutReviewedConnectionRequestsInput, UserUncheckedCreateWithoutReviewedConnectionRequestsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutReviewedConnectionRequestsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type ListingUpdateOneRequiredWithoutConnectionRequestsNestedInput = {
+    create?: XOR<ListingCreateWithoutConnectionRequestsInput, ListingUncheckedCreateWithoutConnectionRequestsInput>
+    connectOrCreate?: ListingCreateOrConnectWithoutConnectionRequestsInput
+    upsert?: ListingUpsertWithoutConnectionRequestsInput
+    connect?: ListingWhereUniqueInput
+    update?: XOR<XOR<ListingUpdateToOneWithWhereWithoutConnectionRequestsInput, ListingUpdateWithoutConnectionRequestsInput>, ListingUncheckedUpdateWithoutConnectionRequestsInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutListingConnectionRequestsNestedInput = {
+    create?: XOR<UserCreateWithoutListingConnectionRequestsInput, UserUncheckedCreateWithoutListingConnectionRequestsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutListingConnectionRequestsInput
+    upsert?: UserUpsertWithoutListingConnectionRequestsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutListingConnectionRequestsInput, UserUpdateWithoutListingConnectionRequestsInput>, UserUncheckedUpdateWithoutListingConnectionRequestsInput>
+  }
+
+  export type UserUpdateOneWithoutReviewedConnectionRequestsNestedInput = {
+    create?: XOR<UserCreateWithoutReviewedConnectionRequestsInput, UserUncheckedCreateWithoutReviewedConnectionRequestsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutReviewedConnectionRequestsInput
+    upsert?: UserUpsertWithoutReviewedConnectionRequestsInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutReviewedConnectionRequestsInput, UserUpdateWithoutReviewedConnectionRequestsInput>, UserUncheckedUpdateWithoutReviewedConnectionRequestsInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -15976,11 +18103,15 @@ export namespace Prisma {
     email: string
     emailVerified?: boolean
     image?: string | null
+    role?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     sessions?: SessionCreateNestedManyWithoutUserInput
     accounts?: AccountCreateNestedManyWithoutUserInput
     listings?: ListingCreateNestedManyWithoutUserInput
+    assuredListings?: ListingCreateNestedManyWithoutAssuredByInput
+    listingConnectionRequests?: ListingConnectionRequestCreateNestedManyWithoutUserInput
+    reviewedConnectionRequests?: ListingConnectionRequestCreateNestedManyWithoutReviewedByInput
   }
 
   export type UserUncheckedCreateWithoutPostsInput = {
@@ -15989,11 +18120,15 @@ export namespace Prisma {
     email: string
     emailVerified?: boolean
     image?: string | null
+    role?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     listings?: ListingUncheckedCreateNestedManyWithoutUserInput
+    assuredListings?: ListingUncheckedCreateNestedManyWithoutAssuredByInput
+    listingConnectionRequests?: ListingConnectionRequestUncheckedCreateNestedManyWithoutUserInput
+    reviewedConnectionRequests?: ListingConnectionRequestUncheckedCreateNestedManyWithoutReviewedByInput
   }
 
   export type UserCreateOrConnectWithoutPostsInput = {
@@ -16018,11 +18153,15 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sessions?: SessionUpdateManyWithoutUserNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
     listings?: ListingUpdateManyWithoutUserNestedInput
+    assuredListings?: ListingUpdateManyWithoutAssuredByNestedInput
+    listingConnectionRequests?: ListingConnectionRequestUpdateManyWithoutUserNestedInput
+    reviewedConnectionRequests?: ListingConnectionRequestUpdateManyWithoutReviewedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPostsInput = {
@@ -16031,11 +18170,15 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     listings?: ListingUncheckedUpdateManyWithoutUserNestedInput
+    assuredListings?: ListingUncheckedUpdateManyWithoutAssuredByNestedInput
+    listingConnectionRequests?: ListingConnectionRequestUncheckedUpdateManyWithoutUserNestedInput
+    reviewedConnectionRequests?: ListingConnectionRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   }
 
   export type SessionCreateWithoutUserInput = {
@@ -16158,9 +18301,14 @@ export namespace Prisma {
     soldNotes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referenceNumber?: string | null
+    assured?: boolean
+    assuredAt?: Date | string | null
+    assuredBy?: UserCreateNestedOneWithoutAssuredListingsInput
     contactInfo: ContactInfoCreateNestedOneWithoutListingsInput
     listingDetails?: ListingDetailsCreateNestedOneWithoutListingInput
     mediaAttachments?: MediaAttachmentCreateNestedManyWithoutListingInput
+    connectionRequests?: ListingConnectionRequestCreateNestedManyWithoutListingInput
   }
 
   export type ListingUncheckedCreateWithoutUserInput = {
@@ -16189,9 +18337,14 @@ export namespace Prisma {
     soldNotes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referenceNumber?: string | null
+    assured?: boolean
+    assuredAt?: Date | string | null
+    assuredById?: string | null
     contactInfoId: string
     listingDetailsId?: string | null
     mediaAttachments?: MediaAttachmentUncheckedCreateNestedManyWithoutListingInput
+    connectionRequests?: ListingConnectionRequestUncheckedCreateNestedManyWithoutListingInput
   }
 
   export type ListingCreateOrConnectWithoutUserInput = {
@@ -16201,6 +18354,160 @@ export namespace Prisma {
 
   export type ListingCreateManyUserInputEnvelope = {
     data: ListingCreateManyUserInput | ListingCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ListingCreateWithoutAssuredByInput = {
+    id?: string
+    status?: $Enums.ListingStatus
+    availabilityStatus?: $Enums.AvailabilityStatus
+    askingPrice: Decimal | DecimalJsLike | number | string
+    currency: string
+    soldPrice?: Decimal | DecimalJsLike | number | string | null
+    year: string
+    manufacturer: string
+    model: string
+    condition: string
+    serialNumber: string
+    hours?: string | null
+    miles?: string | null
+    repossessed?: boolean
+    equipmentCity?: string | null
+    equipmentStateProvince?: string | null
+    equipmentPostalCode?: string | null
+    equipmentCountry?: string | null
+    soldAt?: Date | string | null
+    reservedAt?: Date | string | null
+    reservedUntil?: Date | string | null
+    soldTo?: string | null
+    soldNotes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    referenceNumber?: string | null
+    assured?: boolean
+    assuredAt?: Date | string | null
+    user?: UserCreateNestedOneWithoutListingsInput
+    contactInfo: ContactInfoCreateNestedOneWithoutListingsInput
+    listingDetails?: ListingDetailsCreateNestedOneWithoutListingInput
+    mediaAttachments?: MediaAttachmentCreateNestedManyWithoutListingInput
+    connectionRequests?: ListingConnectionRequestCreateNestedManyWithoutListingInput
+  }
+
+  export type ListingUncheckedCreateWithoutAssuredByInput = {
+    id?: string
+    status?: $Enums.ListingStatus
+    availabilityStatus?: $Enums.AvailabilityStatus
+    askingPrice: Decimal | DecimalJsLike | number | string
+    currency: string
+    soldPrice?: Decimal | DecimalJsLike | number | string | null
+    year: string
+    manufacturer: string
+    model: string
+    condition: string
+    serialNumber: string
+    hours?: string | null
+    miles?: string | null
+    repossessed?: boolean
+    equipmentCity?: string | null
+    equipmentStateProvince?: string | null
+    equipmentPostalCode?: string | null
+    equipmentCountry?: string | null
+    soldAt?: Date | string | null
+    reservedAt?: Date | string | null
+    reservedUntil?: Date | string | null
+    soldTo?: string | null
+    soldNotes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    referenceNumber?: string | null
+    assured?: boolean
+    assuredAt?: Date | string | null
+    userId?: string | null
+    contactInfoId: string
+    listingDetailsId?: string | null
+    mediaAttachments?: MediaAttachmentUncheckedCreateNestedManyWithoutListingInput
+    connectionRequests?: ListingConnectionRequestUncheckedCreateNestedManyWithoutListingInput
+  }
+
+  export type ListingCreateOrConnectWithoutAssuredByInput = {
+    where: ListingWhereUniqueInput
+    create: XOR<ListingCreateWithoutAssuredByInput, ListingUncheckedCreateWithoutAssuredByInput>
+  }
+
+  export type ListingCreateManyAssuredByInputEnvelope = {
+    data: ListingCreateManyAssuredByInput | ListingCreateManyAssuredByInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ListingConnectionRequestCreateWithoutUserInput = {
+    id?: string
+    status?: string
+    proofDocument?: string | null
+    proofNotes?: string | null
+    rejectionReason?: string | null
+    reviewedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    listing: ListingCreateNestedOneWithoutConnectionRequestsInput
+    reviewedBy?: UserCreateNestedOneWithoutReviewedConnectionRequestsInput
+  }
+
+  export type ListingConnectionRequestUncheckedCreateWithoutUserInput = {
+    id?: string
+    listingId: string
+    status?: string
+    proofDocument?: string | null
+    proofNotes?: string | null
+    rejectionReason?: string | null
+    reviewedById?: string | null
+    reviewedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ListingConnectionRequestCreateOrConnectWithoutUserInput = {
+    where: ListingConnectionRequestWhereUniqueInput
+    create: XOR<ListingConnectionRequestCreateWithoutUserInput, ListingConnectionRequestUncheckedCreateWithoutUserInput>
+  }
+
+  export type ListingConnectionRequestCreateManyUserInputEnvelope = {
+    data: ListingConnectionRequestCreateManyUserInput | ListingConnectionRequestCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ListingConnectionRequestCreateWithoutReviewedByInput = {
+    id?: string
+    status?: string
+    proofDocument?: string | null
+    proofNotes?: string | null
+    rejectionReason?: string | null
+    reviewedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    listing: ListingCreateNestedOneWithoutConnectionRequestsInput
+    user: UserCreateNestedOneWithoutListingConnectionRequestsInput
+  }
+
+  export type ListingConnectionRequestUncheckedCreateWithoutReviewedByInput = {
+    id?: string
+    listingId: string
+    userId: string
+    status?: string
+    proofDocument?: string | null
+    proofNotes?: string | null
+    rejectionReason?: string | null
+    reviewedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ListingConnectionRequestCreateOrConnectWithoutReviewedByInput = {
+    where: ListingConnectionRequestWhereUniqueInput
+    create: XOR<ListingConnectionRequestCreateWithoutReviewedByInput, ListingConnectionRequestUncheckedCreateWithoutReviewedByInput>
+  }
+
+  export type ListingConnectionRequestCreateManyReviewedByInputEnvelope = {
+    data: ListingConnectionRequestCreateManyReviewedByInput | ListingConnectionRequestCreateManyReviewedByInput[]
     skipDuplicates?: boolean
   }
 
@@ -16341,9 +18648,78 @@ export namespace Prisma {
     soldNotes?: StringNullableFilter<"Listing"> | string | null
     createdAt?: DateTimeFilter<"Listing"> | Date | string
     updatedAt?: DateTimeFilter<"Listing"> | Date | string
-    userId?: StringFilter<"Listing"> | string
+    referenceNumber?: StringNullableFilter<"Listing"> | string | null
+    assured?: BoolFilter<"Listing"> | boolean
+    assuredAt?: DateTimeNullableFilter<"Listing"> | Date | string | null
+    assuredById?: StringNullableFilter<"Listing"> | string | null
+    userId?: StringNullableFilter<"Listing"> | string | null
     contactInfoId?: StringFilter<"Listing"> | string
     listingDetailsId?: StringNullableFilter<"Listing"> | string | null
+  }
+
+  export type ListingUpsertWithWhereUniqueWithoutAssuredByInput = {
+    where: ListingWhereUniqueInput
+    update: XOR<ListingUpdateWithoutAssuredByInput, ListingUncheckedUpdateWithoutAssuredByInput>
+    create: XOR<ListingCreateWithoutAssuredByInput, ListingUncheckedCreateWithoutAssuredByInput>
+  }
+
+  export type ListingUpdateWithWhereUniqueWithoutAssuredByInput = {
+    where: ListingWhereUniqueInput
+    data: XOR<ListingUpdateWithoutAssuredByInput, ListingUncheckedUpdateWithoutAssuredByInput>
+  }
+
+  export type ListingUpdateManyWithWhereWithoutAssuredByInput = {
+    where: ListingScalarWhereInput
+    data: XOR<ListingUpdateManyMutationInput, ListingUncheckedUpdateManyWithoutAssuredByInput>
+  }
+
+  export type ListingConnectionRequestUpsertWithWhereUniqueWithoutUserInput = {
+    where: ListingConnectionRequestWhereUniqueInput
+    update: XOR<ListingConnectionRequestUpdateWithoutUserInput, ListingConnectionRequestUncheckedUpdateWithoutUserInput>
+    create: XOR<ListingConnectionRequestCreateWithoutUserInput, ListingConnectionRequestUncheckedCreateWithoutUserInput>
+  }
+
+  export type ListingConnectionRequestUpdateWithWhereUniqueWithoutUserInput = {
+    where: ListingConnectionRequestWhereUniqueInput
+    data: XOR<ListingConnectionRequestUpdateWithoutUserInput, ListingConnectionRequestUncheckedUpdateWithoutUserInput>
+  }
+
+  export type ListingConnectionRequestUpdateManyWithWhereWithoutUserInput = {
+    where: ListingConnectionRequestScalarWhereInput
+    data: XOR<ListingConnectionRequestUpdateManyMutationInput, ListingConnectionRequestUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type ListingConnectionRequestScalarWhereInput = {
+    AND?: ListingConnectionRequestScalarWhereInput | ListingConnectionRequestScalarWhereInput[]
+    OR?: ListingConnectionRequestScalarWhereInput[]
+    NOT?: ListingConnectionRequestScalarWhereInput | ListingConnectionRequestScalarWhereInput[]
+    id?: StringFilter<"ListingConnectionRequest"> | string
+    listingId?: StringFilter<"ListingConnectionRequest"> | string
+    userId?: StringFilter<"ListingConnectionRequest"> | string
+    status?: StringFilter<"ListingConnectionRequest"> | string
+    proofDocument?: StringNullableFilter<"ListingConnectionRequest"> | string | null
+    proofNotes?: StringNullableFilter<"ListingConnectionRequest"> | string | null
+    rejectionReason?: StringNullableFilter<"ListingConnectionRequest"> | string | null
+    reviewedById?: StringNullableFilter<"ListingConnectionRequest"> | string | null
+    reviewedAt?: DateTimeNullableFilter<"ListingConnectionRequest"> | Date | string | null
+    createdAt?: DateTimeFilter<"ListingConnectionRequest"> | Date | string
+    updatedAt?: DateTimeFilter<"ListingConnectionRequest"> | Date | string
+  }
+
+  export type ListingConnectionRequestUpsertWithWhereUniqueWithoutReviewedByInput = {
+    where: ListingConnectionRequestWhereUniqueInput
+    update: XOR<ListingConnectionRequestUpdateWithoutReviewedByInput, ListingConnectionRequestUncheckedUpdateWithoutReviewedByInput>
+    create: XOR<ListingConnectionRequestCreateWithoutReviewedByInput, ListingConnectionRequestUncheckedCreateWithoutReviewedByInput>
+  }
+
+  export type ListingConnectionRequestUpdateWithWhereUniqueWithoutReviewedByInput = {
+    where: ListingConnectionRequestWhereUniqueInput
+    data: XOR<ListingConnectionRequestUpdateWithoutReviewedByInput, ListingConnectionRequestUncheckedUpdateWithoutReviewedByInput>
+  }
+
+  export type ListingConnectionRequestUpdateManyWithWhereWithoutReviewedByInput = {
+    where: ListingConnectionRequestScalarWhereInput
+    data: XOR<ListingConnectionRequestUpdateManyMutationInput, ListingConnectionRequestUncheckedUpdateManyWithoutReviewedByInput>
   }
 
   export type UserCreateWithoutSessionsInput = {
@@ -16352,11 +18728,15 @@ export namespace Prisma {
     email: string
     emailVerified?: boolean
     image?: string | null
+    role?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     accounts?: AccountCreateNestedManyWithoutUserInput
     posts?: PostCreateNestedManyWithoutCreatedByInput
     listings?: ListingCreateNestedManyWithoutUserInput
+    assuredListings?: ListingCreateNestedManyWithoutAssuredByInput
+    listingConnectionRequests?: ListingConnectionRequestCreateNestedManyWithoutUserInput
+    reviewedConnectionRequests?: ListingConnectionRequestCreateNestedManyWithoutReviewedByInput
   }
 
   export type UserUncheckedCreateWithoutSessionsInput = {
@@ -16365,11 +18745,15 @@ export namespace Prisma {
     email: string
     emailVerified?: boolean
     image?: string | null
+    role?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     posts?: PostUncheckedCreateNestedManyWithoutCreatedByInput
     listings?: ListingUncheckedCreateNestedManyWithoutUserInput
+    assuredListings?: ListingUncheckedCreateNestedManyWithoutAssuredByInput
+    listingConnectionRequests?: ListingConnectionRequestUncheckedCreateNestedManyWithoutUserInput
+    reviewedConnectionRequests?: ListingConnectionRequestUncheckedCreateNestedManyWithoutReviewedByInput
   }
 
   export type UserCreateOrConnectWithoutSessionsInput = {
@@ -16394,11 +18778,15 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     accounts?: AccountUpdateManyWithoutUserNestedInput
     posts?: PostUpdateManyWithoutCreatedByNestedInput
     listings?: ListingUpdateManyWithoutUserNestedInput
+    assuredListings?: ListingUpdateManyWithoutAssuredByNestedInput
+    listingConnectionRequests?: ListingConnectionRequestUpdateManyWithoutUserNestedInput
+    reviewedConnectionRequests?: ListingConnectionRequestUpdateManyWithoutReviewedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -16407,11 +18795,15 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     posts?: PostUncheckedUpdateManyWithoutCreatedByNestedInput
     listings?: ListingUncheckedUpdateManyWithoutUserNestedInput
+    assuredListings?: ListingUncheckedUpdateManyWithoutAssuredByNestedInput
+    listingConnectionRequests?: ListingConnectionRequestUncheckedUpdateManyWithoutUserNestedInput
+    reviewedConnectionRequests?: ListingConnectionRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   }
 
   export type UserCreateWithoutAccountsInput = {
@@ -16420,11 +18812,15 @@ export namespace Prisma {
     email: string
     emailVerified?: boolean
     image?: string | null
+    role?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     sessions?: SessionCreateNestedManyWithoutUserInput
     posts?: PostCreateNestedManyWithoutCreatedByInput
     listings?: ListingCreateNestedManyWithoutUserInput
+    assuredListings?: ListingCreateNestedManyWithoutAssuredByInput
+    listingConnectionRequests?: ListingConnectionRequestCreateNestedManyWithoutUserInput
+    reviewedConnectionRequests?: ListingConnectionRequestCreateNestedManyWithoutReviewedByInput
   }
 
   export type UserUncheckedCreateWithoutAccountsInput = {
@@ -16433,11 +18829,15 @@ export namespace Prisma {
     email: string
     emailVerified?: boolean
     image?: string | null
+    role?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     posts?: PostUncheckedCreateNestedManyWithoutCreatedByInput
     listings?: ListingUncheckedCreateNestedManyWithoutUserInput
+    assuredListings?: ListingUncheckedCreateNestedManyWithoutAssuredByInput
+    listingConnectionRequests?: ListingConnectionRequestUncheckedCreateNestedManyWithoutUserInput
+    reviewedConnectionRequests?: ListingConnectionRequestUncheckedCreateNestedManyWithoutReviewedByInput
   }
 
   export type UserCreateOrConnectWithoutAccountsInput = {
@@ -16462,11 +18862,15 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sessions?: SessionUpdateManyWithoutUserNestedInput
     posts?: PostUpdateManyWithoutCreatedByNestedInput
     listings?: ListingUpdateManyWithoutUserNestedInput
+    assuredListings?: ListingUpdateManyWithoutAssuredByNestedInput
+    listingConnectionRequests?: ListingConnectionRequestUpdateManyWithoutUserNestedInput
+    reviewedConnectionRequests?: ListingConnectionRequestUpdateManyWithoutReviewedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -16475,11 +18879,15 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     posts?: PostUncheckedUpdateManyWithoutCreatedByNestedInput
     listings?: ListingUncheckedUpdateManyWithoutUserNestedInput
+    assuredListings?: ListingUncheckedUpdateManyWithoutAssuredByNestedInput
+    listingConnectionRequests?: ListingConnectionRequestUncheckedUpdateManyWithoutUserNestedInput
+    reviewedConnectionRequests?: ListingConnectionRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   }
 
   export type ListingCreateWithoutContactInfoInput = {
@@ -16508,9 +18916,14 @@ export namespace Prisma {
     soldNotes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutListingsInput
+    referenceNumber?: string | null
+    assured?: boolean
+    assuredAt?: Date | string | null
+    assuredBy?: UserCreateNestedOneWithoutAssuredListingsInput
+    user?: UserCreateNestedOneWithoutListingsInput
     listingDetails?: ListingDetailsCreateNestedOneWithoutListingInput
     mediaAttachments?: MediaAttachmentCreateNestedManyWithoutListingInput
+    connectionRequests?: ListingConnectionRequestCreateNestedManyWithoutListingInput
   }
 
   export type ListingUncheckedCreateWithoutContactInfoInput = {
@@ -16539,9 +18952,14 @@ export namespace Prisma {
     soldNotes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    userId: string
+    referenceNumber?: string | null
+    assured?: boolean
+    assuredAt?: Date | string | null
+    assuredById?: string | null
+    userId?: string | null
     listingDetailsId?: string | null
     mediaAttachments?: MediaAttachmentUncheckedCreateNestedManyWithoutListingInput
+    connectionRequests?: ListingConnectionRequestUncheckedCreateNestedManyWithoutListingInput
   }
 
   export type ListingCreateOrConnectWithoutContactInfoInput = {
@@ -16596,9 +19014,14 @@ export namespace Prisma {
     soldNotes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutListingsInput
+    referenceNumber?: string | null
+    assured?: boolean
+    assuredAt?: Date | string | null
+    assuredBy?: UserCreateNestedOneWithoutAssuredListingsInput
+    user?: UserCreateNestedOneWithoutListingsInput
     contactInfo: ContactInfoCreateNestedOneWithoutListingsInput
     mediaAttachments?: MediaAttachmentCreateNestedManyWithoutListingInput
+    connectionRequests?: ListingConnectionRequestCreateNestedManyWithoutListingInput
   }
 
   export type ListingUncheckedCreateWithoutListingDetailsInput = {
@@ -16627,9 +19050,14 @@ export namespace Prisma {
     soldNotes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    userId: string
+    referenceNumber?: string | null
+    assured?: boolean
+    assuredAt?: Date | string | null
+    assuredById?: string | null
+    userId?: string | null
     contactInfoId: string
     mediaAttachments?: MediaAttachmentUncheckedCreateNestedManyWithoutListingInput
+    connectionRequests?: ListingConnectionRequestUncheckedCreateNestedManyWithoutListingInput
   }
 
   export type ListingCreateOrConnectWithoutListingDetailsInput = {
@@ -16674,9 +19102,14 @@ export namespace Prisma {
     soldNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutListingsNestedInput
+    referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    assured?: BoolFieldUpdateOperationsInput | boolean
+    assuredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assuredBy?: UserUpdateOneWithoutAssuredListingsNestedInput
+    user?: UserUpdateOneWithoutListingsNestedInput
     contactInfo?: ContactInfoUpdateOneRequiredWithoutListingsNestedInput
     mediaAttachments?: MediaAttachmentUpdateManyWithoutListingNestedInput
+    connectionRequests?: ListingConnectionRequestUpdateManyWithoutListingNestedInput
   }
 
   export type ListingUncheckedUpdateWithoutListingDetailsInput = {
@@ -16705,9 +19138,53 @@ export namespace Prisma {
     soldNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    userId?: StringFieldUpdateOperationsInput | string
+    referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    assured?: BoolFieldUpdateOperationsInput | boolean
+    assuredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assuredById?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
     contactInfoId?: StringFieldUpdateOperationsInput | string
     mediaAttachments?: MediaAttachmentUncheckedUpdateManyWithoutListingNestedInput
+    connectionRequests?: ListingConnectionRequestUncheckedUpdateManyWithoutListingNestedInput
+  }
+
+  export type UserCreateWithoutAssuredListingsInput = {
+    id: string
+    name: string
+    email: string
+    emailVerified?: boolean
+    image?: string | null
+    role?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    posts?: PostCreateNestedManyWithoutCreatedByInput
+    listings?: ListingCreateNestedManyWithoutUserInput
+    listingConnectionRequests?: ListingConnectionRequestCreateNestedManyWithoutUserInput
+    reviewedConnectionRequests?: ListingConnectionRequestCreateNestedManyWithoutReviewedByInput
+  }
+
+  export type UserUncheckedCreateWithoutAssuredListingsInput = {
+    id: string
+    name: string
+    email: string
+    emailVerified?: boolean
+    image?: string | null
+    role?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    posts?: PostUncheckedCreateNestedManyWithoutCreatedByInput
+    listings?: ListingUncheckedCreateNestedManyWithoutUserInput
+    listingConnectionRequests?: ListingConnectionRequestUncheckedCreateNestedManyWithoutUserInput
+    reviewedConnectionRequests?: ListingConnectionRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  }
+
+  export type UserCreateOrConnectWithoutAssuredListingsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutAssuredListingsInput, UserUncheckedCreateWithoutAssuredListingsInput>
   }
 
   export type UserCreateWithoutListingsInput = {
@@ -16716,11 +19193,15 @@ export namespace Prisma {
     email: string
     emailVerified?: boolean
     image?: string | null
+    role?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     sessions?: SessionCreateNestedManyWithoutUserInput
     accounts?: AccountCreateNestedManyWithoutUserInput
     posts?: PostCreateNestedManyWithoutCreatedByInput
+    assuredListings?: ListingCreateNestedManyWithoutAssuredByInput
+    listingConnectionRequests?: ListingConnectionRequestCreateNestedManyWithoutUserInput
+    reviewedConnectionRequests?: ListingConnectionRequestCreateNestedManyWithoutReviewedByInput
   }
 
   export type UserUncheckedCreateWithoutListingsInput = {
@@ -16729,11 +19210,15 @@ export namespace Prisma {
     email: string
     emailVerified?: boolean
     image?: string | null
+    role?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     posts?: PostUncheckedCreateNestedManyWithoutCreatedByInput
+    assuredListings?: ListingUncheckedCreateNestedManyWithoutAssuredByInput
+    listingConnectionRequests?: ListingConnectionRequestUncheckedCreateNestedManyWithoutUserInput
+    reviewedConnectionRequests?: ListingConnectionRequestUncheckedCreateNestedManyWithoutReviewedByInput
   }
 
   export type UserCreateOrConnectWithoutListingsInput = {
@@ -16859,6 +19344,87 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ListingConnectionRequestCreateWithoutListingInput = {
+    id?: string
+    status?: string
+    proofDocument?: string | null
+    proofNotes?: string | null
+    rejectionReason?: string | null
+    reviewedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutListingConnectionRequestsInput
+    reviewedBy?: UserCreateNestedOneWithoutReviewedConnectionRequestsInput
+  }
+
+  export type ListingConnectionRequestUncheckedCreateWithoutListingInput = {
+    id?: string
+    userId: string
+    status?: string
+    proofDocument?: string | null
+    proofNotes?: string | null
+    rejectionReason?: string | null
+    reviewedById?: string | null
+    reviewedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ListingConnectionRequestCreateOrConnectWithoutListingInput = {
+    where: ListingConnectionRequestWhereUniqueInput
+    create: XOR<ListingConnectionRequestCreateWithoutListingInput, ListingConnectionRequestUncheckedCreateWithoutListingInput>
+  }
+
+  export type ListingConnectionRequestCreateManyListingInputEnvelope = {
+    data: ListingConnectionRequestCreateManyListingInput | ListingConnectionRequestCreateManyListingInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithoutAssuredListingsInput = {
+    update: XOR<UserUpdateWithoutAssuredListingsInput, UserUncheckedUpdateWithoutAssuredListingsInput>
+    create: XOR<UserCreateWithoutAssuredListingsInput, UserUncheckedCreateWithoutAssuredListingsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutAssuredListingsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutAssuredListingsInput, UserUncheckedUpdateWithoutAssuredListingsInput>
+  }
+
+  export type UserUpdateWithoutAssuredListingsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    posts?: PostUpdateManyWithoutCreatedByNestedInput
+    listings?: ListingUpdateManyWithoutUserNestedInput
+    listingConnectionRequests?: ListingConnectionRequestUpdateManyWithoutUserNestedInput
+    reviewedConnectionRequests?: ListingConnectionRequestUpdateManyWithoutReviewedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutAssuredListingsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    posts?: PostUncheckedUpdateManyWithoutCreatedByNestedInput
+    listings?: ListingUncheckedUpdateManyWithoutUserNestedInput
+    listingConnectionRequests?: ListingConnectionRequestUncheckedUpdateManyWithoutUserNestedInput
+    reviewedConnectionRequests?: ListingConnectionRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  }
+
   export type UserUpsertWithoutListingsInput = {
     update: XOR<UserUpdateWithoutListingsInput, UserUncheckedUpdateWithoutListingsInput>
     create: XOR<UserCreateWithoutListingsInput, UserUncheckedCreateWithoutListingsInput>
@@ -16876,11 +19442,15 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sessions?: SessionUpdateManyWithoutUserNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
     posts?: PostUpdateManyWithoutCreatedByNestedInput
+    assuredListings?: ListingUpdateManyWithoutAssuredByNestedInput
+    listingConnectionRequests?: ListingConnectionRequestUpdateManyWithoutUserNestedInput
+    reviewedConnectionRequests?: ListingConnectionRequestUpdateManyWithoutReviewedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutListingsInput = {
@@ -16889,11 +19459,15 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     posts?: PostUncheckedUpdateManyWithoutCreatedByNestedInput
+    assuredListings?: ListingUncheckedUpdateManyWithoutAssuredByNestedInput
+    listingConnectionRequests?: ListingConnectionRequestUncheckedUpdateManyWithoutUserNestedInput
+    reviewedConnectionRequests?: ListingConnectionRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   }
 
   export type ContactInfoUpsertWithoutListingsInput = {
@@ -17021,6 +19595,22 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"MediaAttachment"> | Date | string
   }
 
+  export type ListingConnectionRequestUpsertWithWhereUniqueWithoutListingInput = {
+    where: ListingConnectionRequestWhereUniqueInput
+    update: XOR<ListingConnectionRequestUpdateWithoutListingInput, ListingConnectionRequestUncheckedUpdateWithoutListingInput>
+    create: XOR<ListingConnectionRequestCreateWithoutListingInput, ListingConnectionRequestUncheckedCreateWithoutListingInput>
+  }
+
+  export type ListingConnectionRequestUpdateWithWhereUniqueWithoutListingInput = {
+    where: ListingConnectionRequestWhereUniqueInput
+    data: XOR<ListingConnectionRequestUpdateWithoutListingInput, ListingConnectionRequestUncheckedUpdateWithoutListingInput>
+  }
+
+  export type ListingConnectionRequestUpdateManyWithWhereWithoutListingInput = {
+    where: ListingConnectionRequestScalarWhereInput
+    data: XOR<ListingConnectionRequestUpdateManyMutationInput, ListingConnectionRequestUncheckedUpdateManyWithoutListingInput>
+  }
+
   export type ListingCreateWithoutMediaAttachmentsInput = {
     id?: string
     status?: $Enums.ListingStatus
@@ -17047,9 +19637,14 @@ export namespace Prisma {
     soldNotes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutListingsInput
+    referenceNumber?: string | null
+    assured?: boolean
+    assuredAt?: Date | string | null
+    assuredBy?: UserCreateNestedOneWithoutAssuredListingsInput
+    user?: UserCreateNestedOneWithoutListingsInput
     contactInfo: ContactInfoCreateNestedOneWithoutListingsInput
     listingDetails?: ListingDetailsCreateNestedOneWithoutListingInput
+    connectionRequests?: ListingConnectionRequestCreateNestedManyWithoutListingInput
   }
 
   export type ListingUncheckedCreateWithoutMediaAttachmentsInput = {
@@ -17078,9 +19673,14 @@ export namespace Prisma {
     soldNotes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    userId: string
+    referenceNumber?: string | null
+    assured?: boolean
+    assuredAt?: Date | string | null
+    assuredById?: string | null
+    userId?: string | null
     contactInfoId: string
     listingDetailsId?: string | null
+    connectionRequests?: ListingConnectionRequestUncheckedCreateNestedManyWithoutListingInput
   }
 
   export type ListingCreateOrConnectWithoutMediaAttachmentsInput = {
@@ -17125,9 +19725,14 @@ export namespace Prisma {
     soldNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutListingsNestedInput
+    referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    assured?: BoolFieldUpdateOperationsInput | boolean
+    assuredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assuredBy?: UserUpdateOneWithoutAssuredListingsNestedInput
+    user?: UserUpdateOneWithoutListingsNestedInput
     contactInfo?: ContactInfoUpdateOneRequiredWithoutListingsNestedInput
     listingDetails?: ListingDetailsUpdateOneWithoutListingNestedInput
+    connectionRequests?: ListingConnectionRequestUpdateManyWithoutListingNestedInput
   }
 
   export type ListingUncheckedUpdateWithoutMediaAttachmentsInput = {
@@ -17156,9 +19761,342 @@ export namespace Prisma {
     soldNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    userId?: StringFieldUpdateOperationsInput | string
+    referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    assured?: BoolFieldUpdateOperationsInput | boolean
+    assuredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assuredById?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
     contactInfoId?: StringFieldUpdateOperationsInput | string
     listingDetailsId?: NullableStringFieldUpdateOperationsInput | string | null
+    connectionRequests?: ListingConnectionRequestUncheckedUpdateManyWithoutListingNestedInput
+  }
+
+  export type ListingCreateWithoutConnectionRequestsInput = {
+    id?: string
+    status?: $Enums.ListingStatus
+    availabilityStatus?: $Enums.AvailabilityStatus
+    askingPrice: Decimal | DecimalJsLike | number | string
+    currency: string
+    soldPrice?: Decimal | DecimalJsLike | number | string | null
+    year: string
+    manufacturer: string
+    model: string
+    condition: string
+    serialNumber: string
+    hours?: string | null
+    miles?: string | null
+    repossessed?: boolean
+    equipmentCity?: string | null
+    equipmentStateProvince?: string | null
+    equipmentPostalCode?: string | null
+    equipmentCountry?: string | null
+    soldAt?: Date | string | null
+    reservedAt?: Date | string | null
+    reservedUntil?: Date | string | null
+    soldTo?: string | null
+    soldNotes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    referenceNumber?: string | null
+    assured?: boolean
+    assuredAt?: Date | string | null
+    assuredBy?: UserCreateNestedOneWithoutAssuredListingsInput
+    user?: UserCreateNestedOneWithoutListingsInput
+    contactInfo: ContactInfoCreateNestedOneWithoutListingsInput
+    listingDetails?: ListingDetailsCreateNestedOneWithoutListingInput
+    mediaAttachments?: MediaAttachmentCreateNestedManyWithoutListingInput
+  }
+
+  export type ListingUncheckedCreateWithoutConnectionRequestsInput = {
+    id?: string
+    status?: $Enums.ListingStatus
+    availabilityStatus?: $Enums.AvailabilityStatus
+    askingPrice: Decimal | DecimalJsLike | number | string
+    currency: string
+    soldPrice?: Decimal | DecimalJsLike | number | string | null
+    year: string
+    manufacturer: string
+    model: string
+    condition: string
+    serialNumber: string
+    hours?: string | null
+    miles?: string | null
+    repossessed?: boolean
+    equipmentCity?: string | null
+    equipmentStateProvince?: string | null
+    equipmentPostalCode?: string | null
+    equipmentCountry?: string | null
+    soldAt?: Date | string | null
+    reservedAt?: Date | string | null
+    reservedUntil?: Date | string | null
+    soldTo?: string | null
+    soldNotes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    referenceNumber?: string | null
+    assured?: boolean
+    assuredAt?: Date | string | null
+    assuredById?: string | null
+    userId?: string | null
+    contactInfoId: string
+    listingDetailsId?: string | null
+    mediaAttachments?: MediaAttachmentUncheckedCreateNestedManyWithoutListingInput
+  }
+
+  export type ListingCreateOrConnectWithoutConnectionRequestsInput = {
+    where: ListingWhereUniqueInput
+    create: XOR<ListingCreateWithoutConnectionRequestsInput, ListingUncheckedCreateWithoutConnectionRequestsInput>
+  }
+
+  export type UserCreateWithoutListingConnectionRequestsInput = {
+    id: string
+    name: string
+    email: string
+    emailVerified?: boolean
+    image?: string | null
+    role?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    posts?: PostCreateNestedManyWithoutCreatedByInput
+    listings?: ListingCreateNestedManyWithoutUserInput
+    assuredListings?: ListingCreateNestedManyWithoutAssuredByInput
+    reviewedConnectionRequests?: ListingConnectionRequestCreateNestedManyWithoutReviewedByInput
+  }
+
+  export type UserUncheckedCreateWithoutListingConnectionRequestsInput = {
+    id: string
+    name: string
+    email: string
+    emailVerified?: boolean
+    image?: string | null
+    role?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    posts?: PostUncheckedCreateNestedManyWithoutCreatedByInput
+    listings?: ListingUncheckedCreateNestedManyWithoutUserInput
+    assuredListings?: ListingUncheckedCreateNestedManyWithoutAssuredByInput
+    reviewedConnectionRequests?: ListingConnectionRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  }
+
+  export type UserCreateOrConnectWithoutListingConnectionRequestsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutListingConnectionRequestsInput, UserUncheckedCreateWithoutListingConnectionRequestsInput>
+  }
+
+  export type UserCreateWithoutReviewedConnectionRequestsInput = {
+    id: string
+    name: string
+    email: string
+    emailVerified?: boolean
+    image?: string | null
+    role?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    posts?: PostCreateNestedManyWithoutCreatedByInput
+    listings?: ListingCreateNestedManyWithoutUserInput
+    assuredListings?: ListingCreateNestedManyWithoutAssuredByInput
+    listingConnectionRequests?: ListingConnectionRequestCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutReviewedConnectionRequestsInput = {
+    id: string
+    name: string
+    email: string
+    emailVerified?: boolean
+    image?: string | null
+    role?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    posts?: PostUncheckedCreateNestedManyWithoutCreatedByInput
+    listings?: ListingUncheckedCreateNestedManyWithoutUserInput
+    assuredListings?: ListingUncheckedCreateNestedManyWithoutAssuredByInput
+    listingConnectionRequests?: ListingConnectionRequestUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutReviewedConnectionRequestsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutReviewedConnectionRequestsInput, UserUncheckedCreateWithoutReviewedConnectionRequestsInput>
+  }
+
+  export type ListingUpsertWithoutConnectionRequestsInput = {
+    update: XOR<ListingUpdateWithoutConnectionRequestsInput, ListingUncheckedUpdateWithoutConnectionRequestsInput>
+    create: XOR<ListingCreateWithoutConnectionRequestsInput, ListingUncheckedCreateWithoutConnectionRequestsInput>
+    where?: ListingWhereInput
+  }
+
+  export type ListingUpdateToOneWithWhereWithoutConnectionRequestsInput = {
+    where?: ListingWhereInput
+    data: XOR<ListingUpdateWithoutConnectionRequestsInput, ListingUncheckedUpdateWithoutConnectionRequestsInput>
+  }
+
+  export type ListingUpdateWithoutConnectionRequestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumListingStatusFieldUpdateOperationsInput | $Enums.ListingStatus
+    availabilityStatus?: EnumAvailabilityStatusFieldUpdateOperationsInput | $Enums.AvailabilityStatus
+    askingPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    soldPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    year?: StringFieldUpdateOperationsInput | string
+    manufacturer?: StringFieldUpdateOperationsInput | string
+    model?: StringFieldUpdateOperationsInput | string
+    condition?: StringFieldUpdateOperationsInput | string
+    serialNumber?: StringFieldUpdateOperationsInput | string
+    hours?: NullableStringFieldUpdateOperationsInput | string | null
+    miles?: NullableStringFieldUpdateOperationsInput | string | null
+    repossessed?: BoolFieldUpdateOperationsInput | boolean
+    equipmentCity?: NullableStringFieldUpdateOperationsInput | string | null
+    equipmentStateProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    equipmentPostalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    equipmentCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    soldAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reservedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reservedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    soldTo?: NullableStringFieldUpdateOperationsInput | string | null
+    soldNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    assured?: BoolFieldUpdateOperationsInput | boolean
+    assuredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assuredBy?: UserUpdateOneWithoutAssuredListingsNestedInput
+    user?: UserUpdateOneWithoutListingsNestedInput
+    contactInfo?: ContactInfoUpdateOneRequiredWithoutListingsNestedInput
+    listingDetails?: ListingDetailsUpdateOneWithoutListingNestedInput
+    mediaAttachments?: MediaAttachmentUpdateManyWithoutListingNestedInput
+  }
+
+  export type ListingUncheckedUpdateWithoutConnectionRequestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumListingStatusFieldUpdateOperationsInput | $Enums.ListingStatus
+    availabilityStatus?: EnumAvailabilityStatusFieldUpdateOperationsInput | $Enums.AvailabilityStatus
+    askingPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    soldPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    year?: StringFieldUpdateOperationsInput | string
+    manufacturer?: StringFieldUpdateOperationsInput | string
+    model?: StringFieldUpdateOperationsInput | string
+    condition?: StringFieldUpdateOperationsInput | string
+    serialNumber?: StringFieldUpdateOperationsInput | string
+    hours?: NullableStringFieldUpdateOperationsInput | string | null
+    miles?: NullableStringFieldUpdateOperationsInput | string | null
+    repossessed?: BoolFieldUpdateOperationsInput | boolean
+    equipmentCity?: NullableStringFieldUpdateOperationsInput | string | null
+    equipmentStateProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    equipmentPostalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    equipmentCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    soldAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reservedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reservedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    soldTo?: NullableStringFieldUpdateOperationsInput | string | null
+    soldNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    assured?: BoolFieldUpdateOperationsInput | boolean
+    assuredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assuredById?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    contactInfoId?: StringFieldUpdateOperationsInput | string
+    listingDetailsId?: NullableStringFieldUpdateOperationsInput | string | null
+    mediaAttachments?: MediaAttachmentUncheckedUpdateManyWithoutListingNestedInput
+  }
+
+  export type UserUpsertWithoutListingConnectionRequestsInput = {
+    update: XOR<UserUpdateWithoutListingConnectionRequestsInput, UserUncheckedUpdateWithoutListingConnectionRequestsInput>
+    create: XOR<UserCreateWithoutListingConnectionRequestsInput, UserUncheckedCreateWithoutListingConnectionRequestsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutListingConnectionRequestsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutListingConnectionRequestsInput, UserUncheckedUpdateWithoutListingConnectionRequestsInput>
+  }
+
+  export type UserUpdateWithoutListingConnectionRequestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    posts?: PostUpdateManyWithoutCreatedByNestedInput
+    listings?: ListingUpdateManyWithoutUserNestedInput
+    assuredListings?: ListingUpdateManyWithoutAssuredByNestedInput
+    reviewedConnectionRequests?: ListingConnectionRequestUpdateManyWithoutReviewedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutListingConnectionRequestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    posts?: PostUncheckedUpdateManyWithoutCreatedByNestedInput
+    listings?: ListingUncheckedUpdateManyWithoutUserNestedInput
+    assuredListings?: ListingUncheckedUpdateManyWithoutAssuredByNestedInput
+    reviewedConnectionRequests?: ListingConnectionRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  }
+
+  export type UserUpsertWithoutReviewedConnectionRequestsInput = {
+    update: XOR<UserUpdateWithoutReviewedConnectionRequestsInput, UserUncheckedUpdateWithoutReviewedConnectionRequestsInput>
+    create: XOR<UserCreateWithoutReviewedConnectionRequestsInput, UserUncheckedCreateWithoutReviewedConnectionRequestsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutReviewedConnectionRequestsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutReviewedConnectionRequestsInput, UserUncheckedUpdateWithoutReviewedConnectionRequestsInput>
+  }
+
+  export type UserUpdateWithoutReviewedConnectionRequestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    posts?: PostUpdateManyWithoutCreatedByNestedInput
+    listings?: ListingUpdateManyWithoutUserNestedInput
+    assuredListings?: ListingUpdateManyWithoutAssuredByNestedInput
+    listingConnectionRequests?: ListingConnectionRequestUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutReviewedConnectionRequestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    posts?: PostUncheckedUpdateManyWithoutCreatedByNestedInput
+    listings?: ListingUncheckedUpdateManyWithoutUserNestedInput
+    assuredListings?: ListingUncheckedUpdateManyWithoutAssuredByNestedInput
+    listingConnectionRequests?: ListingConnectionRequestUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type SessionCreateManyUserInput = {
@@ -17219,8 +20157,72 @@ export namespace Prisma {
     soldNotes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    referenceNumber?: string | null
+    assured?: boolean
+    assuredAt?: Date | string | null
+    assuredById?: string | null
     contactInfoId: string
     listingDetailsId?: string | null
+  }
+
+  export type ListingCreateManyAssuredByInput = {
+    id?: string
+    status?: $Enums.ListingStatus
+    availabilityStatus?: $Enums.AvailabilityStatus
+    askingPrice: Decimal | DecimalJsLike | number | string
+    currency: string
+    soldPrice?: Decimal | DecimalJsLike | number | string | null
+    year: string
+    manufacturer: string
+    model: string
+    condition: string
+    serialNumber: string
+    hours?: string | null
+    miles?: string | null
+    repossessed?: boolean
+    equipmentCity?: string | null
+    equipmentStateProvince?: string | null
+    equipmentPostalCode?: string | null
+    equipmentCountry?: string | null
+    soldAt?: Date | string | null
+    reservedAt?: Date | string | null
+    reservedUntil?: Date | string | null
+    soldTo?: string | null
+    soldNotes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    referenceNumber?: string | null
+    assured?: boolean
+    assuredAt?: Date | string | null
+    userId?: string | null
+    contactInfoId: string
+    listingDetailsId?: string | null
+  }
+
+  export type ListingConnectionRequestCreateManyUserInput = {
+    id?: string
+    listingId: string
+    status?: string
+    proofDocument?: string | null
+    proofNotes?: string | null
+    rejectionReason?: string | null
+    reviewedById?: string | null
+    reviewedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ListingConnectionRequestCreateManyReviewedByInput = {
+    id?: string
+    listingId: string
+    userId: string
+    status?: string
+    proofDocument?: string | null
+    proofNotes?: string | null
+    rejectionReason?: string | null
+    reviewedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type SessionUpdateWithoutUserInput = {
@@ -17345,9 +20347,14 @@ export namespace Prisma {
     soldNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    assured?: BoolFieldUpdateOperationsInput | boolean
+    assuredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assuredBy?: UserUpdateOneWithoutAssuredListingsNestedInput
     contactInfo?: ContactInfoUpdateOneRequiredWithoutListingsNestedInput
     listingDetails?: ListingDetailsUpdateOneWithoutListingNestedInput
     mediaAttachments?: MediaAttachmentUpdateManyWithoutListingNestedInput
+    connectionRequests?: ListingConnectionRequestUpdateManyWithoutListingNestedInput
   }
 
   export type ListingUncheckedUpdateWithoutUserInput = {
@@ -17376,9 +20383,14 @@ export namespace Prisma {
     soldNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    assured?: BoolFieldUpdateOperationsInput | boolean
+    assuredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assuredById?: NullableStringFieldUpdateOperationsInput | string | null
     contactInfoId?: StringFieldUpdateOperationsInput | string
     listingDetailsId?: NullableStringFieldUpdateOperationsInput | string | null
     mediaAttachments?: MediaAttachmentUncheckedUpdateManyWithoutListingNestedInput
+    connectionRequests?: ListingConnectionRequestUncheckedUpdateManyWithoutListingNestedInput
   }
 
   export type ListingUncheckedUpdateManyWithoutUserInput = {
@@ -17407,8 +20419,196 @@ export namespace Prisma {
     soldNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    assured?: BoolFieldUpdateOperationsInput | boolean
+    assuredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assuredById?: NullableStringFieldUpdateOperationsInput | string | null
     contactInfoId?: StringFieldUpdateOperationsInput | string
     listingDetailsId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ListingUpdateWithoutAssuredByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumListingStatusFieldUpdateOperationsInput | $Enums.ListingStatus
+    availabilityStatus?: EnumAvailabilityStatusFieldUpdateOperationsInput | $Enums.AvailabilityStatus
+    askingPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    soldPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    year?: StringFieldUpdateOperationsInput | string
+    manufacturer?: StringFieldUpdateOperationsInput | string
+    model?: StringFieldUpdateOperationsInput | string
+    condition?: StringFieldUpdateOperationsInput | string
+    serialNumber?: StringFieldUpdateOperationsInput | string
+    hours?: NullableStringFieldUpdateOperationsInput | string | null
+    miles?: NullableStringFieldUpdateOperationsInput | string | null
+    repossessed?: BoolFieldUpdateOperationsInput | boolean
+    equipmentCity?: NullableStringFieldUpdateOperationsInput | string | null
+    equipmentStateProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    equipmentPostalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    equipmentCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    soldAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reservedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reservedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    soldTo?: NullableStringFieldUpdateOperationsInput | string | null
+    soldNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    assured?: BoolFieldUpdateOperationsInput | boolean
+    assuredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    user?: UserUpdateOneWithoutListingsNestedInput
+    contactInfo?: ContactInfoUpdateOneRequiredWithoutListingsNestedInput
+    listingDetails?: ListingDetailsUpdateOneWithoutListingNestedInput
+    mediaAttachments?: MediaAttachmentUpdateManyWithoutListingNestedInput
+    connectionRequests?: ListingConnectionRequestUpdateManyWithoutListingNestedInput
+  }
+
+  export type ListingUncheckedUpdateWithoutAssuredByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumListingStatusFieldUpdateOperationsInput | $Enums.ListingStatus
+    availabilityStatus?: EnumAvailabilityStatusFieldUpdateOperationsInput | $Enums.AvailabilityStatus
+    askingPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    soldPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    year?: StringFieldUpdateOperationsInput | string
+    manufacturer?: StringFieldUpdateOperationsInput | string
+    model?: StringFieldUpdateOperationsInput | string
+    condition?: StringFieldUpdateOperationsInput | string
+    serialNumber?: StringFieldUpdateOperationsInput | string
+    hours?: NullableStringFieldUpdateOperationsInput | string | null
+    miles?: NullableStringFieldUpdateOperationsInput | string | null
+    repossessed?: BoolFieldUpdateOperationsInput | boolean
+    equipmentCity?: NullableStringFieldUpdateOperationsInput | string | null
+    equipmentStateProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    equipmentPostalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    equipmentCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    soldAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reservedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reservedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    soldTo?: NullableStringFieldUpdateOperationsInput | string | null
+    soldNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    assured?: BoolFieldUpdateOperationsInput | boolean
+    assuredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    contactInfoId?: StringFieldUpdateOperationsInput | string
+    listingDetailsId?: NullableStringFieldUpdateOperationsInput | string | null
+    mediaAttachments?: MediaAttachmentUncheckedUpdateManyWithoutListingNestedInput
+    connectionRequests?: ListingConnectionRequestUncheckedUpdateManyWithoutListingNestedInput
+  }
+
+  export type ListingUncheckedUpdateManyWithoutAssuredByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumListingStatusFieldUpdateOperationsInput | $Enums.ListingStatus
+    availabilityStatus?: EnumAvailabilityStatusFieldUpdateOperationsInput | $Enums.AvailabilityStatus
+    askingPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    soldPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    year?: StringFieldUpdateOperationsInput | string
+    manufacturer?: StringFieldUpdateOperationsInput | string
+    model?: StringFieldUpdateOperationsInput | string
+    condition?: StringFieldUpdateOperationsInput | string
+    serialNumber?: StringFieldUpdateOperationsInput | string
+    hours?: NullableStringFieldUpdateOperationsInput | string | null
+    miles?: NullableStringFieldUpdateOperationsInput | string | null
+    repossessed?: BoolFieldUpdateOperationsInput | boolean
+    equipmentCity?: NullableStringFieldUpdateOperationsInput | string | null
+    equipmentStateProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    equipmentPostalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    equipmentCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    soldAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reservedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reservedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    soldTo?: NullableStringFieldUpdateOperationsInput | string | null
+    soldNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    assured?: BoolFieldUpdateOperationsInput | boolean
+    assuredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    contactInfoId?: StringFieldUpdateOperationsInput | string
+    listingDetailsId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ListingConnectionRequestUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    proofDocument?: NullableStringFieldUpdateOperationsInput | string | null
+    proofNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    listing?: ListingUpdateOneRequiredWithoutConnectionRequestsNestedInput
+    reviewedBy?: UserUpdateOneWithoutReviewedConnectionRequestsNestedInput
+  }
+
+  export type ListingConnectionRequestUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    listingId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    proofDocument?: NullableStringFieldUpdateOperationsInput | string | null
+    proofNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewedById?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ListingConnectionRequestUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    listingId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    proofDocument?: NullableStringFieldUpdateOperationsInput | string | null
+    proofNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewedById?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ListingConnectionRequestUpdateWithoutReviewedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    proofDocument?: NullableStringFieldUpdateOperationsInput | string | null
+    proofNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    listing?: ListingUpdateOneRequiredWithoutConnectionRequestsNestedInput
+    user?: UserUpdateOneRequiredWithoutListingConnectionRequestsNestedInput
+  }
+
+  export type ListingConnectionRequestUncheckedUpdateWithoutReviewedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    listingId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    proofDocument?: NullableStringFieldUpdateOperationsInput | string | null
+    proofNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ListingConnectionRequestUncheckedUpdateManyWithoutReviewedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    listingId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    proofDocument?: NullableStringFieldUpdateOperationsInput | string | null
+    proofNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ListingCreateManyContactInfoInput = {
@@ -17437,7 +20637,11 @@ export namespace Prisma {
     soldNotes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    userId: string
+    referenceNumber?: string | null
+    assured?: boolean
+    assuredAt?: Date | string | null
+    assuredById?: string | null
+    userId?: string | null
     listingDetailsId?: string | null
   }
 
@@ -17467,9 +20671,14 @@ export namespace Prisma {
     soldNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutListingsNestedInput
+    referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    assured?: BoolFieldUpdateOperationsInput | boolean
+    assuredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assuredBy?: UserUpdateOneWithoutAssuredListingsNestedInput
+    user?: UserUpdateOneWithoutListingsNestedInput
     listingDetails?: ListingDetailsUpdateOneWithoutListingNestedInput
     mediaAttachments?: MediaAttachmentUpdateManyWithoutListingNestedInput
+    connectionRequests?: ListingConnectionRequestUpdateManyWithoutListingNestedInput
   }
 
   export type ListingUncheckedUpdateWithoutContactInfoInput = {
@@ -17498,9 +20707,14 @@ export namespace Prisma {
     soldNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    userId?: StringFieldUpdateOperationsInput | string
+    referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    assured?: BoolFieldUpdateOperationsInput | boolean
+    assuredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assuredById?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
     listingDetailsId?: NullableStringFieldUpdateOperationsInput | string | null
     mediaAttachments?: MediaAttachmentUncheckedUpdateManyWithoutListingNestedInput
+    connectionRequests?: ListingConnectionRequestUncheckedUpdateManyWithoutListingNestedInput
   }
 
   export type ListingUncheckedUpdateManyWithoutContactInfoInput = {
@@ -17529,7 +20743,11 @@ export namespace Prisma {
     soldNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    userId?: StringFieldUpdateOperationsInput | string
+    referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    assured?: BoolFieldUpdateOperationsInput | boolean
+    assuredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assuredById?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
     listingDetailsId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -17544,6 +20762,19 @@ export namespace Prisma {
     thumbnailUrl?: string | null
     displayOrder?: number
     uploadedAt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ListingConnectionRequestCreateManyListingInput = {
+    id?: string
+    userId: string
+    status?: string
+    proofDocument?: string | null
+    proofNotes?: string | null
+    rejectionReason?: string | null
+    reviewedById?: string | null
+    reviewedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -17589,6 +20820,45 @@ export namespace Prisma {
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
     displayOrder?: IntFieldUpdateOperationsInput | number
     uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ListingConnectionRequestUpdateWithoutListingInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    proofDocument?: NullableStringFieldUpdateOperationsInput | string | null
+    proofNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutListingConnectionRequestsNestedInput
+    reviewedBy?: UserUpdateOneWithoutReviewedConnectionRequestsNestedInput
+  }
+
+  export type ListingConnectionRequestUncheckedUpdateWithoutListingInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    proofDocument?: NullableStringFieldUpdateOperationsInput | string | null
+    proofNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewedById?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ListingConnectionRequestUncheckedUpdateManyWithoutListingInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    proofDocument?: NullableStringFieldUpdateOperationsInput | string | null
+    proofNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewedById?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

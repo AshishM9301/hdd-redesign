@@ -18,6 +18,21 @@ const config = {
       },
     ],
   },
+  /**
+   * Limit file tracing to project root to avoid EPERM errors on Windows protected directories.
+   * This prevents Next.js from scanning outside the project folder.
+   */
+  outputFileTracingRoot: process.cwd(),
+  outputFileTracingExcludes: {
+    "*": [
+      "C:/Users/**",
+      "C:\\Users\\**",
+      "**/Application Data/**",
+      "**/AppData/**",
+      "**/Cookies/**",
+      "./generated/**",
+    ],
+  },
 };
 
 export default config;

@@ -11,7 +11,7 @@ import {
   AvailabilityStatus,
   MediaFileType,
   StorageProvider,
-} from "../../../../generated/prisma";
+} from "../../../../generated/prisma-client";
 import { StorageFactory } from "@/lib/storage";
 import { DEFAULT_STORAGE_CONFIG } from "@/lib/storage/types";
 import {
@@ -105,7 +105,7 @@ const contactInfoSchema = z
       .transform((val) => {
         if (!val || val === "") return undefined;
         const urlValidation = validateUrl(val);
-        return urlValidation.normalizedUrl ?? val;
+        return urlValidation.normalizedUrl || val;
       }),
     hearAboutUs: z.array(z.string()).default([]),
     hearAboutUsOther: z
@@ -334,7 +334,7 @@ const markAsSoldSchema = z.object({
     .string()
     .optional()
     .transform((val) => (val ? parseFloat(val) : undefined))
-    .refine((val) => val === undefined || (!isNaN(val ?? 0) && (val ?? 0) >= 0), {
+    .refine((val) => val === undefined || (!isNaN(val || 0) && (val || 0) >= 0), {
       message: "Sold price must be a valid positive number",
     }),
   soldTo: z.string().optional(),
@@ -588,7 +588,9 @@ async function processFileUpload(
   const storageProviderEnum =
     env.STORAGE_PROVIDER === "firebase"
       ? StorageProvider.FIREBASE
-      : StorageProvider.AWS;
+      : env.STORAGE_PROVIDER === "aws"
+        ? StorageProvider.AWS
+        : StorageProvider.RAILWAY;
 
   // Create MediaAttachment record
   const mediaAttachment = await dbInstance.mediaAttachment.create({
@@ -600,7 +602,7 @@ async function processFileUpload(
       fileSize,
       storageProvider: storageProviderEnum,
       storagePath: uploadResult.path,
-      thumbnailUrl: uploadResult.thumbnailUrl ?? null,
+      thumbnailUrl: uploadResult.thumbnailUrl || null,
       displayOrder,
     },
   });
@@ -625,7 +627,7 @@ export const listingRouter = createTRPCRouter({
   create: publicProcedure
     .input(createListingSchema)
     .mutation(async ({ ctx, input }) => {
-      const userId = ctx.session?.user?.id ?? null;
+      const userId = ctx.session?.user?.id || null;
 
       // Generate unique reference number
       const referenceNumber = await generateUniqueReferenceNumber(ctx.db);
@@ -809,10 +811,10 @@ export const listingRouter = createTRPCRouter({
             if (!urlValidation.valid) {
               throw new TRPCError({
                 code: "BAD_REQUEST",
-                message: urlValidation.error ?? "Invalid website URL",
+                message: urlValidation.error || "Invalid website URL",
               });
             }
-            sanitizedContactInfo.website = urlValidation.normalizedUrl ?? input.contactInfo.website;
+            sanitizedContactInfo.website = urlValidation.normalizedUrl || input.contactInfo.website;
           } else {
             sanitizedContactInfo.website = null;
           }

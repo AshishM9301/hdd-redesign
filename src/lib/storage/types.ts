@@ -33,7 +33,7 @@ export interface UploadResult {
 /**
  * Supported storage provider types
  */
-export type StorageProviderType = "firebase" | "aws";
+export type StorageProviderType = "firebase" | "aws" | "railway";
 
 /**
  * File validation result

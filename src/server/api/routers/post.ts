@@ -32,7 +32,7 @@ export const postRouter = createTRPCRouter({
       where: { createdBy: { id: ctx.session.user.id } },
     });
 
-    return post ?? null;
+    return post || null;
   }),
 
   getSecretMessage: protectedProcedure.query(() => {

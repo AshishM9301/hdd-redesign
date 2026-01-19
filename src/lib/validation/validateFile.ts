@@ -6,29 +6,32 @@
 
 import { fileTypeFromBuffer } from "file-type";
 import { getFileExtension } from "@/lib/storage/utils";
+import {
+  ALL_ALLOWED_MEDIA_MIME_TYPES,
+  ALLOWED_MEDIA_MIME_TYPES,
+  MEDIA_UPLOAD_LIMITS,
+} from "@/types/media";
 
 /**
  * Allowed MIME types for file uploads
  */
 export const ALLOWED_MIME_TYPES = {
-  images: ["image/jpeg", "image/png", "image/webp"],
-  videos: ["video/mp4", "video/webm"],
-  documents: ["application/pdf"],
+  images: [...ALLOWED_MEDIA_MIME_TYPES.images],
+  videos: [...ALLOWED_MEDIA_MIME_TYPES.videos],
+  documents: [...ALLOWED_MEDIA_MIME_TYPES.documents],
 } as const;
 
 export const ALL_ALLOWED_MIME_TYPES = [
-  ...ALLOWED_MIME_TYPES.images,
-  ...ALLOWED_MIME_TYPES.videos,
-  ...ALLOWED_MIME_TYPES.documents,
+  ...ALL_ALLOWED_MEDIA_MIME_TYPES,
 ] as const;
 
 /**
  * File size limits in bytes
  */
 export const FILE_SIZE_LIMITS = {
-  image: 10 * 1024 * 1024, // 10MB
-  video: 100 * 1024 * 1024, // 100MB
-  document: 5 * 1024 * 1024, // 5MB
+  image: MEDIA_UPLOAD_LIMITS.imageMaxBytes,
+  video: MEDIA_UPLOAD_LIMITS.videoMaxBytes,
+  document: MEDIA_UPLOAD_LIMITS.documentMaxBytes,
 } as const;
 
 /**
@@ -104,6 +107,7 @@ export function validateExtensionMatchesMimeType(
     webp: ["image/webp"],
     mp4: ["video/mp4"],
     webm: ["video/webm"],
+    mov: ["video/quicktime"],
     pdf: ["application/pdf"],
   };
 
@@ -126,7 +130,7 @@ export function validateFileSizeByType(
   const valid = fileSize > 0 && fileSize <= maxSize;
 
   if (!valid) {
-    const category = getFileCategory(mimeType) ?? "file";
+    const category = getFileCategory(mimeType) || "file";
     const maxSizeMB = Math.round(maxSize / (1024 * 1024));
     return {
       valid: false,
@@ -166,7 +170,11 @@ export async function validateFileContent(
     const actualMimeType = fileType.mime;
 
     // Check if actual type is in allowed list
-    if (!ALL_ALLOWED_MIME_TYPES.includes(actualMimeType as (typeof ALL_ALLOWED_MIME_TYPES)[number])) {
+    if (
+      !ALL_ALLOWED_MIME_TYPES.includes(
+        actualMimeType as (typeof ALL_ALLOWED_MIME_TYPES)[number],
+      )
+    ) {
       return {
         valid: false,
         actualMimeType,
@@ -214,7 +222,11 @@ export async function validateFile(
   const errors: string[] = [];
 
   // Validate MIME type is allowed
-  if (!ALL_ALLOWED_MIME_TYPES.includes(declaredMimeType.toLowerCase() as (typeof ALL_ALLOWED_MIME_TYPES)[number])) {
+  if (
+    !ALL_ALLOWED_MIME_TYPES.includes(
+      declaredMimeType.toLowerCase() as (typeof ALL_ALLOWED_MIME_TYPES)[number],
+    )
+  ) {
     errors.push(`MIME type ${declaredMimeType} is not allowed`);
   }
 
@@ -231,13 +243,13 @@ export async function validateFile(
   // Validate file size
   const sizeValidation = validateFileSizeByType(buffer.length, declaredMimeType);
   if (!sizeValidation.valid) {
-    errors.push(sizeValidation.error ?? "File size exceeds limit");
+    errors.push(sizeValidation.error || "File size exceeds limit");
   }
 
   // Validate file content
   const contentValidation = await validateFileContent(buffer, declaredMimeType);
   if (!contentValidation.valid) {
-    errors.push(contentValidation.error ?? "File content validation failed");
+    errors.push(contentValidation.error || "File content validation failed");
   }
 
   return {

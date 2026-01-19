@@ -14,7 +14,7 @@ export function sanitizeText(input: string): string {
   if (typeof input !== "string") {
     return "";
   }
-  
+
   // Remove HTML tags
   return input.replace(/<[^>]*>/g, "");
 }
@@ -29,7 +29,7 @@ export function sanitizeHtml(input: string): string {
   if (typeof input !== "string") {
     return "";
   }
-  
+
   const htmlEscapes: Record<string, string> = {
     "&": "&amp;",
     "<": "&lt;",
@@ -38,8 +38,8 @@ export function sanitizeHtml(input: string): string {
     "'": "&#x27;",
     "/": "&#x2F;",
   };
-  
-  return input.replace(/[&<>"'/]/g, (match) => htmlEscapes[match] ?? match);
+
+  return input.replace(/[&<>"'/]/g, (match) => htmlEscapes[match] || match);
 }
 
 /**

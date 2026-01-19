@@ -15,7 +15,12 @@ const serverSchema = z
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
-    STORAGE_PROVIDER: z.enum(["firebase", "aws"]).default("firebase"),
+    // Email (Resend)
+    RESEND_API_KEY: z.string().min(1).optional(),
+    RESEND_FROM: z.string().email().optional(),
+    ADMIN_NOTIFICATION_EMAIL: z.string().email().optional(),
+    SITE_URL: z.string().url().optional(),
+    STORAGE_PROVIDER: z.enum(["firebase", "aws", "railway"]).default("railway"),
     // Firebase variables - optional in development, required when STORAGE_PROVIDER is "firebase" or in production
     FIREBASE_PROJECT_ID: z.string().min(1).optional(),
     FIREBASE_STORAGE_BUCKET: z.string().min(1).optional(),
@@ -25,13 +30,19 @@ const serverSchema = z
     AWS_SECRET_ACCESS_KEY: z.string().optional(),
     AWS_REGION: z.string().optional(),
     AWS_S3_BUCKET_NAME: z.string().optional(),
+    // Railway S3-compatible storage
+    RAILWAY_S3_ENDPOINT: z.string().url().optional(),
+    RAILWAY_S3_REGION: z.string().optional(),
+    RAILWAY_S3_BUCKET: z.string().optional(),
+    RAILWAY_S3_ACCESS_KEY_ID: z.string().optional(),
+    RAILWAY_S3_SECRET_ACCESS_KEY: z.string().optional(),
     // Cron job security
     CRON_SECRET: isProduction
       ? z.string().min(1)
       : z.string().min(1).optional(),
   })
   .superRefine((data, ctx) => {
-    const storageProvider = data.STORAGE_PROVIDER ?? "firebase";
+    const storageProvider = data.STORAGE_PROVIDER ?? "railway";
     const isProd = data.NODE_ENV === "production";
 
     // Validate Firebase variables when STORAGE_PROVIDER is "firebase" or in production
@@ -95,6 +106,28 @@ const serverSchema = z
         });
       }
     }
+
+    // Validate Railway variables when STORAGE_PROVIDER is "railway"
+    if (storageProvider === "railway") {
+      const missingFields = [];
+      if (!data.RAILWAY_S3_ENDPOINT) missingFields.push("RAILWAY_S3_ENDPOINT");
+      if (!data.RAILWAY_S3_REGION) missingFields.push("RAILWAY_S3_REGION");
+      if (!data.RAILWAY_S3_BUCKET) missingFields.push("RAILWAY_S3_BUCKET");
+      if (!data.RAILWAY_S3_ACCESS_KEY_ID) {
+        missingFields.push("RAILWAY_S3_ACCESS_KEY_ID");
+      }
+      if (!data.RAILWAY_S3_SECRET_ACCESS_KEY) {
+        missingFields.push("RAILWAY_S3_SECRET_ACCESS_KEY");
+      }
+
+      for (const field of missingFields) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `${field} is required when STORAGE_PROVIDER is 'railway'`,
+          path: [field],
+        });
+      }
+    }
   });
 
 export const env = createEnv({
@@ -132,6 +165,15 @@ export const env = createEnv({
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
     AWS_REGION: process.env.AWS_REGION,
     AWS_S3_BUCKET_NAME: process.env.AWS_S3_BUCKET_NAME,
+    RESEND_API_KEY: process.env.RESEND_API_KEY,
+    RESEND_FROM: process.env.RESEND_FROM,
+    ADMIN_NOTIFICATION_EMAIL: process.env.ADMIN_NOTIFICATION_EMAIL,
+    SITE_URL: process.env.SITE_URL,
+    RAILWAY_S3_ENDPOINT: process.env.RAILWAY_S3_ENDPOINT,
+    RAILWAY_S3_REGION: process.env.RAILWAY_S3_REGION,
+    RAILWAY_S3_BUCKET: process.env.RAILWAY_S3_BUCKET,
+    RAILWAY_S3_ACCESS_KEY_ID: process.env.RAILWAY_S3_ACCESS_KEY_ID,
+    RAILWAY_S3_SECRET_ACCESS_KEY: process.env.RAILWAY_S3_SECRET_ACCESS_KEY,
     CRON_SECRET: process.env.CRON_SECRET,
   },
   /**

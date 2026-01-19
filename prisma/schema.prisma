@@ -3,7 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
+  output   = "../generated/prisma-client"
 }
 
 // NOTE: When using mysql or sqlserver, uncomment the //@db.Text annotations in model Account below
@@ -41,6 +41,7 @@ enum MediaFileType {
 enum StorageProvider {
   FIREBASE
   AWS
+  RAILWAY
 }
 
 model Post {
@@ -71,6 +72,8 @@ model User {
   assuredListings Listing[] @relation("AssuredListings")
   listingConnectionRequests ListingConnectionRequest[] @relation("ConnectionRequestUser")
   reviewedConnectionRequests ListingConnectionRequest[] @relation("ConnectionRequestReviewer")
+  mediaUploadRequests       MediaUploadRequest[]       @relation("MediaUploadRequester")
+  reviewedMediaUploadRequests MediaUploadRequest[]     @relation("MediaUploadReviewedBy")
 
   @@unique([email])
   @@map("user")
@@ -215,6 +218,7 @@ model Listing {
   listingDetails         ListingDetails?    @relation(fields: [listingDetailsId], references: [id], onDelete: Cascade)
   mediaAttachments       MediaAttachment[]
   connectionRequests     ListingConnectionRequest[]
+  mediaUploadRequests    MediaUploadRequest[]
 
   @@index([status, availabilityStatus])
   @@index([availabilityStatus])
@@ -238,7 +242,7 @@ model MediaAttachment {
   fileType        MediaFileType
   mimeType        String
   fileSize        Int
-  storageProvider StorageProvider @default(FIREBASE)
+  storageProvider StorageProvider @default(RAILWAY)
   storagePath     String
   thumbnailUrl    String?
   displayOrder    Int             @default(0)
@@ -275,4 +279,34 @@ model ListingConnectionRequest {
   @@index([status])
   @@index([userId])
   @@map("listing_connection_request")
+}
+
+// Media Upload Request Model
+// Tracks uploads submitted by users (authenticated or anonymous)
+model MediaUploadRequest {
+  id               String   @id @default(cuid())
+  listingId        String?
+  listing          Listing? @relation(fields: [listingId], references: [id])
+  userId           String?
+  user             User?    @relation("MediaUploadRequester", fields: [userId], references: [id])
+  contactName      String
+  email            String
+  phone            String?
+  message          String?
+  status           String   @default("PENDING")
+  referenceNumber  String?
+  mediaFiles       Json
+  cancellationToken String  @unique
+  reviewedById     String?
+  reviewedBy       User?    @relation("MediaUploadReviewedBy", fields: [reviewedById], references: [id])
+  reviewedAt       DateTime?
+  rejectionReason  String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([email])
+  @@index([status])
+  @@index([userId])
+  @@index([listingId])
+  @@index([cancellationToken])
 }

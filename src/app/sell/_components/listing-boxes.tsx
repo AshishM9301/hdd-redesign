@@ -12,6 +12,8 @@ import {
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import UploadPhotosDialog from "./upload-photos-dialog";
+import { Button } from "@/components/ui/button";
 
 const listingItems = [
   {
@@ -57,6 +59,35 @@ export default function ListingBoxes() {
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
       {listingItems.map((item) => {
         const Icon = item.icon;
+
+        if (item.title === "UPLOAD PHOTOS & DOCUMENTS") {
+          return (
+            <UploadPhotosDialog key={item.title}>
+              <Button
+                type="button"
+                variant="ghost"
+                className="h-auto w-full p-0 hover:bg-transparent"
+              >
+                <Card
+                  className={cn(
+                    "group cursor-pointer transition-all hover:shadow-lg",
+                    `bg-gradient-to-br ${item.gradient}`,
+                  )}
+                >
+                  <CardContent className="flex flex-col items-center justify-center p-8">
+                    <div className="bg-primary/10 group-hover:bg-primary/20 mb-4 rounded-full p-4 transition-colors">
+                      <Icon className="text-primary h-8 w-8" />
+                    </div>
+                    <h3 className="text-center text-lg font-semibold">
+                      {item.title}
+                    </h3>
+                  </CardContent>
+                </Card>
+              </Button>
+            </UploadPhotosDialog>
+          );
+        }
+
         return (
           <Link key={item.title} href={item.href}>
             <Card

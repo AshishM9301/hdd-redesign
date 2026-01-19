@@ -14,6 +14,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Upload, X, Image as ImageIcon, Video, Play } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  ALL_ALLOWED_MEDIA_MIME_TYPES,
+  MEDIA_UPLOAD_LIMITS,
+} from "@/types/media";
 
 export type MediaFile = {
   file: File;
@@ -68,9 +72,27 @@ export default function ImageUploadDialog({
     const filesToProcess = Array.from(filesList).slice(0, remainingSlots);
 
     filesToProcess.forEach((file) => {
-      if (file.type.startsWith("image/") || file.type.startsWith("video/")) {
+      const mimeType = (file.type ?? "").toLowerCase();
+      if (
+        !ALL_ALLOWED_MEDIA_MIME_TYPES.includes(
+          mimeType as (typeof ALL_ALLOWED_MEDIA_MIME_TYPES)[number],
+        )
+      ) {
+        return;
+      }
+
+      const isImage = mimeType.startsWith("image/");
+      const maxBytes = isImage
+        ? MEDIA_UPLOAD_LIMITS.imageMaxBytes
+        : MEDIA_UPLOAD_LIMITS.videoMaxBytes;
+
+      if (file.size <= 0 || file.size > maxBytes) {
+        return;
+      }
+
+      if (isImage || mimeType.startsWith("video/")) {
         const preview = URL.createObjectURL(file);
-        const type = file.type.startsWith("image/") ? "image" : "video";
+        const type = isImage ? "image" : "video";
         newFiles.push({ file, preview, type });
       }
     });

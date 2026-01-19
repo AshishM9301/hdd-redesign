@@ -294,7 +294,7 @@ export const adminRouter = createTRPCRouter({
                 email: true,
               },
             },
-            reviewedByUser: {
+            reviewedBy: {
               select: {
                 id: true,
                 name: true,
@@ -399,7 +399,7 @@ export const adminRouter = createTRPCRouter({
               email: true,
             },
           },
-          reviewedByUser: {
+          reviewedBy: {
             select: {
               id: true,
               name: true,
@@ -471,7 +471,7 @@ export const adminRouter = createTRPCRouter({
               email: true,
             },
           },
-          reviewedByUser: {
+          reviewedBy: {
             select: {
               id: true,
               name: true,

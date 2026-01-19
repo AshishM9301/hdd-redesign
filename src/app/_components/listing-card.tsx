@@ -32,10 +32,10 @@ export function ListingCard({ listing }: Props) {
       onClick={() => router.push(`/listings/${listing.id}`)}
     >
       <div className="bg-accent/40 relative aspect-4/3 w-full overflow-hidden">
-        {firstImage?.thumbnailUrl || firstImage?.url ? (
+        {firstImage?.thumbnailUrl || firstImage?.storagePath ? (
           <Image
-            src={firstImage.thumbnailUrl || firstImage.url}
-            alt={`${listing.manufacturer} ${listing.model}`}
+            src={firstImage.thumbnailUrl || firstImage.storagePath}
+            alt={firstImage.fileName}
             fill
             className="object-cover transition-transform duration-300 hover:scale-105"
             sizes="(min-width: 1024px) 250px, (min-width: 768px) 33vw, 100vw"
@@ -67,7 +67,7 @@ export function ListingCard({ listing }: Props) {
       <CardContent className="flex flex-1 flex-col justify-between gap-3 pb-4">
         <div className="flex items-center justify-between">
           <span className="text-lg font-semibold">
-            {formatPrice(listing.askingPrice, listing.currency)}
+            {formatPrice(Number(listing.askingPrice.toString()), listing.currency)}
           </span>
           {listing.contactInfo && (
             <span className="text-muted-foreground text-xs">

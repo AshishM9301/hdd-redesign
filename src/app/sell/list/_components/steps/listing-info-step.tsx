@@ -87,7 +87,7 @@ export default function ListingInfoStep() {
           </FieldLabel>
           <FieldContent>
             <Select
-              value={watch("year") || ""}
+              value={watch("year") ?? ""}
               onValueChange={(value) => setValue("year", value)}
             >
               <SelectTrigger className="w-full">
@@ -134,7 +134,7 @@ export default function ListingInfoStep() {
           </FieldLabel>
           <FieldContent>
             <Select
-              value={watch("condition") || ""}
+              value={watch("condition") ?? ""}
               onValueChange={(value) => setValue("condition", value)}
             >
               <SelectTrigger className="w-full">

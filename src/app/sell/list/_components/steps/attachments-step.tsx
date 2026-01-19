@@ -14,7 +14,7 @@ const MAX_FILES = 5;
 
 export default function AttachmentsStep() {
   const { watch, setValue } = useFormContext<ListingFormData>();
-  const attachments = watch("attachments") || [];
+  const attachments = watch("attachments") ?? [];
   const [uploadedFiles, setUploadedFiles] = React.useState<
     (MediaFile | null)[]
   >(Array.from({ length: MAX_FILES }, () => null));

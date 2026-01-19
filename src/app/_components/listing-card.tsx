@@ -22,7 +22,7 @@ export function ListingCard({ listing }: Props) {
   const formatPrice = (price: number, currency: string) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
-      currency: currency || "USD",
+      currency: currency ?? "USD",
     }).format(price);
   };
 
@@ -32,9 +32,9 @@ export function ListingCard({ listing }: Props) {
       onClick={() => router.push(`/listings/${listing.id}`)}
     >
       <div className="bg-accent/40 relative aspect-4/3 w-full overflow-hidden">
-        {firstImage?.thumbnailUrl || firstImage?.storagePath ? (
+        {firstImage?.thumbnailUrl ?? firstImage?.storagePath ? (
           <Image
-            src={firstImage.thumbnailUrl || firstImage.storagePath}
+            src={firstImage.thumbnailUrl ?? firstImage.storagePath}
             alt={firstImage.fileName}
             fill
             className="object-cover transition-transform duration-300 hover:scale-105"

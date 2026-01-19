@@ -23,7 +23,7 @@ export default function ContactInfoStep() {
     formState: { errors },
   } = useFormContext<ListingFormData>();
 
-  const hearAboutUs = watch("hearAboutUs") || [];
+  const hearAboutUs = watch("hearAboutUs") ?? [];
   const acceptTerms = watch("acceptTerms");
 
   const handleHearAboutUsChange = (value: string, checked: boolean) => {

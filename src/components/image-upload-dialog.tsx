@@ -86,11 +86,11 @@ export default function ImageUploadDialog({
         ? MEDIA_UPLOAD_LIMITS.imageMaxBytes
         : MEDIA_UPLOAD_LIMITS.videoMaxBytes;
 
-      if (file.size <= 0 || file.size > maxBytes) {
+      if (file.size <= 0 ?? file.size > maxBytes) {
         return;
       }
 
-      if (isImage || mimeType.startsWith("video/")) {
+      if (isImage ?? mimeType.startsWith("video/")) {
         const preview = URL.createObjectURL(file);
         const type = isImage ? "image" : "video";
         newFiles.push({ file, preview, type });

@@ -40,7 +40,7 @@ export default function AdminListingsPage() {
     status: status !== "all" ? (status as ListingStatus) : undefined,
     assured:
       assured !== "all" ? assured === "assured" : undefined,
-    search: search || undefined,
+    search: search ?? undefined,
   });
 
   const assureMutation = api.admin.assureListing.useMutation({
@@ -49,7 +49,7 @@ export default function AdminListingsPage() {
       void refetch();
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to assure listing");
+      toast.error(error.message ?? "Failed to assure listing");
     },
   });
 
@@ -59,7 +59,7 @@ export default function AdminListingsPage() {
       void refetch();
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to remove assurance");
+      toast.error(error.message ?? "Failed to remove assurance");
     },
   });
 
@@ -141,7 +141,7 @@ export default function AdminListingsPage() {
             <Skeleton key={i} className="h-16 w-full" />
           ))}
         </div>
-      ) : !data || data.listings.length === 0 ? (
+      ) : !data ?? data.listings.length === 0 ? (
         <div className="rounded-lg border border-dashed p-8 text-center">
           <p className="text-muted-foreground">No listings found</p>
         </div>
@@ -163,7 +163,7 @@ export default function AdminListingsPage() {
                 {data.listings.map((listing) => (
                   <TableRow key={listing.id}>
                     <TableCell className="font-mono text-sm">
-                      {listing.referenceNumber || "N/A"}
+                      {(listing?.referenceNumber ?? "N/A")}
                     </TableCell>
                     <TableCell>
                       <div>
@@ -171,7 +171,7 @@ export default function AdminListingsPage() {
                           {listing.manufacturer} {listing.model}
                         </div>
                         <div className="text-muted-foreground text-xs">
-                          {listing.year}
+                          {listing?.year}
                         </div>
                       </div>
                     </TableCell>

@@ -33,12 +33,12 @@ export default function UploadRequestDetailClient({ requestId }: Props) {
       await query.refetch();
       router.refresh();
     },
-    onError: (error) => toast.error(error.message || "Unable to cancel request"),
+    onError: (error) => toast.error(error.message ?? "Unable to cancel request"),
   });
 
   const data = query.data;
   const files = parseUploadRequestFiles(data?.mediaFiles);
-  const isBusy = query.isFetching || cancelMutation.isPending;
+  const isBusy = query.isFetching ?? cancelMutation.isPending;
 
   if (!requestId) {
     return (

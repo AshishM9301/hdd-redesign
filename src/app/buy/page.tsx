@@ -27,12 +27,12 @@ export default function BuyPage() {
   const [maxPrice, setMaxPrice] = React.useState<string>("");
 
   const { data, isLoading, error } = api.listing.getAvailable.useQuery({
-    manufacturer: manufacturer || undefined,
-    model: model || undefined,
-    year: year || undefined,
+    manufacturer: manufacturer ?? undefined,
+    model: model ?? undefined,
+    year: year ?? undefined,
     condition: condition && condition !== "all" ? condition : undefined,
-    minPrice: minPrice || undefined,
-    maxPrice: maxPrice || undefined,
+    minPrice: minPrice ?? undefined,
+    maxPrice: maxPrice ?? undefined,
     page,
     limit: 20,
   });
@@ -55,7 +55,7 @@ export default function BuyPage() {
       </section>
 
       {/* Filters */}
-      <BuyFilters products={data?.listings || []} />
+      <BuyFilters products={data?.listings ?? []} />
 
       {/* Results */}
       {/* {isLoading ? (
@@ -76,7 +76,7 @@ export default function BuyPage() {
             Error loading listings. Please try again.
           </p>
         </Card>
-      ) : !data || data.listings.length === 0 ? (
+      ) : !data ?? data.listings.length === 0 ? (
         <Card className="flex min-h-[200px] items-center justify-center border-dashed">
           <p className="text-muted-foreground text-sm">
             No listings available. Check back later!

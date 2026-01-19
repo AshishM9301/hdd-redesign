@@ -48,7 +48,7 @@ function RequestTable({ requests }: { requests: UploadRequest[] }) {
       toast.success("Request cancelled");
       await utils.mediaUpload.getMyUploadRequests.invalidate();
     },
-    onError: (error) => toast.error(error.message || "Unable to cancel request"),
+    onError: (error) => toast.error(error.message ?? "Unable to cancel request"),
   });
 
   const isBusy = cancelMutation.isPending;
@@ -79,7 +79,7 @@ function RequestTable({ requests }: { requests: UploadRequest[] }) {
                 <TableRow key={request.id}>
                   <TableCell className="font-mono text-xs">{request.id.slice(0, 8)}…</TableCell>
                   <TableCell className="text-sm">
-                    {(request.referenceNumber || request.listing?.referenceNumber) || "—"}
+                    {(request.referenceNumber ?? request.listing?.referenceNumber) ?? "—"}
                   </TableCell>
                   <TableCell>
                     <UploadStatusBadge status={request.status} />
@@ -184,7 +184,7 @@ export default function MyUploadRequestsClient() {
         </p>
       </div>
 
-      {!requests || requests.length === 0 ? <EmptyState /> : <RequestTable requests={requests} />}
+      {!requests ?? requests.length === 0 ? <EmptyState /> : <RequestTable requests={requests} />}
     </div>
   );
 }

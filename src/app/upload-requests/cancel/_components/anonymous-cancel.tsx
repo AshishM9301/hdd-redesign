@@ -23,7 +23,7 @@ export default function AnonymousCancelClient({ initialToken = "" }: Props) {
     onSuccess: () => {
       toast.success("Upload request cancelled");
     },
-    onError: (error) => toast.error(error.message || "Unable to cancel request"),
+    onError: (error) => toast.error(error.message ?? "Unable to cancel request"),
   });
 
   const isBusy = mutation.isPending;

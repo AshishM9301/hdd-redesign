@@ -49,7 +49,7 @@ export function validateStatusTransition(
 
   const allowed = ALLOWED_TRANSITIONS[currentStatus];
 
-  if (!allowed || !allowed.includes(newStatus)) {
+  if (!allowed?.includes(newStatus)) {
     throw new TRPCError({
       code: "BAD_REQUEST",
       message: `Cannot transition from ${currentStatus} to ${newStatus}`,

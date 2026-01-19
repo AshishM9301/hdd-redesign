@@ -6,7 +6,7 @@
  * Security: Requires CRON_SECRET to be provided in the Authorization header
  */
 
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { env } from "@/env";
 import { checkAndExpireReservations } from "@/server/jobs/reservation-expiry";
 

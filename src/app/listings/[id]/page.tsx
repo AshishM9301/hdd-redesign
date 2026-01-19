@@ -60,7 +60,7 @@ export default function ListingDetailPage() {
       void listingQuery.refetch();
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to mark listing as sold");
+      toast.error(error.message ?? "Failed to mark listing as sold");
     },
   });
 
@@ -70,7 +70,7 @@ export default function ListingDetailPage() {
       void listingQuery.refetch();
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to archive listing");
+      toast.error(error.message ?? "Failed to archive listing");
     },
   });
 
@@ -80,7 +80,7 @@ export default function ListingDetailPage() {
       void listingQuery.refetch();
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to link listing to account");
+      toast.error(error.message ?? "Failed to link listing to account");
     },
   });
 
@@ -93,9 +93,9 @@ export default function ListingDetailPage() {
     if (!listing) return;
     markAsSoldMutation.mutate({
       listingId: listing.id,
-      soldPrice: soldPrice || undefined,
-      soldTo: soldTo || undefined,
-      soldNotes: soldNotes || undefined,
+      soldPrice: soldPrice ?? undefined,
+      soldTo: soldTo ?? undefined,
+      soldNotes: soldNotes ?? undefined,
     });
   };
 
@@ -107,7 +107,7 @@ export default function ListingDetailPage() {
   const formatPrice = (price: number, currency: string) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
-      currency: currency || "USD",
+      currency: currency ?? "USD",
     }).format(price);
   };
 
@@ -135,7 +135,7 @@ export default function ListingDetailPage() {
     );
   }
 
-  if (error || !listing) {
+  if (error ?? !listing) {
     return (
       <div className="container mx-auto px-4 py-8">
         <Button variant="ghost" onClick={() => router.back()}>
@@ -158,13 +158,13 @@ export default function ListingDetailPage() {
 
   const images = listing.mediaAttachments?.filter(
     (m) => m.fileType === MediaFileType.IMAGE
-  ) || [];
+  ) ?? [];
   const videos = listing.mediaAttachments?.filter(
     (m) => m.fileType === MediaFileType.VIDEO
-  ) || [];
+  ) ?? [];
   const documents = listing.mediaAttachments?.filter(
     (m) => m.fileType === MediaFileType.DOCUMENT
-  ) || [];
+  ) ?? [];
 
   // Check if current user is owner
   const isOwner = user && listing?.userId && user.id === listing.userId;
@@ -186,7 +186,7 @@ export default function ListingDetailPage() {
             <>
               <div className="relative aspect-square w-full overflow-hidden rounded-lg border">
                 <Image
-                  src={images[0]?.thumbnailUrl || images[0]?.storagePath || ""}
+                  src={images[0]?.thumbnailUrl ?? images[0]?.storagePath ?? ""}
                   alt={`${listing.manufacturer} ${listing.model}`}
                   fill
                   className="object-cover"
@@ -203,7 +203,7 @@ export default function ListingDetailPage() {
                       className="relative aspect-square w-full overflow-hidden rounded border transition-opacity hover:opacity-80"
                     >
                       <Image
-                        src={image.thumbnailUrl || image.storagePath}
+                        src={image.thumbnailUrl ?? image.storagePath}
                         alt={`${listing.manufacturer} ${listing.model} - Image ${index + 2}`}
                         fill
                         className="object-cover"
@@ -365,7 +365,7 @@ export default function ListingDetailPage() {
           {/* Owner Actions */}
           {isOwner && (
             <div className="flex flex-col gap-2">
-              {(listing.status === ListingStatus.PUBLISHED ||
+              {(listing.status === ListingStatus.PUBLISHED ??
                 listing.status === ListingStatus.RESERVED) && (
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
@@ -546,8 +546,8 @@ export default function ListingDetailPage() {
           open={previewIndex !== null}
           onOpenChange={(open) => !open && setPreviewIndex(null)}
           file={{
-            preview: images[previewIndex]?.thumbnailUrl || images[previewIndex]?.storagePath || "",
-            name: images[previewIndex]?.fileName || "",
+            preview: images[previewIndex]?.thumbnailUrl ?? images[previewIndex]?.storagePath ?? "",
+            name: images[previewIndex]?.fileName ?? "",
             type: "image",
           }}
         />

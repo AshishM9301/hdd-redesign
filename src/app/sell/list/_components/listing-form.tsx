@@ -166,7 +166,7 @@ export default function ListingForm() {
     },
     onError: (error) => {
       console.error("Error creating listing:", error);
-      toast.error(error.message || "Failed to create listing");
+      toast.error(error.message ?? "Failed to create listing");
       // Reset dialog states on error
       setShowAnonymousDialog(false);
       setShowAuthenticatedDialog(false);
@@ -177,7 +177,7 @@ export default function ListingForm() {
   const uploadMedia = api.listing.uploadMedia.useMutation({
     onError: (error) => {
       console.error("Error uploading media:", error);
-      toast.error(error.message || "Failed to upload files");
+      toast.error(error.message ?? "Failed to upload files");
     },
   });
 
@@ -189,7 +189,7 @@ export default function ListingForm() {
     },
     onError: (error) => {
       console.error("Error publishing listing:", error);
-      toast.error(error.message || "Failed to publish listing");
+      toast.error(error.message ?? "Failed to publish listing");
       setShouldPublish(false);
     },
   });
@@ -295,7 +295,7 @@ export default function ListingForm() {
         phone: data.phone,
         email: data.email,
         website: data.website,
-        hearAboutUs: data.hearAboutUs || [],
+        hearAboutUs: data.hearAboutUs ?? [],
         hearAboutUsOther: data.hearAboutUsOther,
         acceptTerms: data.acceptTerms,
       };
@@ -310,7 +310,7 @@ export default function ListingForm() {
         currency: data.currency,
         hours: data.hours,
         miles: data.miles,
-        repossessed: data.repossessed || false,
+        repossessed: data.repossessed ?? false,
         equipmentCity: data.equipmentCity,
         equipmentStateProvince: data.equipmentStateProvince,
         equipmentPostalCode: data.equipmentPostalCode,
@@ -664,16 +664,16 @@ export default function ListingForm() {
             onClick={handleStepSubmit}
             disabled={
               currentStep === STEPS.length
-                ? form.formState.isSubmitting ||
-                  createListing.isPending ||
-                  uploadMedia.isPending ||
+                ? form.formState.isSubmitting ??
+                  createListing.isPending ??
+                  uploadMedia.isPending ??
                   publishListing.isPending
                 : !isCurrentStepValid
             }
             className={`${currentStep === STEPS.length ? "text-background bg-yellow-400 hover:bg-yellow-500 active:bg-yellow-600" : isCurrentStepValid ? "bg-primary/90 hover:bg-primary-foreground/10 border border-white/20 hover:border-white" : ""}`}
           >
             {currentStep === STEPS.length ? (
-              createListing.isPending || uploadMedia.isPending || publishListing.isPending ? (
+              createListing.isPending ?? uploadMedia.isPending ?? publishListing.isPending ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Submitting...
@@ -750,10 +750,10 @@ export default function ListingForm() {
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => handleConfirmAuthenticatedSubmit(false)}
-              disabled={createListing.isPending || publishListing.isPending}
+              disabled={createListing.isPending ?? publishListing.isPending}
               className="border bg-background text-foreground shadow-sm hover:bg-accent hover:text-accent-foreground"
             >
-              {createListing.isPending || publishListing.isPending ? (
+              {createListing.isPending ?? publishListing.isPending ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Saving...
@@ -764,9 +764,9 @@ export default function ListingForm() {
             </AlertDialogAction>
             <AlertDialogAction
               onClick={() => handleConfirmAuthenticatedSubmit(true)}
-              disabled={createListing.isPending || publishListing.isPending}
+              disabled={createListing.isPending ?? publishListing.isPending}
             >
-              {createListing.isPending || publishListing.isPending ? (
+              {createListing.isPending ?? publishListing.isPending ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Publishing...

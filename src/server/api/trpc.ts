@@ -148,7 +148,7 @@ export const adminProcedure = protectedProcedure.use(async ({ ctx, next }) => {
     select: { role: true },
   });
 
-  if (!user || user.role !== "admin") {
+  if (user?.role !== "admin") {
     throw new TRPCError({
       code: "FORBIDDEN",
       message: "Admin access required",

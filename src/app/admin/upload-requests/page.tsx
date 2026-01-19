@@ -79,7 +79,7 @@ export default function AdminUploadRequestsPage() {
       page,
       limit: 20,
       status: status !== "all" ? (status as UploadStatus) : undefined,
-      search: search || undefined,
+      search: search ?? undefined,
     });
 
   const approveMutation = api.admin.approveUploadRequest.useMutation({
@@ -87,7 +87,7 @@ export default function AdminUploadRequestsPage() {
       toast.success("Request approved");
       void refetch();
     },
-    onError: (error) => toast.error(error.message || "Failed to approve"),
+    onError: (error) => toast.error(error.message ?? "Failed to approve"),
   });
 
   const rejectMutation = api.admin.rejectUploadRequest.useMutation({
@@ -95,7 +95,7 @@ export default function AdminUploadRequestsPage() {
       toast.success("Request rejected");
       void refetch();
     },
-    onError: (error) => toast.error(error.message || "Failed to reject"),
+    onError: (error) => toast.error(error.message ?? "Failed to reject"),
   });
 
   const handleApprove = (requestId: string) => {
@@ -171,7 +171,7 @@ export default function AdminUploadRequestsPage() {
 
       {isLoading ? (
         <div className="space-y-4">{loadingRows}</div>
-      ) : !data || data.requests.length === 0 ? (
+      ) : !data ?? data.requests.length === 0 ? (
         <div className="rounded-lg border border-dashed p-8 text-center">
           <p className="text-muted-foreground">No upload requests found</p>
         </div>
@@ -203,13 +203,13 @@ export default function AdminUploadRequestsPage() {
                       <TableCell className="max-w-[220px]">
                         <div className="font-medium">{request.contactName}</div>
                         <div className="text-muted-foreground text-xs">
-                          {request.phone || "—"}
+                          {request.phone ?? "—"}
                         </div>
                       </TableCell>
                       <TableCell className="text-xs">{request.email}</TableCell>
                       <TableCell className="text-sm">
-                        {request.referenceNumber ||
-                          request.listing?.referenceNumber ||
+                        {request.referenceNumber ??
+                          request.listing?.referenceNumber ??
                           "—"}
                       </TableCell>
                       <TableCell>

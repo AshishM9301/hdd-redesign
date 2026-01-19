@@ -107,9 +107,7 @@ export class FirebaseStorageProvider implements IStorageProvider {
       // Prepare metadata
       const uploadMetadata: {
         contentType: string;
-        metadata?: {
-          [key: string]: string;
-        };
+        metadata?: Record<string, string>;
         cacheControl?: string;
       } = {
         contentType: mimeType,
@@ -237,7 +235,7 @@ export class FirebaseStorageProvider implements IStorageProvider {
    * @returns Promise resolving to the file URL
    * @throws {NetworkError} If URL generation fails
    */
-  async getUrl(path: string, expiresIn: number = 31536000): Promise<string> {
+  async getUrl(path: string, expiresIn = 31536000): Promise<string> {
     try {
       const bucket = getFirebaseBucket();
       const fileRef = bucket.file(path);

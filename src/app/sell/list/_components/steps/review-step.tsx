@@ -94,7 +94,7 @@ export default function ReviewStep({ onEdit }: ReviewStepProps) {
             </div>
             <div>
               <span className="font-medium">Company:</span>{" "}
-              {formData.companyName || "N/A"}
+              {formData.companyName ?? "N/A"}
             </div>
             <div>
               <span className="font-medium">Address:</span>{" "}
@@ -183,13 +183,13 @@ export default function ReviewStep({ onEdit }: ReviewStepProps) {
           <CardContent className="space-y-2 text-sm">
             {(() => {
               const hasData =
-                formData.generalDescription ||
-                formData.locatingSystems ||
-                formData.mixingSystems ||
-                formData.accessories ||
-                formData.trailers ||
-                formData.recentWorkModifications ||
-                formData.additionalInformation ||
+                formData.generalDescription ??
+                formData.locatingSystems ??
+                formData.mixingSystems ??
+                formData.accessories ??
+                formData.trailers ??
+                formData.recentWorkModifications ??
+                formData.additionalInformation ??
                 formData.pipe;
 
               if (!hasData) {

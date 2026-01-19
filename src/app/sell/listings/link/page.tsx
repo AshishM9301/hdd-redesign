@@ -21,7 +21,7 @@ export default function LinkListingPage() {
       router.push("/sell/listings");
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to link listing to account");
+      toast.error(error.message ?? "Failed to link listing to account");
     },
   });
 
@@ -75,7 +75,7 @@ export default function LinkListingPage() {
               <Button
                 type="submit"
                 className="w-full"
-                disabled={linkMutation.isPending || !referenceNumber.trim()}
+                disabled={linkMutation.isPending ?? !referenceNumber.trim()}
               >
                 {linkMutation.isPending ? (
                   <>

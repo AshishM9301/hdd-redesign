@@ -22,7 +22,7 @@ import {
   getFileSize,
 } from "@/lib/storage/utils";
 import { env } from "@/env";
-import { db } from "@/server/db";
+import { type db } from "@/server/db";
 import {
   createTRPCRouter,
   protectedProcedure,

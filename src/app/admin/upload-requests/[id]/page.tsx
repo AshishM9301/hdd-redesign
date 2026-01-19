@@ -82,7 +82,7 @@ export default function AdminUploadRequestDetailPage() {
       toast.success("Request approved");
       void query.refetch();
     },
-    onError: (error) => toast.error(error.message || "Failed to approve"),
+    onError: (error) => toast.error(error.message ?? "Failed to approve"),
   });
 
   const rejectMutation = api.admin.rejectUploadRequest.useMutation({
@@ -91,7 +91,7 @@ export default function AdminUploadRequestDetailPage() {
       setRejectionReason("");
       void query.refetch();
     },
-    onError: (error) => toast.error(error.message || "Failed to reject"),
+    onError: (error) => toast.error(error.message ?? "Failed to reject"),
   });
 
   const data = query.data;
@@ -167,7 +167,7 @@ export default function AdminUploadRequestDetailPage() {
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
                   <AlertDialogAction
                     onClick={() =>
-                      approveMutation.mutate({ requestId, notes: approveNotes || undefined })
+                      approveMutation.mutate({ requestId, notes: approveNotes ?? undefined })
                     }
                   >
                     Confirm
@@ -205,7 +205,7 @@ export default function AdminUploadRequestDetailPage() {
                     onClick={() =>
                       rejectMutation.mutate({
                         requestId,
-                        rejectionReason: rejectionReason || "Request rejected",
+                        rejectionReason: rejectionReason ?? "Request rejected",
                       })
                     }
                   >
@@ -218,7 +218,7 @@ export default function AdminUploadRequestDetailPage() {
         )}
       </div>
 
-      {query.isLoading || !data ? (
+      {query.isLoading ?? !data ? (
         <div className="space-y-4">
           <Skeleton className="h-24 w-full" />
           <Skeleton className="h-64 w-full" />
@@ -239,12 +239,12 @@ export default function AdminUploadRequestDetailPage() {
                 </div>
                 <div>
                   <p className="text-muted-foreground">Phone</p>
-                  <p className="font-medium">{data.phone || "—"}</p>
+                  <p className="font-medium">{data.phone ?? "—"}</p>
                 </div>
                 <div>
                   <p className="text-muted-foreground">Reference #</p>
                   <p className="font-medium">
-                    {data.referenceNumber || data.listing?.referenceNumber || "—"}
+                    {data.referenceNumber ?? data.listing?.referenceNumber ?? "—"}
                   </p>
                 </div>
               </div>
@@ -259,7 +259,7 @@ export default function AdminUploadRequestDetailPage() {
                       {data.listing.manufacturer} {data.listing.model}
                     </p>
                     <p className="text-muted-foreground">
-                      Ref: {data.listing.referenceNumber || "—"}
+                      Ref: {data.listing.referenceNumber ?? "—"}
                     </p>
                   </div>
                   <Button
@@ -281,7 +281,7 @@ export default function AdminUploadRequestDetailPage() {
             <div className="rounded-lg border p-4">
               <h2 className="text-lg font-semibold">Message</h2>
               <p className="text-muted-foreground mt-2 whitespace-pre-wrap text-sm">
-                {data.message || "No message provided."}
+                {data.message ?? "No message provided."}
               </p>
             </div>
 
@@ -358,7 +358,7 @@ export default function AdminUploadRequestDetailPage() {
                 {data.reviewedBy && (
                   <div className="flex items-center justify-between">
                     <span className="text-muted-foreground">Reviewed by</span>
-                    <span className="font-medium">{data.reviewedBy.name || data.reviewedBy.email}</span>
+                    <span className="font-medium">{data.reviewedBy.name ?? data.reviewedBy.email}</span>
                   </div>
                 )}
               </div>
@@ -381,7 +381,7 @@ export default function AdminUploadRequestDetailPage() {
               <div className="rounded-lg border p-4">
                 <h2 className="text-lg font-semibold">User</h2>
                 <div className="mt-2 space-y-1 text-sm">
-                  <p className="font-medium">{data.user.name || "User"}</p>
+                  <p className="font-medium">{data.user.name ?? "User"}</p>
                   <p className="text-muted-foreground">{data.user.email}</p>
                   <p className="text-muted-foreground text-xs">Authenticated submitter</p>
                 </div>

@@ -78,7 +78,7 @@ function validateFileOnClient(file: File): { ok: true } | { ok: false; reason: s
       mimeType as (typeof ALL_ALLOWED_MEDIA_MIME_TYPES)[number],
     )
   ) {
-    return { ok: false, reason: `File type ${mimeType || "unknown"} is not allowed` };
+    return { ok: false, reason: `File type ${mimeType ?? "unknown"} is not allowed` };
   }
 
   const kind = classifyKind(mimeType);
@@ -154,7 +154,7 @@ export default function UploadPhotosDialog({
 
   // Debounce reference number changes before triggering preview lookup
   React.useEffect(() => {
-    if (!watchedReference || !watchedReference.trim()) {
+    if (!watchedReference?.trim()) {
       setReferenceForPreview("");
       return;
     }
@@ -210,7 +210,7 @@ export default function UploadPhotosDialog({
         }
 
         const previewUrl =
-          kind === "image" || kind === "video" ? URL.createObjectURL(file) : undefined;
+          kind === "image" ?? kind === "video" ? URL.createObjectURL(file) : undefined;
 
         next.push({ file, kind, previewUrl });
       }
@@ -254,7 +254,7 @@ export default function UploadPhotosDialog({
   }, [cleanupPreviews, form, selectedFiles, user?.email, user?.name]);
 
   const isBusy =
-    uploadFiles.isPending || submitRequest.isPending || progress.stage !== "idle";
+    uploadFiles.isPending ?? submitRequest.isPending ?? progress.stage !== "idle";
 
   const onSubmit = form.handleSubmit(async (values) => {
     if (selectedFiles.length === 0) {

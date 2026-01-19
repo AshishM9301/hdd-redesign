@@ -86,7 +86,7 @@ export default function ImageUploadDialog({
         ? MEDIA_UPLOAD_LIMITS.imageMaxBytes
         : MEDIA_UPLOAD_LIMITS.videoMaxBytes;
 
-      if (file.size <= 0 ?? file.size > maxBytes) {
+      if (file.size <= 0 || file.size > maxBytes) {
         return;
       }
 

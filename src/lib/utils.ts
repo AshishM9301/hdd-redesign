@@ -23,7 +23,14 @@ export function generateReferenceNumber(): string {
  * @returns Promise<boolean> - true if exists, false otherwise
  */
 export async function referenceNumberExists(
-  db: { listing: { findUnique: (args: { where: { referenceNumber: string } }) => Promise<{ id: string } | null> } },
+  db: {
+    listing: {
+      findUnique: (args: {
+        where: { referenceNumber: string }
+        select?: { id: boolean }
+      }) => Promise<{ id: string } | null>
+    }
+  },
   referenceNumber: string,
 ): Promise<boolean> {
   const existing = await db.listing.findUnique({
@@ -39,7 +46,14 @@ export async function referenceNumberExists(
  * @returns Promise<string> - A unique reference number
  */
 export async function generateUniqueReferenceNumber(
-  db: { listing: { findUnique: (args: { where: { referenceNumber: string } }) => Promise<{ id: string } | null> } },
+  db: {
+    listing: {
+      findUnique: (args: {
+        where: { referenceNumber: string }
+        select?: { id: boolean }
+      }) => Promise<{ id: string } | null>
+    }
+  },
 ): Promise<string> {
   let referenceNumber = generateReferenceNumber();
   let attempts = 0;

@@ -1,11 +1,18 @@
 import { HydrateClient } from "@/trpc/server";
 import AnonymousCancelClient from "./_components/anonymous-cancel";
 
-type PageProps = {
+type UploadRequestCancelPageParams = {
   searchParams?: { token?: string };
 };
 
-export default function UploadRequestCancelPage({ searchParams }: PageProps) {
+type UploadRequestCancelPageProps = {
+  params: Promise<UploadRequestCancelPageParams>;
+};
+
+export default async function UploadRequestCancelPage({
+  params,
+}: UploadRequestCancelPageProps) {
+  const { searchParams } = await params;
   const tokenParam = searchParams?.token;
   const initialToken = typeof tokenParam === "string" ? tokenParam : "";
 

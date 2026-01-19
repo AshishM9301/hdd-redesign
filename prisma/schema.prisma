@@ -3,7 +3,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma-client"
 }
 
 // NOTE: When using mysql or sqlserver, uncomment the //@db.Text annotations in model Account below
@@ -16,7 +15,7 @@ datasource db {
 }
 
 // Listing System Enums
-enum ListingStatus {
+ enum ListingStatus {
   DRAFT
   PENDING_REVIEW
   PUBLISHED

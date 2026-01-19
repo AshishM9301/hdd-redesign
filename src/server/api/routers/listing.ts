@@ -11,7 +11,7 @@ import {
   AvailabilityStatus,
   MediaFileType,
   StorageProvider,
-} from "../../../../generated/prisma-client";
+} from "@prisma/client";
 import { StorageFactory } from "@/lib/storage";
 import { DEFAULT_STORAGE_CONFIG } from "@/lib/storage/types";
 import {

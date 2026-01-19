@@ -18,7 +18,7 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "@/server/api/trpc";
-import { MediaFileType } from "../../../../generated/prisma-client";
+import { MediaFileType } from "@prisma/client";
 
 const fileMetadataSchema = z.object({
   fileName: z.string().min(1),

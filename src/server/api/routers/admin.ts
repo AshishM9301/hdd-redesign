@@ -15,7 +15,7 @@ import { TRPCError } from "@trpc/server";
 import {
   MediaFileType,
   StorageProvider,
-} from "../../../../generated/prisma-client";
+} from "@prisma/client";
 
 type UploadRequestFile = {
   fileName: string;

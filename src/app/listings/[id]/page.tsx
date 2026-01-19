@@ -365,67 +365,67 @@ export default function ListingDetailPage() {
           {/* Owner Actions */}
           {isOwner && (
             <div className="flex flex-col gap-2">
-              {(listing.status === ListingStatus.PUBLISHED ??
-                listing.status === ListingStatus.RESERVED) && (
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button variant="default" className="w-full">
-                      <CheckCircle2 className="mr-2 h-4 w-4" />
-                      Mark as Sold
-                    </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Mark as Sold</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        Enter the sale details below.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <div className="space-y-4 py-4">
-                      <div>
-                        <Label htmlFor="soldPrice">Sold Price (optional)</Label>
-                        <Input
-                          id="soldPrice"
-                          type="number"
-                          value={soldPrice}
-                          onChange={(e) => setSoldPrice(e.target.value)}
-                          placeholder="Enter sold price"
-                        />
+                {(listing.status === ListingStatus.PUBLISHED ||
+                  listing.status === ListingStatus.RESERVED) && (
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="default" className="w-full">
+                        <CheckCircle2 className="mr-2 h-4 w-4" />
+                        Mark as Sold
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Mark as Sold</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Enter the sale details below.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <div className="space-y-4 py-4">
+                        <div>
+                          <Label htmlFor="soldPrice">Sold Price (optional)</Label>
+                          <Input
+                            id="soldPrice"
+                            type="number"
+                            value={soldPrice}
+                            onChange={(e) => setSoldPrice(e.target.value)}
+                            placeholder="Enter sold price"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="soldTo">Sold To (optional)</Label>
+                          <Input
+                            id="soldTo"
+                            value={soldTo}
+                            onChange={(e) => setSoldTo(e.target.value)}
+                            placeholder="Buyer name or company"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="soldNotes">Notes (optional)</Label>
+                          <Textarea
+                            id="soldNotes"
+                            value={soldNotes}
+                            onChange={(e) => setSoldNotes(e.target.value)}
+                            placeholder="Additional notes about the sale"
+                          />
+                        </div>
                       </div>
-                      <div>
-                        <Label htmlFor="soldTo">Sold To (optional)</Label>
-                        <Input
-                          id="soldTo"
-                          value={soldTo}
-                          onChange={(e) => setSoldTo(e.target.value)}
-                          placeholder="Buyer name or company"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="soldNotes">Notes (optional)</Label>
-                        <Textarea
-                          id="soldNotes"
-                          value={soldNotes}
-                          onChange={(e) => setSoldNotes(e.target.value)}
-                          placeholder="Additional notes about the sale"
-                        />
-                      </div>
-                    </div>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction
-                        onClick={handleMarkAsSold}
-                        disabled={markAsSoldMutation.isPending}
-                      >
-                        {markAsSoldMutation.isPending ? (
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        ) : null}
-                        Confirm
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              )}
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={handleMarkAsSold}
+                          disabled={markAsSoldMutation.isPending}
+                        >
+                          {markAsSoldMutation.isPending ? (
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          ) : null}
+                          Confirm
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                )}
               {listing.status !== ListingStatus.SOLD &&
                 listing.status !== ListingStatus.ARCHIVED && (
                   <AlertDialog>

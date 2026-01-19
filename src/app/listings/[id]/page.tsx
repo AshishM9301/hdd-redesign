@@ -186,7 +186,7 @@ export default function ListingDetailPage() {
             <>
               <div className="relative aspect-square w-full overflow-hidden rounded-lg border">
                 <Image
-                  src={images[0]?.thumbnailUrl || images[0]?.url || ""}
+                  src={images[0]?.thumbnailUrl || images[0]?.storagePath || ""}
                   alt={`${listing.manufacturer} ${listing.model}`}
                   fill
                   className="object-cover"
@@ -203,7 +203,7 @@ export default function ListingDetailPage() {
                       className="relative aspect-square w-full overflow-hidden rounded border transition-opacity hover:opacity-80"
                     >
                       <Image
-                        src={image.thumbnailUrl || image.url}
+                        src={image.thumbnailUrl || image.storagePath}
                         alt={`${listing.manufacturer} ${listing.model} - Image ${index + 2}`}
                         fill
                         className="object-cover"
@@ -239,7 +239,7 @@ export default function ListingDetailPage() {
               {listing.year} • {listing.condition}
             </p>
             <p className="mt-2 text-3xl font-semibold">
-              {formatPrice(listing.askingPrice, listing.currency)}
+              {formatPrice(Number(listing.askingPrice.toString()), listing.currency)}
             </p>
             {listing.assured && listing.assuredAt && (
               <div className="mt-3 text-sm text-muted-foreground">
@@ -546,7 +546,7 @@ export default function ListingDetailPage() {
           open={previewIndex !== null}
           onOpenChange={(open) => !open && setPreviewIndex(null)}
           file={{
-            preview: images[previewIndex]?.url || "",
+            preview: images[previewIndex]?.thumbnailUrl || images[previewIndex]?.storagePath || "",
             name: images[previewIndex]?.fileName || "",
             type: "image",
           }}

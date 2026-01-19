@@ -184,7 +184,7 @@ export default function MyUploadRequestsClient() {
         </p>
       </div>
 
-      {!requests ?? requests.length === 0 ? <EmptyState /> : <RequestTable requests={requests} />}
+      {!requests || requests?.length === 0 ? <EmptyState /> : <RequestTable requests={requests} />}
     </div>
   );
 }

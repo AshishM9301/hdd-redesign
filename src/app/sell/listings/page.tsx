@@ -141,7 +141,7 @@ export default function ListingsPage() {
             <Skeleton key={i} className="h-16 w-full" />
           ))}
         </div>
-      ) : !listings ?? listings.length === 0 ? (
+      ) : !listings || listings?.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-muted-foreground text-lg">
             No listings found. Create your first listing to get started!
@@ -221,7 +221,7 @@ export default function ListingsPage() {
                           )}
                         </Button>
                       )}
-                      {(listing.status === ListingStatus.PUBLISHED ??
+                      {(listing.status === ListingStatus.PUBLISHED ||
                         listing.status === ListingStatus.RESERVED) && (
                         <AlertDialog>
                           <AlertDialogTrigger asChild>

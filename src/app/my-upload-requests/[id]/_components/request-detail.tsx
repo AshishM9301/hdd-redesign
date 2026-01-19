@@ -5,7 +5,10 @@ import { useRouter } from "next/navigation";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { UploadStatusBadge } from "@/components/upload-status-badge";
+import {
+  UploadStatusBadge,
+  type UploadStatus,
+} from "@/components/upload-status-badge";
 import { TopLoadingBar } from "@/components/top-loading-bar";
 import { fileSizeLabel, formatDateTime, parseUploadRequestFiles } from "@/lib/upload-request";
 import { api } from "@/trpc/react";
@@ -109,7 +112,7 @@ export default function UploadRequestDetailClient({ requestId }: Props) {
             Review your request details and attached files.
           </p>
           <div className="mt-2 flex flex-wrap items-center gap-2 text-sm">
-            <UploadStatusBadge status={data.status} />
+            <UploadStatusBadge status={data.status as UploadStatus} />
             <span className="text-muted-foreground">ID: {data.id}</span>
           </div>
         </div>
@@ -249,7 +252,7 @@ export default function UploadRequestDetailClient({ requestId }: Props) {
           <div className="rounded-lg border p-4">
             <h2 className="text-lg font-semibold">Status</h2>
             <div className="mt-3 space-y-1 text-sm">
-              <UploadStatusBadge status={data.status} />
+              <UploadStatusBadge status={data.status as UploadStatus} />
               <p className="text-muted-foreground">Updated: {formatDateTime(data.updatedAt ?? data.createdAt)}</p>
             </div>
           </div>

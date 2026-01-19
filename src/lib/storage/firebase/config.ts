@@ -43,6 +43,13 @@ function initializeFirebaseAdmin(): App {
   try {
     // Parse service account key from environment variable
     const serviceAccountKey = env.FIREBASE_SERVICE_ACCOUNT_KEY;
+    
+    if (!serviceAccountKey) {
+      throw new Error(
+        "FIREBASE_SERVICE_ACCOUNT_KEY is required but not provided",
+      );
+    }
+    
     let serviceAccount: ServiceAccount;
 
     try {

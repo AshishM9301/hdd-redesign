@@ -79,7 +79,7 @@ function RequestTable({ requests }: { requests: UploadRequest[] }) {
                 <TableRow key={request.id}>
                   <TableCell className="font-mono text-xs">{request.id.slice(0, 8)}…</TableCell>
                   <TableCell className="text-sm">
-                    {request.referenceNumber ?? request.listing?.referenceNumber ?? "—"}
+                    {(request.referenceNumber || request.listing?.referenceNumber) || "—"}
                   </TableCell>
                   <TableCell>
                     <UploadStatusBadge status={request.status} />
@@ -135,7 +135,15 @@ function RequestTable({ requests }: { requests: UploadRequest[] }) {
 export default function MyUploadRequestsClient() {
   const query = api.mediaUpload.getMyUploadRequests.useQuery();
 
-  const requests = useMemo(() => query.data ?? [], [query.data]);
+  const requests: UploadRequest[] = useMemo(
+    () =>
+      (query.data ?? []).map((request) => ({
+        ...request,
+        // Ensure status matches the UploadStatus union type expected by UploadRequest
+        status: request.status as UploadRequest["status"],
+      })),
+    [query.data],
+  );
 
   if (query.isLoading) {
     return (

@@ -43,7 +43,7 @@ export type ListingWithRelations = Listing & {
     id: string;
     name: string;
     email: string;
-  };
+  } | null;
   mediaAttachments: MediaAttachment[];
 };
 

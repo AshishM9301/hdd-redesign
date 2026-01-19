@@ -3,10 +3,10 @@
  * for Docker builds.
  */
 import "./src/env.js";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
+// import path from "node:path";
+// import { fileURLToPath } from "node:url";
 
-const projectRoot = path.dirname(fileURLToPath(import.meta.url));
+// const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 
 /** @type {import("next").NextConfig} */
 const config = {
@@ -26,13 +26,13 @@ const config = {
    * Limit file tracing to project root to avoid EPERM errors on Windows protected directories.
    * This prevents Next.js from scanning outside the project folder.
    */
-  outputFileTracing: false,
-  outputFileTracingRoot: projectRoot,
-  outputFileTracingExcludes: {
-    "*": [
-      "generated/**",
-    ],
-  },
+  // outputFileTracing: false,
+  // outputFileTracingRoot: projectRoot,
+  // outputFileTracingExcludes: {
+  //   "*": [
+  //     "generated/**",
+  //   ],
+  // },
 };
 
 export default config;

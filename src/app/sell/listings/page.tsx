@@ -180,7 +180,10 @@ export default function ListingsPage() {
                     </div>
                   </TableCell>
                   <TableCell>
-                    {formatPrice(listing.askingPrice, listing.currency)}
+                    {formatPrice(
+                      Number(listing.askingPrice.toString()),
+                      listing.currency,
+                    )}
                   </TableCell>
                   <TableCell>
                     <ListingStatusBadge status={listing.status} />

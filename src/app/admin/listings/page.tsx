@@ -141,7 +141,7 @@ export default function AdminListingsPage() {
             <Skeleton key={i} className="h-16 w-full" />
           ))}
         </div>
-      ) : !data ?? data.listings.length === 0 ? (
+      ) : !data || data?.listings.length === 0 ? (
         <div className="rounded-lg border border-dashed p-8 text-center">
           <p className="text-muted-foreground">No listings found</p>
         </div>
@@ -160,7 +160,7 @@ export default function AdminListingsPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {data.listings.map((listing) => (
+                {data?.listings.map((listing) => (
                   <TableRow key={listing.id}>
                     <TableCell className="font-mono text-sm">
                       {(listing?.referenceNumber ?? "N/A")}
@@ -202,7 +202,7 @@ export default function AdminListingsPage() {
                           <Eye className="mr-2 h-4 w-4" />
                           View
                         </Button>
-                        {listing.assured ? (
+                        {listing?.assured ? (
                           <Button
                             variant="outline"
                             size="sm"
@@ -240,7 +240,7 @@ export default function AdminListingsPage() {
           </div>
 
           {/* Pagination */}
-          {data.totalPages > 1 && (
+          {data?.totalPages && data.totalPages > 1 && (
             <div className="mt-4 flex items-center justify-between">
               <p className="text-muted-foreground text-sm">
                 Showing {data.listings.length} of {data.total} listings
@@ -255,7 +255,7 @@ export default function AdminListingsPage() {
                   Previous
                 </Button>
                 <span className="text-muted-foreground flex items-center px-4 text-sm">
-                  Page {page} of {data.totalPages}
+                  Page {page} of {data?.totalPages}
                 </span>
                 <Button
                   variant="outline"

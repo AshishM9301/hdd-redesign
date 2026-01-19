@@ -182,7 +182,7 @@ export const BuyFilters = ({ products }: BuyFiltersProps) => {
         setPriceRange((prev) => {
           const [prevMin, prevMax] = prev;
           // If range is outside new bounds, clamp it
-          if (prevMin < minPrice ?? prevMax > maxPrice) {
+          if (prevMin < minPrice || prevMax > maxPrice) {
             return [
               Math.max(minPrice, Math.min(prevMin, maxPrice)),
               Math.min(maxPrice, Math.max(prevMax, minPrice)),
@@ -202,7 +202,7 @@ export const BuyFilters = ({ products }: BuyFiltersProps) => {
       } else {
         setRigRange((prev) => {
           const [prevMin, prevMax] = prev;
-          if (prevMin < rigMin ?? prevMax > rigMax) {
+          if (prevMin < rigMin || prevMax > rigMax) {
             return [
               Math.max(rigMin, Math.min(prevMin, rigMax)),
               Math.min(rigMax, Math.max(prevMax, rigMin)),
@@ -243,7 +243,7 @@ export const BuyFilters = ({ products }: BuyFiltersProps) => {
       const title = `${product.manufacturer} ${product.model}`;
       const description = product.listingDetails?.generalDescription ?? "";
       const matchesSearch =
-        pageSearch.trim().length === 0 ??
+        pageSearch.trim().length === 0 ||
         title.toLowerCase().includes(pageSearch.toLowerCase()) ??
         description.toLowerCase().includes(pageSearch.toLowerCase()) ??
         product.condition.toLowerCase().includes(pageSearch.toLowerCase()) ??
@@ -259,18 +259,18 @@ export const BuyFilters = ({ products }: BuyFiltersProps) => {
 
       // Category (using condition as category)
       const matchesCategory =
-        selectedCategories.length === 0 ??
+        selectedCategories.length === 0 ||
         selectedCategories.includes(product.condition);
 
       // Manufacturer
       const matchesManufacturer =
-        selectedManufacturers.length === 0 ??
+        selectedManufacturers.length === 0 ||
         (product.manufacturer &&
           selectedManufacturers.includes(product.manufacturer));
 
       // Model
       const matchesModel =
-        selectedModels.length === 0 ??
+        selectedModels.length === 0 ||
         (product.model && selectedModels.includes(product.model));
 
       // Rig Range - not available in Listing schema, so always pass
@@ -286,13 +286,13 @@ export const BuyFilters = ({ products }: BuyFiltersProps) => {
         product.mediaAttachments?.some(
           (m) => m.fileType === MediaFileType.VIDEO,
         ) ?? false;
-      const matchesVideo = !onlyWithVideo ?? hasVideo;
+      const matchesVideo = !onlyWithVideo || hasVideo;
 
       const hasPictures =
         product.mediaAttachments?.some(
           (m) => m.fileType === MediaFileType.IMAGE,
         ) ?? false;
-      const matchesPictures = !onlyWithPictures ?? hasPictures;
+      const matchesPictures = !onlyWithPictures || hasPictures;
 
       // Color (UI only for now)
       const matchesColor = selectedColorId ? true : true;

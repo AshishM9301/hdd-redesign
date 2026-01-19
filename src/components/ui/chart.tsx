@@ -162,7 +162,7 @@ function ChartTooltipContent({
     labelKey,
   ])
 
-  if (!active ?? !payload?.length) {
+  if (!active || !payload?.length) {
     return null
   }
 
@@ -312,7 +312,7 @@ function getPayloadConfigFromPayload(
   payload: unknown,
   key: string
 ) {
-  if (typeof payload !== "object" ?? payload === null) {
+  if (typeof payload !== "object" || payload === null) {
     return undefined
   }
 

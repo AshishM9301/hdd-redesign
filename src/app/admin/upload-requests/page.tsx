@@ -171,7 +171,7 @@ export default function AdminUploadRequestsPage() {
 
       {isLoading ? (
         <div className="space-y-4">{loadingRows}</div>
-      ) : !data ?? data.requests.length === 0 ? (
+      ) : !data || data?.requests.length === 0 ? (
         <div className="rounded-lg border border-dashed p-8 text-center">
           <p className="text-muted-foreground">No upload requests found</p>
         </div>

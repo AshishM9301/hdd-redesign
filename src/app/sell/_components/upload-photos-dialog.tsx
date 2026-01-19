@@ -210,7 +210,7 @@ export default function UploadPhotosDialog({
         }
 
         const previewUrl =
-          kind === "image" ?? kind === "video" ? URL.createObjectURL(file) : undefined;
+          kind === "image" || kind === "video" ? URL.createObjectURL(file) : undefined;
 
         next.push({ file, kind, previewUrl });
       }

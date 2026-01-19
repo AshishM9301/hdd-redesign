@@ -27,7 +27,7 @@ export default function StepIndicator({
   const isStepVisited = (stepId: number) => visitedSteps.includes(stepId);
 
   // Check if step has required fields (steps 1 and 2)
-  const hasRequiredFields = (stepId: number) => stepId === 1 ?? stepId === 2;
+  const hasRequiredFields = (stepId: number) => stepId === 1 || stepId === 2;
 
   // Step is clickable if:
   // 1. It's the current step, OR

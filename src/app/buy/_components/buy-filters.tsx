@@ -244,13 +244,13 @@ export const BuyFilters = ({ products }: BuyFiltersProps) => {
       const description = product.listingDetails?.generalDescription ?? "";
       const matchesSearch =
         pageSearch.trim().length === 0 ||
-        title.toLowerCase().includes(pageSearch.toLowerCase()) ??
-        description.toLowerCase().includes(pageSearch.toLowerCase()) ??
-        product.condition.toLowerCase().includes(pageSearch.toLowerCase()) ??
+        title.toLowerCase().includes(pageSearch.toLowerCase()) ||
+        description.toLowerCase().includes(pageSearch.toLowerCase()) ||
+        product.condition.toLowerCase().includes(pageSearch.toLowerCase()) ||
         (product.manufacturer &&
           product.manufacturer
             .toLowerCase()
-            .includes(pageSearch.toLowerCase())) ??
+            .includes(pageSearch.toLowerCase())) ||
         (product.model &&
           product.model.toLowerCase().includes(pageSearch.toLowerCase()));
 

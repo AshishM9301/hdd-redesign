@@ -247,12 +247,8 @@ export const BuyFilters = ({ products }: BuyFiltersProps) => {
         title.toLowerCase().includes(pageSearch.toLowerCase()) ||
         description.toLowerCase().includes(pageSearch.toLowerCase()) ||
         product.condition.toLowerCase().includes(pageSearch.toLowerCase()) ||
-        (product.manufacturer &&
-          product.manufacturer
-            .toLowerCase()
-            .includes(pageSearch.toLowerCase())) ||
-        (product.model &&
-          product.model.toLowerCase().includes(pageSearch.toLowerCase()));
+        product.manufacturer?.toLowerCase().includes(pageSearch.toLowerCase()) ||
+        product.model?.toLowerCase().includes(pageSearch.toLowerCase());
 
       // Equipment Assurance - not available in Listing schema, so always pass if filter is off
       const matchesAssurance = !assuranceOnly;

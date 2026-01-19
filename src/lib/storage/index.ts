@@ -34,25 +34,19 @@ export class StorageFactory {
 
     switch (provider) {
       case "railway":
-        if (!this.railwayInstance) {
-          this.railwayInstance = new RailwayStorageProvider();
-        }
+        this.railwayInstance ??= new RailwayStorageProvider();
         return this.railwayInstance;
       case "firebase":
-        if (!this.firebaseInstance) {
-          this.firebaseInstance = new FirebaseStorageProvider();
-        }
+        this.firebaseInstance ??= new FirebaseStorageProvider();
         return this.firebaseInstance;
 
       case "aws":
-        if (!this.awsInstance) {
-          this.awsInstance = new AWSStorageProvider();
-        }
+        this.awsInstance ??= new AWSStorageProvider();
         return this.awsInstance;
 
       default:
         throw new StorageError(
-          `Invalid storage provider: ${provider}. Supported providers: railway, firebase, aws`,
+          `Invalid storage provider: ${String(provider)}. Supported providers: railway, firebase, aws`,
           "INVALID_PROVIDER",
         );
     }
@@ -68,25 +62,19 @@ export class StorageFactory {
   static getProviderByType(type: StorageProviderType): IStorageProvider {
     switch (type) {
       case "railway":
-        if (!this.railwayInstance) {
-          this.railwayInstance = new RailwayStorageProvider();
-        }
+        this.railwayInstance ??= new RailwayStorageProvider();
         return this.railwayInstance;
       case "firebase":
-        if (!this.firebaseInstance) {
-          this.firebaseInstance = new FirebaseStorageProvider();
-        }
+        this.firebaseInstance ??= new FirebaseStorageProvider();
         return this.firebaseInstance;
 
       case "aws":
-        if (!this.awsInstance) {
-          this.awsInstance = new AWSStorageProvider();
-        }
+        this.awsInstance ??= new AWSStorageProvider();
         return this.awsInstance;
 
       default:
         throw new StorageError(
-          `Invalid storage provider type: ${type}. Supported types: railway, firebase, aws`,
+          `Invalid storage provider type: ${String(type)}. Supported types: railway, firebase, aws`,
           "INVALID_PROVIDER",
         );
     }

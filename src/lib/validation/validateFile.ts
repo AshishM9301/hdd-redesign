@@ -130,7 +130,7 @@ export function validateFileSizeByType(
   const valid = fileSize > 0 && fileSize <= maxSize;
 
   if (!valid) {
-    const category = getFileCategory(mimeType) || "file";
+    const category = getFileCategory(mimeType) ?? "file";
     const maxSizeMB = Math.round(maxSize / (1024 * 1024));
     return {
       valid: false,
@@ -243,13 +243,13 @@ export async function validateFile(
   // Validate file size
   const sizeValidation = validateFileSizeByType(buffer.length, declaredMimeType);
   if (!sizeValidation.valid) {
-    errors.push(sizeValidation.error || "File size exceeds limit");
+    errors.push(sizeValidation.error ?? "File size exceeds limit");
   }
 
   // Validate file content
   const contentValidation = await validateFileContent(buffer, declaredMimeType);
   if (!contentValidation.valid) {
-    errors.push(contentValidation.error || "File content validation failed");
+    errors.push(contentValidation.error ?? "File content validation failed");
   }
 
   return {

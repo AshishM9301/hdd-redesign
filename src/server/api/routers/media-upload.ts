@@ -56,7 +56,7 @@ const allowedMimeTypes = DEFAULT_STORAGE_CONFIG.allowedMimeTypes;
 const maxFileSize = DEFAULT_STORAGE_CONFIG.maxFileSize;
 
 function toBuffer(base64: string): Buffer {
-  const cleaned = base64.includes(",") ? base64.split(",").pop() || "" : base64;
+  const cleaned = base64.includes(",") ? base64.split(",").pop() ?? "" : base64;
   return Buffer.from(cleaned, "base64");
 }
 
@@ -108,14 +108,14 @@ export const mediaUploadRouter = createTRPCRouter({
         const storagePath = generateStoragePath(
           "upload-requests",
           file.fileName,
-          userId || "anonymous",
+          userId ?? "anonymous",
         );
 
         const uploadResult = await storageProvider.upload(buffer, storagePath, {
           contentType: mimeType,
           customMetadata: {
             fileName: file.fileName,
-            uploaderId: userId || "anonymous",
+            uploaderId: userId ?? "anonymous",
           },
         });
 
@@ -136,7 +136,7 @@ export const mediaUploadRouter = createTRPCRouter({
   submitUploadRequest: publicProcedure
     .input(submitUploadSchema)
     .mutation(async ({ ctx, input }) => {
-      const userId = ctx.session?.user?.id || null;
+      const userId = ctx.session?.user?.id ?? null;
 
       let listingId: string | null = null;
       let listingMeta: {
@@ -155,7 +155,7 @@ export const mediaUploadRouter = createTRPCRouter({
             model: true,
           },
         });
-        listingId = matchedListing?.id || null;
+        listingId = matchedListing?.id ?? null;
         if (matchedListing) {
           listingMeta = {
             referenceNumber: matchedListing.referenceNumber,
@@ -231,7 +231,7 @@ export const mediaUploadRouter = createTRPCRouter({
             referenceNumber: input.referenceNumber,
             files: input.files,
             listing: listingMeta,
-            siteUrl: env.SITE_URL || "",
+            siteUrl: env.SITE_URL ?? "",
             cancellationToken,
             isAuthenticated: Boolean(userId),
             adminEmails,

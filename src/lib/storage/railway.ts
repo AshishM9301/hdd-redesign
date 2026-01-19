@@ -33,17 +33,17 @@ const MAX_FILE_SIZE = DEFAULT_STORAGE_CONFIG.maxFileSize;
 
 function getS3Client() {
   return new S3Client({
-    region: env.RAILWAY_S3_REGION || "auto",
+    region: env.RAILWAY_S3_REGION ?? "auto",
     endpoint: env.RAILWAY_S3_ENDPOINT,
     forcePathStyle: true,
     credentials: {
       accessKeyId:
-        env.RAILWAY_S3_ACCESS_KEY_ID ||
-        env.AWS_ACCESS_KEY_ID ||
+        env.RAILWAY_S3_ACCESS_KEY_ID ??
+        env.AWS_ACCESS_KEY_ID ??
         "",
       secretAccessKey:
-        env.RAILWAY_S3_SECRET_ACCESS_KEY ||
-        env.AWS_SECRET_ACCESS_KEY ||
+        env.RAILWAY_S3_SECRET_ACCESS_KEY ??
+        env.AWS_SECRET_ACCESS_KEY ??
         "",
     },
   });
@@ -64,7 +64,7 @@ function sanitizePath(path: string): string {
 
 export class RailwayStorageProvider implements IStorageProvider {
   private client = getS3Client();
-  private bucket = env.RAILWAY_S3_BUCKET || env.AWS_S3_BUCKET_NAME || "";
+  private bucket = env.RAILWAY_S3_BUCKET ?? env.AWS_S3_BUCKET_NAME ?? "";
 
   async upload(
     file: StorageFile,
@@ -75,8 +75,8 @@ export class RailwayStorageProvider implements IStorageProvider {
       const buffer = await toBuffer(file);
       const fileSize = getFileSize(file);
       const fileName =
-        file instanceof File ? file.name : metadata?.customMetadata?.fileName || "file";
-      const mimeType = metadata?.contentType || extractMimeType(file, fileName);
+        file instanceof File ? file.name : metadata?.customMetadata?.fileName ?? "file";
+      const mimeType = metadata?.contentType ?? extractMimeType(file, fileName);
 
       if (!validateMimeType(mimeType, ALLOWED_MIME_TYPES)) {
         throw new InvalidFileTypeError(mimeType, ALLOWED_MIME_TYPES);

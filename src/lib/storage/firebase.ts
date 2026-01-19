@@ -78,7 +78,7 @@ export class FirebaseStorageProvider implements IStorageProvider {
 
       // Extract MIME type
       const fileName =
-        file instanceof File ? file.name : metadata?.customMetadata?.fileName || "file";
+        file instanceof File ? file.name : metadata?.customMetadata?.fileName ?? "file";
       const mimeType = extractMimeType(file, fileName);
 
       // Validate file type
@@ -101,7 +101,14 @@ export class FirebaseStorageProvider implements IStorageProvider {
       }
 
       // Get Firebase Storage bucket
-      const bucket = getFirebaseBucket();
+      const bucket = getFirebaseBucket() as {
+        file: (p: string) => {
+          save: (data: Buffer, options: { metadata: { contentType: string; metadata?: Record<string, string>; cacheControl?: string } }) => Promise<unknown>;
+          getSignedUrl: (options: { action: "read"; expires: Date }) => Promise<[string]>;
+          exists: () => Promise<[boolean]>;
+          delete: () => Promise<unknown>;
+        };
+      };
       const fileRef = bucket.file(path);
 
       // Prepare metadata
@@ -113,7 +120,7 @@ export class FirebaseStorageProvider implements IStorageProvider {
         contentType: mimeType,
         metadata: {
           ...metadata?.customMetadata,
-          listingId: metadata?.customMetadata?.listingId || "",
+          listingId: metadata?.customMetadata?.listingId ?? "",
           fileType: fileCategory,
           uploadedAt: new Date().toISOString(),
           originalFileName: fileName,
@@ -122,7 +129,7 @@ export class FirebaseStorageProvider implements IStorageProvider {
 
       // Set cache control for images and videos
       if (fileCategory === "images" || fileCategory === "videos") {
-        uploadMetadata.cacheControl = metadata?.cacheControl || "public, max-age=31536000";
+        uploadMetadata.cacheControl = metadata?.cacheControl ?? "public, max-age=31536000";
       }
 
       // Upload file
@@ -188,7 +195,12 @@ export class FirebaseStorageProvider implements IStorageProvider {
    */
   async delete(path: string): Promise<void> {
     try {
-      const bucket = getFirebaseBucket();
+      const bucket = getFirebaseBucket() as {
+        file: (p: string) => {
+          exists: () => Promise<[boolean]>;
+          delete: () => Promise<unknown>;
+        };
+      };
       const fileRef = bucket.file(path);
 
       // Check if file exists
@@ -237,7 +249,12 @@ export class FirebaseStorageProvider implements IStorageProvider {
    */
   async getUrl(path: string, expiresIn = 31536000): Promise<string> {
     try {
-      const bucket = getFirebaseBucket();
+      const bucket = getFirebaseBucket() as {
+        file: (p: string) => {
+          exists: () => Promise<[boolean]>;
+          getSignedUrl: (options: { action: "read"; expires: Date }) => Promise<[string]>;
+        };
+      };
       const fileRef = bucket.file(path);
 
       // Check if file exists
@@ -308,7 +325,12 @@ export class FirebaseStorageProvider implements IStorageProvider {
       const thumbnailPath = generateThumbnailPath(path);
 
       // Get Firebase Storage bucket
-      const bucket = getFirebaseBucket();
+      const bucket = getFirebaseBucket() as {
+        file: (p: string) => {
+          save: (data: Buffer, options: { metadata: { contentType: string; cacheControl?: string; metadata?: Record<string, string> } }) => Promise<unknown>;
+          getSignedUrl: (options: { action: "read"; expires: Date }) => Promise<[string]>;
+        };
+      };
       const thumbnailRef = bucket.file(thumbnailPath);
 
       // Upload thumbnail

@@ -39,7 +39,7 @@ export function sanitizeHtml(input: string): string {
     "/": "&#x2F;",
   };
 
-  return input.replace(/[&<>"'/]/g, (match) => htmlEscapes[match] || match);
+  return input.replace(/[&<>"'/]/g, (match) => htmlEscapes[match] ?? match);
 }
 
 /**

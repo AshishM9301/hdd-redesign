@@ -452,7 +452,7 @@ export const adminRouter = createTRPCRouter({
           status: "REJECTED",
           reviewedById: adminUserId,
           reviewedAt: new Date(),
-          rejectionReason: rejectionReason || null,
+          rejectionReason: rejectionReason ?? null,
         },
         include: {
           listing: {
@@ -623,7 +623,7 @@ export const adminRouter = createTRPCRouter({
                 fileName: file.fileName,
                 fileType,
                 mimeType,
-                fileSize: file.fileSize || 0,
+                fileSize: file.fileSize ?? 0,
                 storageProvider,
                 storagePath: file.storagePath,
                 displayOrder: existingCount + index,

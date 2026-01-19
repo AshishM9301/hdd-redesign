@@ -457,12 +457,7 @@ export default function UploadPhotosDialog({
                   {listingPreviewQuery.error && !listingPreviewQuery.isLoading && (
                     <div className="flex items-start gap-2 text-destructive">
                       <AlertCircle className="mt-0.5 h-4 w-4" />
-                      <p>
-                        {"data" in listingPreviewQuery.error &&
-                        (listingPreviewQuery.error as any).data?.code === "NOT_FOUND"
-                          ? "No listing found for this reference number. Please double-check the number or leave it blank."
-                          : listingPreviewQuery.error.message}
-                      </p>
+                      <p>{listingPreviewQuery.error.message}</p>
                     </div>
                   )}
 

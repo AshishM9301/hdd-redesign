@@ -63,7 +63,7 @@ export function useAuth() {
 
   return {
     session,
-    user: session?.user || null,
+    user: session?.user ?? null,
     isLoading,
     isAuthenticated: !!session?.user,
     signOut,

@@ -9,7 +9,6 @@ import { toast } from "sonner";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { api } from "@/trpc/react";
@@ -57,17 +56,10 @@ const statusBadges: Record<
 };
 
 export default function AdminUploadRequestDetailPage() {
-  const params = useParams<{ id: string }>();
+  const params = useParams();
   const router = useRouter();
-  const requestId = Array.isArray(params?.id) ? params?.id[0] : params?.id;
-
-  if (!requestId) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <p className="text-muted-foreground">Invalid request id.</p>
-      </div>
-    );
-  }
+  const rawId = (params as Record<string, string | string[] | undefined>).id;
+  const requestId = Array.isArray(rawId) ? rawId[0] : rawId;
 
   const [approveNotes, setApproveNotes] = useState("");
   const [rejectionReason, setRejectionReason] = useState("");
@@ -95,7 +87,10 @@ export default function AdminUploadRequestDetailPage() {
   });
 
   const data = query.data;
-  const files = useMemo(() => parseFiles(data?.mediaFiles), [data?.mediaFiles]);
+  const files = useMemo(
+    () => parseFiles(data?.mediaFiles),
+    [data?.mediaFiles],
+  );
 
   const formatDateTime = (value: Date | string) =>
     new Date(value).toLocaleString("en-US", {
@@ -121,6 +116,14 @@ export default function AdminUploadRequestDetailPage() {
       </Badge>
     );
   };
+
+  if (!requestId) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <p className="text-muted-foreground">Invalid request id.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -218,7 +221,7 @@ export default function AdminUploadRequestDetailPage() {
         )}
       </div>
 
-      {query.isLoading ?? !data ? (
+      {query.isLoading || !data ? (
         <div className="space-y-4">
           <Skeleton className="h-24 w-full" />
           <Skeleton className="h-64 w-full" />
@@ -358,15 +361,20 @@ export default function AdminUploadRequestDetailPage() {
                 {data.reviewedBy && (
                   <div className="flex items-center justify-between">
                     <span className="text-muted-foreground">Reviewed by</span>
-                    <span className="font-medium">{data.reviewedBy.name ?? data.reviewedBy.email}</span>
+                    <span className="font-medium">
+                      {data.reviewedBy.name ?? data.reviewedBy.email}
+                    </span>
                   </div>
                 )}
               </div>
               <div className="mt-4">
                 <p className="text-muted-foreground text-xs">Status history</p>
                 <div className="mt-2 space-y-2">
-                  {data.statusHistory.map((item: any) => (
-                    <div key={item.at.toString()} className="flex items-center justify-between text-sm">
+                  {data.statusHistory.map((item) => (
+                    <div
+                      key={item.at.toString()}
+                      className="flex items-center justify-between text-sm"
+                    >
                       <span className="font-medium">{item.status}</span>
                       <span className="text-muted-foreground">
                         {formatDateTime(item.at)}

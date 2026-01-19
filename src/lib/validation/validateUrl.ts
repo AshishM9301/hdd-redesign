@@ -110,6 +110,6 @@ export function validateUrl(url: string): {
  */
 export function validateAndNormalizeUrl(url: string): string | null {
   const result = validateUrl(url);
-  return result.valid ? result.normalizedUrl || null : null;
+  return result.valid ? result.normalizedUrl ?? null : null;
 }
 

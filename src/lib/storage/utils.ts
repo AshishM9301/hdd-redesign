@@ -84,7 +84,7 @@ export function extractMimeType(
   fileName?: string,
 ): string {
   if (isFile(file)) {
-    return file.type || getMimeTypeFromExtension(fileName || file.name);
+    return file.type || getMimeTypeFromExtension(fileName ?? file.name);
   }
 
   // For Buffer, try to infer from file name if provided
@@ -123,7 +123,7 @@ function getMimeTypeFromExtension(fileName: string): string {
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
   };
 
-  return mimeTypes[extension] || "application/octet-stream";
+  return mimeTypes[extension] ?? "application/octet-stream";
 }
 
 /**

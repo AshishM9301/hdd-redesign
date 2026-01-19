@@ -17,7 +17,7 @@ function getResendClient() {
 }
 
 function requireFrom(): string | null {
-  return env.RESEND_FROM || null;
+  return env.RESEND_FROM ?? null;
 }
 
 async function sendEmail({
@@ -60,14 +60,14 @@ export async function sendUploadRequestEmails(
     adminEmails?: string[] | null;
   },
 ) {
-  const fallbackAdminEmail = env.ADMIN_NOTIFICATION_EMAIL || null;
+  const fallbackAdminEmail = env.ADMIN_NOTIFICATION_EMAIL ?? null;
   const adminEmails =
     data.adminEmails && data.adminEmails.length > 0
       ? data.adminEmails
       : fallbackAdminEmail
         ? [fallbackAdminEmail]
         : [];
-  const siteUrl = data.siteUrl || env.SITE_URL || "";
+  const siteUrl = data.siteUrl ?? env.SITE_URL ?? "";
 
   const baseData: UploadRequestTemplateData = { ...data, siteUrl };
 
@@ -104,7 +104,7 @@ export async function sendUploadRequestStatusEmail(opts: {
   status: "APPROVED" | "REJECTED";
   notes?: string | null;
 }) {
-  const siteUrl = env.SITE_URL || "";
+  const siteUrl = env.SITE_URL ?? "";
   const resend = getResendClient();
   const from = requireFrom();
 

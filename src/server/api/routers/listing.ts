@@ -105,7 +105,7 @@ const contactInfoSchema = z
       .transform((val) => {
         if (!val || val === "") return undefined;
         const urlValidation = validateUrl(val);
-        return urlValidation.normalizedUrl || val;
+        return urlValidation.normalizedUrl ?? val;
       }),
     hearAboutUs: z.array(z.string()).default([]),
     hearAboutUsOther: z
@@ -197,7 +197,7 @@ const listingInfoSchema = z.object({
     .transform((val) => sanitizeText(val).trim()),
   askingPrice: z.string().transform((val) => {
     const num = parseFloat(val);
-    if (isNaN(num) || num < 0) {
+    if (Number.isNaN(num) || num < 0) {
       throw new z.ZodError([
         {
           code: "custom",
@@ -219,7 +219,7 @@ const listingInfoSchema = z.object({
       (val) => {
         if (!val || val === "") return true;
         const num = parseFloat(val);
-        return !isNaN(num) && num >= 0;
+        return !Number.isNaN(num) && num >= 0;
       },
       {
         message: "Hours must be a valid positive number",
@@ -233,7 +233,7 @@ const listingInfoSchema = z.object({
       (val) => {
         if (!val || val === "") return true;
         const num = parseFloat(val);
-        return !isNaN(num) && num >= 0;
+        return !Number.isNaN(num) && num >= 0;
       },
       {
         message: "Miles must be a valid positive number",
@@ -334,7 +334,7 @@ const markAsSoldSchema = z.object({
     .string()
     .optional()
     .transform((val) => (val ? parseFloat(val) : undefined))
-    .refine((val) => val === undefined || (!isNaN(val || 0) && (val || 0) >= 0), {
+    .refine((val) => val === undefined || (!Number.isNaN(val ?? 0) && (val ?? 0) >= 0), {
       message: "Sold price must be a valid positive number",
     }),
   soldTo: z.string().optional(),
@@ -602,7 +602,7 @@ async function processFileUpload(
       fileSize,
       storageProvider: storageProviderEnum,
       storagePath: uploadResult.path,
-      thumbnailUrl: uploadResult.thumbnailUrl || null,
+      thumbnailUrl: uploadResult.thumbnailUrl ?? null,
       displayOrder,
     },
   });
@@ -627,7 +627,7 @@ export const listingRouter = createTRPCRouter({
   create: publicProcedure
     .input(createListingSchema)
     .mutation(async ({ ctx, input }) => {
-      const userId = ctx.session?.user?.id || null;
+      const userId = ctx.session?.user?.id ?? null;
 
       // Generate unique reference number
       const referenceNumber = await generateUniqueReferenceNumber(ctx.db);
@@ -811,10 +811,10 @@ export const listingRouter = createTRPCRouter({
             if (!urlValidation.valid) {
               throw new TRPCError({
                 code: "BAD_REQUEST",
-                message: urlValidation.error || "Invalid website URL",
+                message: urlValidation.error ?? "Invalid website URL",
               });
             }
-            sanitizedContactInfo.website = urlValidation.normalizedUrl || input.contactInfo.website;
+            sanitizedContactInfo.website = urlValidation.normalizedUrl ?? input.contactInfo.website;
           } else {
             sanitizedContactInfo.website = null;
           }
@@ -930,7 +930,7 @@ export const listingRouter = createTRPCRouter({
       if (input.listingInfo) {
         if (input.listingInfo.year) {
           const yearNum = parseInt(input.listingInfo.year, 10);
-          if (isNaN(yearNum) || yearNum < minYear || yearNum > maxYear) {
+          if (Number.isNaN(yearNum) || yearNum < minYear || yearNum > maxYear) {
             throw new TRPCError({
               code: "BAD_REQUEST",
               message: `Year must be between ${minYear} and ${maxYear}`,
@@ -957,7 +957,7 @@ export const listingRouter = createTRPCRouter({
           const num = typeof input.listingInfo.askingPrice === "string"
             ? parseFloat(input.listingInfo.askingPrice)
             : input.listingInfo.askingPrice;
-          if (isNaN(num) || num < 0) {
+          if (Number.isNaN(num) || num < 0) {
             throw new TRPCError({
               code: "BAD_REQUEST",
               message: "Asking price must be a valid positive number",
@@ -970,7 +970,7 @@ export const listingRouter = createTRPCRouter({
         if (input.listingInfo.hours !== undefined) {
           if (input.listingInfo.hours && input.listingInfo.hours !== "") {
             const num = parseFloat(input.listingInfo.hours);
-            if (isNaN(num) || num < 0) {
+            if (Number.isNaN(num) || num < 0) {
               throw new TRPCError({
                 code: "BAD_REQUEST",
                 message: "Hours must be a valid positive number",
@@ -984,7 +984,7 @@ export const listingRouter = createTRPCRouter({
         if (input.listingInfo.miles !== undefined) {
           if (input.listingInfo.miles && input.listingInfo.miles !== "") {
             const num = parseFloat(input.listingInfo.miles);
-            if (isNaN(num) || num < 0) {
+            if (Number.isNaN(num) || num < 0) {
               throw new TRPCError({
                 code: "BAD_REQUEST",
                 message: "Miles must be a valid positive number",

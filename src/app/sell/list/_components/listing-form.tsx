@@ -216,7 +216,7 @@ export default function ListingForm() {
   // Watch step-specific fields to trigger re-renders when they change
   const watchedValues = useWatch({
     control: form.control,
-    name: stepFields.length > 0 ? (stepFields as any) : undefined,
+    name: stepFields.length > 0 ? stepFields : [],
   });
 
   // Compute if current step is valid
@@ -256,7 +256,7 @@ export default function ListingForm() {
 
   const handleNext = async () => {
     const stepFields = getStepFields(currentStep);
-    const isValid = await form.trigger(stepFields as any);
+    const isValid = await form.trigger(stepFields);
     if (isValid && currentStep < STEPS.length) {
       const nextStep = currentStep + 1;
       setCurrentStep(nextStep);
@@ -525,11 +525,13 @@ export default function ListingForm() {
     }
 
     // Set the form values
-    Object.entries(fieldsToFill).forEach(([key, value]) => {
-      if (value !== undefined) {
-        form.setValue(key as keyof ListingFormData, value as any);
-      }
-    });
+    (Object.entries(fieldsToFill) as [keyof ListingFormData, ListingFormData[keyof ListingFormData]][]).forEach(
+      ([key, value]) => {
+        if (value !== undefined) {
+          form.setValue(key, value);
+        }
+      },
+    );
   };
 
   // If reference number is set (anonymous listing created), show success message

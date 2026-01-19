@@ -193,7 +193,7 @@ export default function AdminUploadRequestsPage() {
               </TableHeader>
               <TableBody>
                 {data.requests.map((request) => {
-                  const files = parseFiles((request as any).mediaFiles);
+                  const files = parseFiles(request.mediaFiles);
                   const badge = statusBadges[request.status as UploadStatus];
                   return (
                     <TableRow key={request.id}>

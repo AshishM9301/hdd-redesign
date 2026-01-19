@@ -26,8 +26,7 @@ interface ServiceAccount {
 }
 
 let adminApp: App | null = null;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let storageBucket: any = null;
+let storageBucket: unknown = null;
 
 /**
  * Initializes Firebase Admin SDK
@@ -104,13 +103,10 @@ export function getFirebaseBucket() {
 
     // Get storage bucket
     const bucketName = env.FIREBASE_STORAGE_BUCKET;
-    storageBucket = getStorage(adminApp!).bucket(bucketName);
+    const bucket = getStorage(adminApp!).bucket(bucketName);
 
-    if (!storageBucket) {
-      throw new Error(`Failed to get storage bucket: ${bucketName}`);
-    }
-
-    return storageBucket;
+    storageBucket = bucket;
+    return bucket;
   } catch (error) {
     const errorMessage =
       error instanceof Error

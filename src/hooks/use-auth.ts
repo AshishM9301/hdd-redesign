@@ -11,8 +11,8 @@ export function useAuth() {
   const fetchSession = React.useCallback(async () => {
     try {
       const result = await authClient.getSession();
-      if (result.data?.session) {
-        setSession(result.data.session);
+      if (result.data) {
+        setSession(result.data);
       } else {
         setSession(null);
       }

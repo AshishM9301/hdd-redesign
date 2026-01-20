@@ -25,11 +25,12 @@ export default async function ListingRequestInfoPage({
   const listing = isReferenceNumber
     ? await api.listing.getByReference({ referenceNumber: id })
     : await api.listing.getById({ listingId: id })
+  const referenceNumber = listing.referenceNumber ?? id
 
   return (
     <RequestMoreInfoForm
       data={{
-        referenceNumber: listing.referenceNumber,
+        referenceNumber,
         equipmentDescription: formatEquipmentDescription({
           year: listing.year,
           manufacturer: listing.manufacturer,

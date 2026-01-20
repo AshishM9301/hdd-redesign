@@ -20,6 +20,10 @@ const config = {
         protocol: "https",
         hostname: "cdn.dummyjson.com",
       },
+      {
+        protocol: "https",
+        hostname: "picsum.photos",
+      },
     ],
   },
   /**

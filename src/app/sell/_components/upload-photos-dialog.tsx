@@ -40,6 +40,7 @@ import {
   MEDIA_UPLOAD_LIMITS,
 } from "@/types/media";
 import { AlertCircle, FileText, Image as ImageIcon, Loader2, Upload, Video, X } from "lucide-react";
+import { DialogClose } from "@/components/ui/dialog";
 import { useAuth } from "@/hooks/use-auth";
 
 type UploadableKind = "image" | "video" | "document";
@@ -349,149 +350,196 @@ export default function UploadPhotosDialog({
           : "Submitting request…";
 
   return (
-    <Dialog
-      open={open}
-      onOpenChange={(nextOpen) => {
-        if (!nextOpen && !canClose) return;
-        setOpen(nextOpen);
-        if (!nextOpen) resetAll();
-      }}
-    >
-      <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="max-w-3xl">
-        <DialogHeader>
-          <DialogTitle>Upload Photos & Documents</DialogTitle>
-          <DialogDescription>
-            Send photos, videos, or a PDF document to be added to a listing.
-          </DialogDescription>
-        </DialogHeader>
+    <>
+      <style>{`
+        .upload-dialog-scrollbar::-webkit-scrollbar {
+          width: 8px;
+        }
+        .upload-dialog-scrollbar::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .upload-dialog-scrollbar::-webkit-scrollbar-thumb {
+          background: hsl(var(--muted-foreground) / 0.3);
+          border-radius: 4px;
+        }
+        .upload-dialog-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: hsl(var(--muted-foreground) / 0.5);
+        }
+      `}</style>
+      <Dialog
+        open={open}
+        onOpenChange={(nextOpen) => {
+          if (!nextOpen && !canClose) return;
+          setOpen(nextOpen);
+          if (!nextOpen) resetAll();
+        }}
+        
+      >
+        <DialogTrigger asChild>{children}</DialogTrigger>
+        <DialogContent className="sm:max-w-5xl max-h-[calc(100vh-4rem)] flex flex-col" showCloseButton={false}>
+          <DialogClose
+            className="absolute top-4 right-4 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-red-500 text-white transition-colors hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:pointer-events-none"
+            disabled={!canClose}
+          >
+            <X className="h-6 w-6" />
+            <span className="sr-only">Close</span>
+          </DialogClose>
+          <DialogHeader>
+            <DialogTitle>Upload Photos & Documents</DialogTitle>
+            <DialogDescription>
+              Send photos, videos, or a PDF document to be added to a listing.
+            </DialogDescription>
+          </DialogHeader>
 
-        <form className="space-y-6" onSubmit={onSubmit}>
-          <FieldGroup>
-            <Field orientation="responsive" data-invalid={!!form.formState.errors.contactName}>
-              <FieldLabel htmlFor="contactName">From</FieldLabel>
-              <FieldContent>
-                <Input
-                  id="contactName"
-                  placeholder="Your name"
-                  disabled={isBusy}
-                  {...form.register("contactName")}
-                />
-                <FieldError errors={[form.formState.errors.contactName]} />
-              </FieldContent>
-            </Field>
+          <form className="flex flex-col flex-1 min-h-0 space-y-5" onSubmit={onSubmit}>
+            <div
+              className="upload-dialog-scrollbar flex-1 overflow-y-auto pr-4 space-y-4"
+              style={{
+                scrollbarWidth: "thin",
+                scrollbarColor: "hsl(var(--muted-foreground) / 0.3) transparent",
+              }}
+            >
+            <FieldGroup className="space-y-0 px-10">
+              {/* Row 1: From | Email */}
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Field className="flex-1" data-invalid={!!form.formState.errors.contactName}>
+                  <FieldLabel htmlFor="contactName">
+                    From <span className="text-red-500">*</span>
+                  </FieldLabel>
+                  <FieldContent>
+                    <Input
+                      id="contactName"
+                      placeholder="Your name"
+                      disabled={isBusy}
+                      {...form.register("contactName")}
+                    />
+                    <FieldError errors={[form.formState.errors.contactName]} />
+                  </FieldContent>
+                </Field>
 
-            <Field orientation="responsive" data-invalid={!!form.formState.errors.email}>
-              <FieldLabel htmlFor="email">Email</FieldLabel>
-              <FieldContent>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="you@example.com"
-                  autoComplete="email"
-                  disabled={isBusy}
-                  {...form.register("email")}
-                />
-                <FieldError errors={[form.formState.errors.email]} />
-              </FieldContent>
-            </Field>
+                <Field className="flex-1" data-invalid={!!form.formState.errors.email}>
+                  <FieldLabel htmlFor="email">
+                    Email <span className="text-red-500">*</span>
+                  </FieldLabel>
+                  <FieldContent>
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="you@example.com"
+                      autoComplete="email"
+                      disabled={isBusy}
+                      {...form.register("email")}
+                    />
+                    <FieldError errors={[form.formState.errors.email]} />
+                  </FieldContent>
+                </Field>
+              </div>
 
-            <Field orientation="responsive" data-invalid={!!form.formState.errors.phone}>
-              <FieldLabel htmlFor="phone">Phone</FieldLabel>
-              <FieldContent>
-                <Input
-                  id="phone"
-                  placeholder="Optional"
-                  disabled={isBusy}
-                  {...form.register("phone")}
-                />
-                <FieldError errors={[form.formState.errors.phone]} />
-              </FieldContent>
-            </Field>
+              {/* Row 2: Phone | To */}
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Field className="flex-1" data-invalid={!!form.formState.errors.phone}>
+                  <FieldLabel htmlFor="phone">Phone</FieldLabel>
+                  <FieldContent>
+                    <Input
+                      id="phone"
+                      placeholder="Optional"
+                      disabled={isBusy}
+                      {...form.register("phone")}
+                    />
+                    <FieldError errors={[form.formState.errors.phone]} />
+                  </FieldContent>
+                </Field>
 
-            <Field orientation="responsive">
-              <FieldLabel>To</FieldLabel>
-              <FieldContent>
-                <Select
-                  value={form.watch("recipient")}
-                  onValueChange={(v) => form.setValue("recipient", v as "LISTINGS")}
-                  disabled={isBusy}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select department" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {recipientOptions.map((o) => (
-                      <SelectItem key={o.value} value={o.value}>
-                        {o.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </FieldContent>
-            </Field>
+                <Field className="flex-1">
+                  <FieldLabel>
+                    To <span className="text-red-500">*</span>
+                  </FieldLabel>
+                  <FieldContent>
+                    <Select
+                      value={form.watch("recipient")}
+                      onValueChange={(v) => form.setValue("recipient", v as "LISTINGS")}
+                      disabled={isBusy}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select department" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {recipientOptions.map((o) => (
+                          <SelectItem key={o.value} value={o.value}>
+                            {o.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FieldContent>
+                </Field>
+              </div>
 
-            <Field orientation="responsive" data-invalid={!!form.formState.errors.referenceNumber}>
-              <FieldLabel htmlFor="referenceNumber">Listing</FieldLabel>
-              <FieldContent>
-                <Input
-                  id="referenceNumber"
-                  placeholder="Reference # (Optional)"
-                  disabled={isBusy}
-                  {...form.register("referenceNumber")}
-                />
-                <FieldError errors={[form.formState.errors.referenceNumber]} />
-              </FieldContent>
-            </Field>
+              {/* Row 3: Message */}
+              <Field orientation="vertical" data-invalid={!!form.formState.errors.message}>
+                <FieldLabel htmlFor="message">Message</FieldLabel>
+                <FieldContent>
+                  <Textarea
+                    id="message"
+                    placeholder="Optional"
+                    disabled={isBusy}
+                    {...form.register("message")}
+                    className="h-32"
+                  />
+                  <FieldError errors={[form.formState.errors.message]} />
+                </FieldContent>
+              </Field>
 
-            {referenceForPreview && (
-              <Card className="bg-muted/40">
-                <CardContent className="space-y-1 py-3 text-sm">
-                  {listingPreviewQuery.isLoading && (
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      <span>Checking listing…</span>
-                    </div>
-                  )}
+              {/* Row 4: Listing */}
+              <Field data-invalid={!!form.formState.errors.referenceNumber}>
+                <FieldLabel htmlFor="referenceNumber">Listing</FieldLabel>
+                <FieldContent>
+                  <Input
+                    id="referenceNumber"
+                    placeholder="Reference # (Optional)"
+                    disabled={isBusy}
+                    {...form.register("referenceNumber")}
+                  />
+                  <FieldError errors={[form.formState.errors.referenceNumber]} />
+                </FieldContent>
+              </Field>
 
-                  {listingPreviewQuery.error && !listingPreviewQuery.isLoading && (
-                    <div className="flex items-start gap-2 text-destructive">
-                      <AlertCircle className="mt-0.5 h-4 w-4" />
-                      <p>{listingPreviewQuery.error.message}</p>
-                    </div>
-                  )}
+              {referenceForPreview && (
+                <Card className="bg-muted/40">
+                  <CardContent className="space-y-1 py-3 text-sm">
+                    {listingPreviewQuery.isLoading && (
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <span>Checking listing…</span>
+                      </div>
+                    )}
 
-                  {listingPreviewQuery.data && !listingPreviewQuery.isLoading && (
-                    <div>
-                      <p className="font-medium">
-                        {listingPreviewQuery.data.manufacturer}{" "}
-                        {listingPreviewQuery.data.model}
-                      </p>
-                      <p className="text-muted-foreground text-xs">
-                        Ref: {listingPreviewQuery.data.referenceNumber}
-                      </p>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            )}
+                    {listingPreviewQuery.error && !listingPreviewQuery.isLoading && (
+                      <div className="flex items-start gap-2 text-destructive">
+                        <AlertCircle className="mt-0.5 h-4 w-4" />
+                        <p>{listingPreviewQuery.error.message}</p>
+                      </div>
+                    )}
 
-            <Field orientation="vertical" data-invalid={!!form.formState.errors.message}>
-              <FieldLabel htmlFor="message">Message</FieldLabel>
-              <FieldContent>
-                <Textarea
-                  id="message"
-                  placeholder="Optional"
-                  disabled={isBusy}
-                  {...form.register("message")}
-                />
-                <FieldError errors={[form.formState.errors.message]} />
-              </FieldContent>
-            </Field>
-          </FieldGroup>
+                    {listingPreviewQuery.data && !listingPreviewQuery.isLoading && (
+                      <div>
+                        <p className="font-medium">
+                          {listingPreviewQuery.data.manufacturer}{" "}
+                          {listingPreviewQuery.data.model}
+                        </p>
+                        <p className="text-muted-foreground text-xs">
+                          Ref: {listingPreviewQuery.data.referenceNumber}
+                        </p>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
+            </FieldGroup>
 
-          <div className="space-y-3">
-            <div className="text-sm font-medium">Files</div>
+            {/* Files Section */}
+            <div className="space-y-3 px-10">
+            <div className="text-sm font-medium">Files <span className="text-red-500">*</span></div>
 
             <div
               onDragOver={onDragOver}
@@ -602,6 +650,7 @@ export default function UploadPhotosDialog({
                 <span>{progressText}</span>
               </div>
             )}
+            </div>
           </div>
 
           <DialogFooter className="gap-2">
@@ -623,6 +672,7 @@ export default function UploadPhotosDialog({
         </form>
       </DialogContent>
     </Dialog>
+    </>
   );
 }
 

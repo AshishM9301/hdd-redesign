@@ -17,36 +17,42 @@ import { Button } from "@/components/ui/button";
 
 const listingItems = [
   {
+    id: 1,
     title: "LIST ONLINE",
     icon: Upload,
     href: "/sell/list",
     gradient: "from-blue-500/20 to-blue-600/20",
   },
   {
+    id: 2,
     title: "UPLOAD PHOTOS & DOCUMENTS",
     icon: FileImage,
     href: "#",
     gradient: "from-green-500/20 to-green-600/20",
   },
-  {
+  { 
+    id: 3,
     title: "VIEW FAQ",
     icon: HelpCircle,
-    href: "#",
+    href: "/sell/faq",
     gradient: "from-purple-500/20 to-purple-600/20",
   },
   {
+    id: 4,
     title: "SAMPLE LISTING",
     icon: FileText,
-    href: "#",
+    href: "/sell/listing-sample",
     gradient: "from-orange-500/20 to-orange-600/20",
   },
   {
+    id: 5,
     title: "TRADE IN EQUIPMENT",
     icon: ArrowRightLeft,
     href: "#",
     gradient: "from-red-500/20 to-red-600/20",
   },
   {
+    id: 6,
     title: "VALUE MY EQUIPMENT",
     icon: DollarSign,
     href: "#",
@@ -60,9 +66,9 @@ export default function ListingBoxes() {
       {listingItems.map((item) => {
         const Icon = item.icon;
 
-        if (item.title === "UPLOAD PHOTOS & DOCUMENTS") {
+        if (item.id === 2) {
           return (
-            <UploadPhotosDialog key={item.title}>
+            <UploadPhotosDialog key={item.id}>
               <Button
                 type="button"
                 variant="ghost"
@@ -89,7 +95,7 @@ export default function ListingBoxes() {
         }
 
         return (
-          <Link key={item.title} href={item.href}>
+          <Link key={item.id} href={item.href}>
             <Card
               className={cn(
                 "group cursor-pointer transition-all hover:shadow-lg",

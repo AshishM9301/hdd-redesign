@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { api } from "@/trpc/react";
 import { ListingStatusBadge } from "@/components/listing-status-badge";
@@ -174,10 +175,18 @@ export default function ListingDetailPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <Button variant="ghost" onClick={() => router.back()} className="mb-4">
-        <ArrowLeft className="mr-2 h-4 w-4" />
-        Back
-      </Button>
+      <div className="mb-4 flex flex-wrap items-center gap-2">
+        <Button variant="ghost" onClick={() => router.back()}>
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back
+        </Button>
+        <Button
+          asChild
+          className="bg-gradient-to-r from-amber-600 to-amber-700 text-black hover:from-amber-600/90 hover:to-amber-700/90"
+        >
+          <Link href={`/listings/${identifier}/request-info`}>Request More Info</Link>
+        </Button>
+      </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Media Gallery */}

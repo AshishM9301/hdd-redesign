@@ -6,7 +6,16 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
-import { ArrowLeft, Loader2, Mail, Phone } from "lucide-react"
+import {
+  ArrowLeft,
+  ArrowRight,
+  Loader2,
+  Mail,
+  Phone,
+  Package,
+  MessageSquare,
+  CheckCircle2,
+} from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -94,172 +103,251 @@ export function RequestMoreInfoForm({ data }: { data: RequestMoreInfoData }) {
   }
 
   return (
-    <div className="bg-muted/40 min-h-screen">
-      <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-4 py-8 md:px-8 md:py-12">
-        <div className="flex items-center justify-between">
-          <Button asChild variant="ghost" className="gap-2">
+    <div className="min-h-screen">
+      <div className="absolute inset-0 z-1 h-full w-full bg-gradient-to-r from-white/50 to-white/20 fixed" />
+      {/* Background Pattern */}
+      <div className="absolute inset-0 -z-0 h-full w-full bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] fixed" />
+      
+      <div className="relative mx-auto z-3 flex w-full max-w-5xl flex-col gap-8 px-4 py-8 md:px-8 md:py-16">
+        {/* Back Button */}
+        <div className="flex items-center">
+          <Button
+            asChild
+            variant="ghost"
+            className="group gap-2 transition-all hover:translate-x-[-2px]"
+          >
             <Link href={data.backHref}>
-              <ArrowLeft className="size-4" />
+              <ArrowLeft className="size-4 transition-transform group-hover:-translate-x-1" />
               Back
             </Link>
           </Button>
         </div>
 
-        <Card className="border shadow-md">
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl font-extrabold tracking-wide md:text-3xl">
+        {/* Main Card */}
+        <Card className="border-0 shadow-2xl backdrop-blur-sm transition-all hover:shadow-3xl">
+          <CardHeader className="space-y-2 border-b bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 pb-8 pt-8 text-center text-white">
+            <div className="mx-auto mb-2 flex h-16 w-16 items-center justify-center rounded-full bg-white/10 backdrop-blur-sm">
+              <MessageSquare className="size-8 text-white" />
+            </div>
+            <CardTitle className="text-3xl font-extrabold tracking-tight md:text-4xl">
               REQUEST MORE INFO
             </CardTitle>
+            <p className="mt-2 text-sm text-slate-300">
+              Fill out the form below and we&apos;ll get back to you shortly
+            </p>
           </CardHeader>
 
-          <CardContent className="space-y-10">
+          <CardContent className="space-y-8 p-8 md:p-10">
             {/* You Were Looking At */}
-            <section className="rounded-lg border bg-white/70 p-6 shadow-sm">
-              <div className="flex flex-col items-center gap-3 text-center">
-                <p className="text-base uppercase tracking-[0.25em] text-muted-foreground">
-                  You were looking at
-                </p>
-                <p className="text-lg font-semibold">
-                  Reference Number:{" "}
-                  <span className="font-bold">{data.referenceNumber}</span>
-                </p>
-                <p className="text-lg font-medium text-muted-foreground">
-                  {data.equipmentDescription}
-                </p>
+            <section className="group relative overflow-hidden rounded-xl border border-slate-200 bg-gradient-to-br from-white to-slate-50/50 p-8 shadow-lg transition-all hover:shadow-xl">
+              <div className="absolute right-0 top-0 h-32 w-32 translate-x-12 -translate-y-12 rounded-full bg-gradient-to-br from-amber-400/20 to-orange-400/20 blur-2xl transition-transform group-hover:scale-150" />
+              <div className="relative flex flex-col items-center gap-4 text-center">
+                <div className="flex items-center gap-2 rounded-full bg-amber-100 px-4 py-2">
+                  <Package className="size-5 text-amber-600" />
+                  <p className="text-sm font-semibold uppercase tracking-[0.15em] text-amber-700">
+                    You were looking at
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <p className="text-lg font-semibold text-slate-700">
+                    Reference Number:{" "}
+                    <span className="rounded-md bg-slate-900 px-3 py-1 font-mono text-lg font-bold text-white">
+                      {data.referenceNumber}
+                    </span>
+                  </p>
+                  <p className="text-base font-medium text-slate-600">
+                    {data.equipmentDescription}
+                  </p>
+                </div>
                 <Button
                   asChild
                   variant="outline"
-                  className="mt-2 bg-slate-800 text-white hover:bg-slate-700"
+                  className="group/btn mt-2 border-2 border-slate-800 bg-slate-900 text-white transition-all hover:scale-105 hover:border-slate-700 hover:bg-slate-800"
                 >
-                  <Link href={data.returnToListingHref}>Return to Listing</Link>
+                  <Link href={data.returnToListingHref}>
+                    Return to Listing
+                    <ArrowRight className="ml-2 size-4 transition-transform group-hover/btn:translate-x-1" />
+                  </Link>
                 </Button>
               </div>
             </section>
 
             {/* Ways to Contact */}
-            <section className="rounded-lg border bg-white/70 p-6 shadow-sm">
-              <h2 className="mb-4 text-center text-lg font-semibold tracking-wide">
-                WAYS TO CONTACT HDD BROKER
-              </h2>
+            <section className="space-y-6 rounded-xl border border-slate-200 bg-white/80 p-8 shadow-lg backdrop-blur-sm">
+              <div className="flex items-center justify-center gap-3">
+                <div className="h-px flex-1 bg-gradient-to-r from-transparent via-slate-300 to-slate-300" />
+                <h2 className="text-center text-xl font-bold tracking-wide text-slate-800">
+                  WAYS TO CONTACT HDD BROKER
+                </h2>
+                <div className="h-px flex-1 bg-gradient-to-l from-transparent via-slate-300 to-slate-300" />
+              </div>
               <div className="grid gap-4 md:grid-cols-3">
-                <div className="flex items-start gap-3 rounded-md bg-slate-50 p-4">
-                  <div className="rounded-full bg-slate-200 p-2">
-                    <Phone className="size-4 text-slate-700" />
+                <a
+                  href="tel:+18669603331"
+                  className="group flex flex-col gap-4 rounded-lg border-2 border-slate-200 bg-gradient-to-br from-white to-slate-50 p-6 shadow-sm transition-all hover:scale-[1.02] hover:border-blue-300 hover:shadow-md"
+                >
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-md transition-transform group-hover:scale-110">
+                    <Phone className="size-5" />
                   </div>
-                  <div className="text-sm font-medium leading-6">
-                    <div>+1.866.960.3331</div>
-                    <div>+1.239.237.3744</div>
+                  <div className="space-y-1">
+                    <div className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                      Phone
+                    </div>
+                    <div className="text-sm font-semibold leading-6 text-slate-900">
+                      +1.866.960.3331
+                    </div>
+                    <div className="text-sm font-semibold leading-6 text-slate-900">
+                      +1.239.237.3744
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-start gap-3 rounded-md bg-slate-50 p-4">
-                  <div className="rounded-full bg-slate-200 p-2">
-                    <Mail className="size-4 text-slate-700" />
+                </a>
+                <a
+                  href="mailto:sales@hddbroker.com"
+                  className="group flex flex-col gap-4 rounded-lg border-2 border-slate-200 bg-gradient-to-br from-white to-slate-50 p-6 shadow-sm transition-all hover:scale-[1.02] hover:border-amber-300 hover:shadow-md"
+                >
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 text-white shadow-md transition-transform group-hover:scale-110">
+                    <Mail className="size-5" />
                   </div>
-                  <div className="text-sm font-medium leading-6">
-                    <a className="hover:underline" href="mailto:sales@hddbroker.com">
+                  <div className="space-y-1">
+                    <div className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                      Email
+                    </div>
+                    <div className="text-sm font-semibold leading-6 text-blue-600 transition-colors group-hover:text-blue-700">
                       sales@hddbroker.com
-                    </a>
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-start gap-3 rounded-md bg-slate-50 p-4">
-                  <div className="rounded-full bg-slate-200 p-2">
-                    <ArrowLeft className="size-4 rotate-180 text-slate-700" />
+                </a>
+                <a
+                  href="#"
+                  className="group flex flex-col gap-4 rounded-lg border-2 border-slate-200 bg-gradient-to-br from-white to-slate-50 p-6 shadow-sm transition-all hover:scale-[1.02] hover:border-slate-300 hover:shadow-md"
+                >
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-slate-600 to-slate-700 text-white shadow-md transition-transform group-hover:scale-110">
+                    <MessageSquare className="size-5" />
                   </div>
-                  <div className="text-sm font-medium leading-6">
-                    <a className="hover:underline" href="#">
+                  <div className="space-y-1">
+                    <div className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                      More Options
+                    </div>
+                    <div className="text-sm font-semibold leading-6 text-slate-900 transition-colors group-hover:text-slate-700">
                       Other Ways to Contact Us
-                    </a>
+                    </div>
                   </div>
-                </div>
+                </a>
               </div>
             </section>
 
             {/* Form */}
-            <section className="rounded-lg border bg-white/70 p-6 shadow-sm">
-              <h2 className="mb-6 text-center text-lg font-semibold tracking-wide">
-                SUBMIT YOUR REQUEST HERE
-              </h2>
+            <section className="rounded-xl border border-slate-200 bg-black/80 p-8 shadow-lg backdrop-blur-sm">
+              <div className="mb-8 flex items-center justify-center gap-3">
+                <div className="h-px flex-1 bg-gradient-to-r from-transparent via-slate-300 to-slate-300" />
+                <h2 className="flex items-center gap-2 text-center text-xl font-bold tracking-wide text-yellow-500">
+                  <CheckCircle2 className="size-5 text-green-500" />
+                  SUBMIT YOUR REQUEST HERE
+                </h2>
+                <div className="h-px flex-1 bg-gradient-to-l from-transparent via-slate-300 to-slate-300" />
+              </div>
 
-              <form className="space-y-5" onSubmit={handleSubmit(onSubmit)} noValidate>
-                <FieldGroup>
-                  <Field orientation="responsive" data-invalid={!!errors.referenceNumber}>
-                    <FieldLabel htmlFor="referenceNumber">Reference Number</FieldLabel>
+              <form className="space-y-6" onSubmit={handleSubmit(onSubmit)} noValidate>
+                <FieldGroup className="space-y-6">
+                  <Field data-invalid={!!errors.referenceNumber}>
+                    <FieldLabel htmlFor="referenceNumber" className="text-sm font-semibold">
+                      Reference Number
+                    </FieldLabel>
                     <FieldContent>
                       <Input
                         id="referenceNumber"
                         readOnly
                         value={data.referenceNumber}
                         aria-invalid={!!errors.referenceNumber}
+                        className="font-mono font-semibold"
                         {...register("referenceNumber")}
                       />
                       <FieldError errors={[errors.referenceNumber]} />
                     </FieldContent>
                   </Field>
 
-                  <Field orientation="responsive" data-invalid={!!errors.name}>
-                    <FieldLabel htmlFor="name">Name *</FieldLabel>
-                    <FieldContent>
-                      <Input
-                        id="name"
-                        placeholder="John Doe"
-                        autoComplete="name"
-                        aria-invalid={!!errors.name}
-                        disabled={isSubmitting}
-                        {...register("name")}
-                      />
-                      <FieldError errors={[errors.name]} />
-                    </FieldContent>
-                  </Field>
+                  <div className="grid gap-6 md:grid-cols-2">
+                    <Field data-invalid={!!errors.name}>
+                      <FieldLabel htmlFor="name" className="text-sm font-semibold">
+                        Name <span className="text-red-500">*</span>
+                      </FieldLabel>
+                      <FieldContent>
+                        <Input
+                          id="name"
+                          placeholder="John Doe"
+                          autoComplete="name"
+                          aria-invalid={!!errors.name}
+                          disabled={isSubmitting}
+                          className="transition-all focus:ring-2 focus:ring-amber-500"
+                          {...register("name")}
+                        />
+                        <FieldError errors={[errors.name]} />
+                      </FieldContent>
+                    </Field>
 
-                  <Field orientation="responsive" data-invalid={!!errors.company}>
-                    <FieldLabel htmlFor="company">Company</FieldLabel>
-                    <FieldContent>
-                      <Input
-                        id="company"
-                        placeholder="Company (optional)"
-                        autoComplete="organization"
-                        aria-invalid={!!errors.company}
-                        disabled={isSubmitting}
-                        {...register("company")}
-                      />
-                      <FieldError errors={[errors.company]} />
-                    </FieldContent>
-                  </Field>
+                    <Field data-invalid={!!errors.company}>
+                      <FieldLabel htmlFor="company" className="text-sm font-semibold">
+                        Company <span className="text-xs font-normal text-muted-foreground">(optional)</span>
+                      </FieldLabel>
+                      <FieldContent>
+                        <Input
+                          id="company"
+                          placeholder="Company Name"
+                          autoComplete="organization"
+                          aria-invalid={!!errors.company}
+                          disabled={isSubmitting}
+                          className="transition-all focus:ring-2 focus:ring-amber-500"
+                          {...register("company")}
+                        />
+                        <FieldError errors={[errors.company]} />
+                      </FieldContent>
+                    </Field>
+                  </div>
 
-                  <Field orientation="responsive" data-invalid={!!errors.phone}>
-                    <FieldLabel htmlFor="phone">Phone *</FieldLabel>
-                    <FieldContent>
-                      <Input
-                        id="phone"
-                        type="tel"
-                        placeholder="+1 (555) 123-4567"
-                        autoComplete="tel"
-                        aria-invalid={!!errors.phone}
-                        disabled={isSubmitting}
-                        {...register("phone")}
-                      />
-                      <FieldError errors={[errors.phone]} />
-                    </FieldContent>
-                  </Field>
+                  <div className="grid gap-6 md:grid-cols-2">
+                    <Field data-invalid={!!errors.phone}>
+                      <FieldLabel htmlFor="phone" className="text-sm font-semibold">
+                        Phone <span className="text-red-500">*</span>
+                      </FieldLabel>
+                      <FieldContent>
+                        <Input
+                          id="phone"
+                          type="tel"
+                          placeholder="+1 (555) 123-4567"
+                          autoComplete="tel"
+                          aria-invalid={!!errors.phone}
+                          disabled={isSubmitting}
+                          className="transition-all focus:ring-2 focus:ring-amber-500"
+                          {...register("phone")}
+                        />
+                        <FieldError errors={[errors.phone]} />
+                      </FieldContent>
+                    </Field>
 
-                  <Field orientation="responsive" data-invalid={!!errors.email}>
-                    <FieldLabel htmlFor="email">Email *</FieldLabel>
-                    <FieldContent>
-                      <Input
-                        id="email"
-                        type="email"
-                        placeholder="you@example.com"
-                        autoComplete="email"
-                        aria-invalid={!!errors.email}
-                        disabled={isSubmitting}
-                        {...register("email")}
-                      />
-                      <FieldError errors={[errors.email]} />
-                    </FieldContent>
-                  </Field>
+                    <Field data-invalid={!!errors.email}>
+                      <FieldLabel htmlFor="email" className="text-sm font-semibold">
+                        Email <span className="text-red-500">*</span>
+                      </FieldLabel>
+                      <FieldContent>
+                        <Input
+                          id="email"
+                          type="email"
+                          placeholder="you@example.com"
+                          autoComplete="email"
+                          aria-invalid={!!errors.email}
+                          disabled={isSubmitting}
+                          className="transition-all focus:ring-2 focus:ring-amber-500"
+                          {...register("email")}
+                        />
+                        <FieldError errors={[errors.email]} />
+                      </FieldContent>
+                    </Field>
+                  </div>
 
-                  <Field orientation="responsive" data-invalid={!!errors.language}>
-                    <FieldLabel htmlFor="language">Preferred Language</FieldLabel>
+                  <Field data-invalid={!!errors.language}>
+                    <FieldLabel htmlFor="language" className="text-sm font-semibold">
+                      Preferred Language
+                    </FieldLabel>
                     <FieldContent>
                       <Select
                         defaultValue="english"
@@ -267,7 +355,10 @@ export function RequestMoreInfoForm({ data }: { data: RequestMoreInfoData }) {
                           setValue("language", value as Language, { shouldValidate: true })
                         }
                       >
-                        <SelectTrigger aria-invalid={!!errors.language} className="w-full">
+                        <SelectTrigger
+                          aria-invalid={!!errors.language}
+                          className="w-full transition-all focus:ring-2 focus:ring-amber-500"
+                        >
                           <SelectValue placeholder="Select language" />
                         </SelectTrigger>
                         <SelectContent>
@@ -281,41 +372,53 @@ export function RequestMoreInfoForm({ data }: { data: RequestMoreInfoData }) {
                     </FieldContent>
                   </Field>
 
-                  <Field orientation="responsive" data-invalid={!!errors.message}>
-                    <FieldLabel htmlFor="message">Your Message *</FieldLabel>
+                  <Field data-invalid={!!errors.message}>
+                    <FieldLabel htmlFor="message" className="text-sm font-semibold">
+                      Your Message <span className="text-red-500">*</span>
+                    </FieldLabel>
                     <FieldContent>
                       <Textarea
                         id="message"
                         placeholder="Please specify what additional information you would like to see..."
-                        rows={5}
+                        rows={6}
                         aria-invalid={!!errors.message}
                         disabled={isSubmitting}
+                        className="resize-none transition-all focus:ring-2 focus:ring-amber-500"
                         {...register("message")}
                       />
                       <FieldError errors={[errors.message]} />
                     </FieldContent>
                   </Field>
 
-                  <Field orientation="responsive" data-invalid={!!errors.captcha}>
+                  <Field data-invalid={!!errors.captcha}>
                     <FieldLabel className="sr-only">Captcha</FieldLabel>
                     <FieldContent>
-                      <div className="border-input bg-slate-50 flex items-center justify-between rounded-md border px-4 py-4">
+                      <div className="flex items-center justify-between rounded-lg border-2 border-slate-200 bg-gradient-to-br from-slate-50 to-white px-6 py-5 transition-all hover:border-slate-300 data-[invalid=true]:border-red-300">
                         <div className="flex items-center gap-3">
                           <Checkbox
                             checked={captchaChecked}
                             aria-invalid={!!errors.captcha}
                             disabled={isSubmitting}
+                            className="data-[state=checked]:bg-amber-500 data-[state=checked]:border-amber-500"
                             onCheckedChange={(v) =>
                               setValue("captcha", v === true, { shouldValidate: true })
                             }
                           />
-                          <span className="text-sm">I&apos;m not a robot</span>
+                          <span className="text-sm font-medium text-slate-700">
+                            I&apos;m not a robot
+                          </span>
                         </div>
-                        <div className="flex gap-3 text-xs text-muted-foreground">
-                          <a href="#" className="hover:underline">
+                        <div className="flex gap-4 text-xs text-slate-500">
+                          <a
+                            href="#"
+                            className="transition-colors hover:text-slate-700 hover:underline"
+                          >
                             Privacy
                           </a>
-                          <a href="#" className="hover:underline">
+                          <a
+                            href="#"
+                            className="transition-colors hover:text-slate-700 hover:underline"
+                          >
                             Terms
                           </a>
                         </div>
@@ -327,17 +430,21 @@ export function RequestMoreInfoForm({ data }: { data: RequestMoreInfoData }) {
                   <Field>
                     <Button
                       type="submit"
-                      className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-400 text-white shadow-md transition hover:from-amber-600 hover:via-orange-600 hover:to-amber-500"
+                      size="lg"
+                      className="w-full bg-gradient-to-r from-amber-500 via-orange-500 to-amber-400 text-base font-semibold text-white shadow-lg transition-all hover:scale-[1.02] hover:from-amber-600 hover:via-orange-600 hover:to-amber-500 hover:shadow-xl disabled:opacity-50 disabled:hover:scale-100"
                       disabled={isSubmitting}
                       aria-busy={isSubmitting}
                     >
                       {isSubmitting ? (
                         <>
-                          <Loader2 className="size-4 animate-spin" />
-                          <span>Submitting...</span>
+                          <Loader2 className="size-5 animate-spin" />
+                          <span>Submitting Your Request...</span>
                         </>
                       ) : (
-                        "Submit Request"
+                        <>
+                          <span>Submit Request</span>
+                          <ArrowRight className="ml-2 size-5" />
+                        </>
                       )}
                     </Button>
                   </Field>

@@ -19,9 +19,7 @@ import {
   Share2,
 } from "lucide-react";
 
-import MediaPreviewDialog, {
-  type MediaPreviewFile,
-} from "@/components/media-preview-dialog";
+import MediaPreviewDialog, { type MediaPreviewFile } from "@/components/media-preview-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -98,8 +96,8 @@ export default function SampleListingPage() {
       return {
         id,
         fileName: `photo-${id}.jpg`,
-        storagePath: `https://picsum.photos/800/600?random=${id}`,
-        thumbnailUrl: `https://picsum.photos/200/200?random=${id}`,
+        storagePath: `https://picsum.photos/seed/${id}/800/600`,
+        thumbnailUrl: `https://picsum.photos/seed/${id}/400/400`,
       } satisfies SampleImage;
     }),
     videos: [
@@ -107,19 +105,19 @@ export default function SampleListingPage() {
         id: "v1",
         fileName: "walkaround.mp4",
         storagePath: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4",
-        thumbnailUrl: "https://picsum.photos/800/450?random=901",
+        thumbnailUrl: "https://picsum.photos/seed/video-901/800/450",
       },
       {
         id: "v2",
         fileName: "startup.mp4",
         storagePath: "https://samplelib.com/lib/preview/mp4/sample-10s.mp4",
-        thumbnailUrl: "https://picsum.photos/800/450?random=902",
+        thumbnailUrl: "https://picsum.photos/seed/video-902/800/450",
       },
       {
         id: "v3",
         fileName: "controls.mp4",
         storagePath: "https://samplelib.com/lib/preview/mp4/sample-15s.mp4",
-        thumbnailUrl: "https://picsum.photos/800/450?random=903",
+        thumbnailUrl: "https://picsum.photos/seed/video-903/800/450",
       },
     ] satisfies SampleVideo[],
     documents: [
@@ -134,52 +132,73 @@ export default function SampleListingPage() {
     maximumFractionDigits: 0,
   }).format(sampleListing.askingPrice);
 
-  const [activeImageIndex, setActiveImageIndex] = React.useState(0);
-  const activeImage = sampleListing.images[activeImageIndex] ?? sampleListing.images[0];
-
-  const [previewOpen, setPreviewOpen] = React.useState(false);
-  const [previewFile, setPreviewFile] = React.useState<MediaPreviewFile | null>(
-    null,
+  const mediaItems = React.useMemo<MediaPreviewFile[]>(
+    () => [
+      ...sampleListing.images.map((img) => ({
+        preview: img.storagePath,
+        name: img.fileName,
+        type: "image" as const,
+        thumbnail: img.thumbnailUrl,
+      })),
+      ...sampleListing.videos.map((video) => ({
+        preview: video.storagePath,
+        name: video.fileName,
+        type: "video" as const,
+        thumbnail: video.thumbnailUrl,
+      })),
+    ],
+    [sampleListing.images, sampleListing.videos],
   );
 
-  const openPreview = (file: MediaPreviewFile) => {
-    setPreviewFile(file);
-    setPreviewOpen(true);
-  };
+  const galleryFiles = mediaItems;
+
+  const [activeMediaIndex, setActiveMediaIndex] = React.useState(0);
+  const activeMediaItem = mediaItems[activeMediaIndex] ?? mediaItems[0];
 
   const [galleryOpen, setGalleryOpen] = React.useState(false);
   const [galleryStartIndex, setGalleryStartIndex] = React.useState(0);
 
-  const galleryFiles = React.useMemo<MediaPreviewFile[]>(
-    () =>
-      sampleListing.images.map((img) => ({
-        preview: img.storagePath,
-        name: img.fileName,
-        type: "image",
-      })),
-    [sampleListing.images],
-  );
+  // Ref map for thumbnail buttons to enable auto-scroll to active item
+  const thumbnailButtonRefs = React.useRef<Map<number, HTMLButtonElement>>(new Map());
 
-  const handleThumbnailClick = (index: number) => {
+  const openMediaAtIndex = (index: number) => {
     setGalleryStartIndex(index);
     setGalleryOpen(true);
+  };
+
+  const handleThumbnailClick = (index: number) => {
+    openMediaAtIndex(index);
   };
 
   const loginRequired = () => toast.error("Login required");
 
   const totalPhotos = sampleListing.images.length;
   const totalVideos = sampleListing.videos.length;
+  const totalMedia = totalPhotos + totalVideos;
 
-  const goPrevImage = React.useCallback(() => {
-    setActiveImageIndex((prev) => {
+  const goPrevMedia = React.useCallback(() => {
+    setActiveMediaIndex((prev) => {
       const next = prev - 1;
-      return next < 0 ? sampleListing.images.length - 1 : next;
+      return next < 0 ? totalMedia - 1 : next;
     });
-  }, [sampleListing.images.length]);
+  }, [totalMedia]);
 
-  const goNextImage = React.useCallback(() => {
-    setActiveImageIndex((prev) => (prev + 1) % sampleListing.images.length);
-  }, [sampleListing.images.length]);
+  const goNextMedia = React.useCallback(() => {
+    setActiveMediaIndex((prev) => (prev + 1) % totalMedia);
+  }, [totalMedia]);
+
+  // Auto-scroll thumbnail strip to show active thumbnail when navigating with keyboard
+  React.useEffect(() => {
+    const activeButton = thumbnailButtonRefs.current.get(activeMediaIndex);
+    if (activeButton) {
+      // Use scrollIntoView to smoothly scroll the active thumbnail into view
+      activeButton.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "center",
+      });
+    }
+  }, [activeMediaIndex]);
 
   React.useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
@@ -188,13 +207,13 @@ export default function SampleListingPage() {
       const tag = target?.tagName?.toLowerCase();
       if (tag === "input" || tag === "textarea" || target?.isContentEditable) return;
 
-      if (e.key === "ArrowLeft") goPrevImage();
-      if (e.key === "ArrowRight") goNextImage();
+      if (e.key === "ArrowLeft") goPrevMedia();
+      if (e.key === "ArrowRight") goNextMedia();
     };
 
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [goNextImage, goPrevImage]);
+  }, [goNextMedia, goPrevMedia]);
 
   const InfoCheckMini = () => (
     <Card>
@@ -223,11 +242,6 @@ export default function SampleListingPage() {
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-6 md:px-6 md:py-10">
-      <MediaPreviewDialog
-        open={previewOpen}
-        onOpenChange={setPreviewOpen}
-        file={previewFile}
-      />
       <MediaPreviewDialog
         open={galleryOpen}
         onOpenChange={setGalleryOpen}
@@ -332,16 +346,38 @@ export default function SampleListingPage() {
             </div>
           </div>
 
-          <div className="relative overflow-hidden rounded-2xl bg-card shadow">
+          <div className="relative overflow-hidden rounded-2xl  shadow backdrop-blur" style={{ backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.5)),url(/images/hand-drawn-abstract-outline-background.avif)`, backgroundSize: "cover", backgroundPosition: "center" }}>
             <div className="relative aspect-video w-full">
-              {activeImage ? (
-                <Image
-                  src={activeImage.storagePath}
-                  alt={activeImage.fileName}
-                  fill
-                  className="object-cover"
-                  priority
-                />
+              {activeMediaItem ? (
+                activeMediaItem.type === "video" ? (
+                  <div className="relative h-full w-full">
+                    <Image
+                      src={activeMediaItem.thumbnail ?? activeMediaItem.preview}
+                      alt={activeMediaItem.name}
+                      fill
+                      className="object-cover"
+                      priority
+                    />
+                    <button
+                      type="button"
+                      onClick={() => openMediaAtIndex(activeMediaIndex)}
+                      className="absolute inset-0 flex items-center justify-center bg-black/25 transition-colors hover:bg-black/35"
+                      aria-label={`Play ${activeMediaItem.name}`}
+                    >
+                      <div className="rounded-full bg-white/90 p-4">
+                        <Play className="ml-1 h-8 w-8 fill-black text-black" />
+                      </div>
+                    </button>
+                  </div>
+                ) : (
+                  <Image
+                    src={activeMediaItem.preview}
+                    alt={activeMediaItem.name}
+                    fill
+                    className="object-cover"
+                    priority
+                  />
+                )
               ) : null}
 
               <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-linear-to-t from-black/35 to-transparent" />
@@ -358,8 +394,8 @@ export default function SampleListingPage() {
                   variant="secondary"
                   size="icon"
                   className="h-9 w-9 rounded-full bg-background/50 backdrop-blur hover:bg-background/80 border border-white/5"
-                  onClick={goPrevImage}
-                  aria-label="Previous photo"
+                  onClick={goPrevMedia}
+                  aria-label="Previous media"
                 >
                   <ChevronLeft className="h-5 w-5 text-white" />
                 </Button>
@@ -370,8 +406,8 @@ export default function SampleListingPage() {
                   variant="secondary"
                   size="icon"
                   className="h-9 w-9 rounded-full bg-background/50 backdrop-blur hover:bg-background/80 border border-white/5"
-                  onClick={goNextImage}
-                  aria-label="Next photo"
+                  onClick={goNextMedia}
+                  aria-label="Next media"
                 >
                   <ChevronRight className="h-5 w-5 text-white" />
                 </Button>
@@ -382,60 +418,74 @@ export default function SampleListingPage() {
                   type="button"
                   variant="secondary"
                   className="gap-2 bg-background/80 backdrop-blur hover:bg-background text-stone-600"
-                  onClick={() => {
-                    setGalleryStartIndex(activeImageIndex);
-                    setGalleryOpen(true);
-                  }}
+                  onClick={() => openMediaAtIndex(activeMediaIndex)}
                 >
-                  <Camera className="h-4 w-4 text-white" />
+                  {activeMediaItem?.type === "video" ? (
+                    <Play className="h-4 w-4 text-white" />
+                  ) : (
+                    <Camera className="h-4 w-4 text-white" />
+                  )}
                   View full screen
                 </Button>
                 <div className="rounded-full bg-black/40 px-2.5 py-1 text-xs font-medium text-white">
-                  {activeImageIndex + 1} / {totalPhotos}
+                  {activeMediaIndex + 1} / {totalMedia}
                 </div>
               </div>
             </div>
 
-            <div className="border-b border-r border-l  rounded-b-2xl bg-card p-3">
+            <div className="border-b border-r border-l  rounded-b-2xl bg-black/90 p-3" style={{ backdropFilter: "blur(5px)" }}>
               <div className="flex items-center justify-between gap-3">
                 <Button
                   type="button"
                   variant="outline"
                   className="gap-2"
                   onClick={() => {
-                    setGalleryStartIndex(0);
-                    setGalleryOpen(true);
+                    openMediaAtIndex(0);
                   }}
                 >
                   <Camera className="h-4 w-4" />
-                  VIEW ALL PHOTOS
+                  VIEW ALL MEDIA
                 </Button>
                 <div className="text-xs text-muted-foreground">Tip: use ← → to navigate.</div>
               </div>
 
               <div className="mt-3">
                 <ScrollArea className="w-full">
-                  <div className="flex gap-2 pb-3">
-                    {sampleListing.images.slice(0, 24).map((img, idx) => {
-                      const isActive = idx === activeImageIndex;
+                  <div className="flex gap-2 pb-3 px-1">
+                    {mediaItems.map((item, idx) => {
+                      const isActive = idx === activeMediaIndex;
                       return (
                         <button
-                          key={img.id}
+                          key={`${item.type}-${idx}-${item.name}`}
+                          ref={(el) => {
+                            if (el) {
+                              thumbnailButtonRefs.current.set(idx, el);
+                            } else {
+                              thumbnailButtonRefs.current.delete(idx);
+                            }
+                          }}
                           type="button"
                           className={cn(
-                            "relative h-16 w-16 shrink-0 overflow-hidden rounded-md border bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:h-20 sm:w-20",
-                            isActive && "ring-2 ring-ring",
+                            " my-1 relative h-16 w-16 shrink-0 overflow-hidden rounded-md border bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:h-20 sm:w-20",
+                            isActive && "ring-2 ring-yellow-600 border-yellow-400",
                           )}
-                          onClick={() => setActiveImageIndex(idx)}
+                          onClick={() => setActiveMediaIndex(idx)}
                           onDoubleClick={() => handleThumbnailClick(idx)}
-                          aria-label={`View ${img.fileName}`}
+                          aria-label={`View ${item.name}`}
                         >
                           <Image
-                            src={img.thumbnailUrl}
-                            alt={img.fileName}
+                            src={item.thumbnail ?? item.preview}
+                            alt={item.name}
                             fill
                             className="object-cover"
+                            loading={idx < 12 ? "eager" : "lazy"}
+                            sizes="(max-width: 640px) 64px, 80px"
                           />
+                          {item.type === "video" && (
+                            <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+                              <Play className="h-5 w-5 fill-white text-white sm:h-6 sm:w-6" />
+                            </div>
+                          )}
                         </button>
                       );
                     })}
@@ -551,18 +601,12 @@ export default function SampleListingPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                    {sampleListing.videos.map((video) => (
+                    {sampleListing.videos.map((video, videoIndex) => (
                       <button
                         key={video.id}
                         type="button"
                         className="group overflow-hidden rounded-lg border bg-card text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                        onClick={() =>
-                          openPreview({
-                            preview: video.storagePath,
-                            name: video.fileName,
-                            type: "video",
-                          })
-                        }
+                        onClick={() => openMediaAtIndex(totalPhotos + videoIndex)}
                         aria-label={`Play ${video.fileName}`}
                       >
                         <div className="relative aspect-video bg-muted">
@@ -643,11 +687,24 @@ export default function SampleListingPage() {
         {/* Right: sticky actions + details */}
         <div className="space-y-4 lg:sticky lg:top-6">
           <Card className="overflow-hidden">
-            <CardHeader className="space-y-2 pb-4">
+            <CardHeader className="space-y-2">
               <CardTitle className="text-base">Actions</CardTitle>
-              <div className="rounded-lg border bg-card px-4 py-3">
-                <div className="text-sm text-muted-foreground">Call us at</div>
+              <div
+                className="relative overflow-hidden rounded-lg border border-white/20 bg-white/10  shadow-lg backdrop-blur-xl ring-1 ring-white/20 dark:border-slate-800/60 dark:bg-slate-900/40 dark:ring-slate-800/40"
+                
+                style={{
+                  backgroundImage:
+                    "url(/images/modern-smartphone-with-blank-screen.png)",
+                  backgroundRepeat: "no-repeat",
+                  backgroundPosition: "110% -10%",
+                  backgroundSize: "160px",
+                }}
+              >
+                <div className="flex flex-col items-center justify-center backdrop-blur-sm px-4 py-3 bg-black/50 rounded-lg">
+
+                <div className="text-sm text-stone-200">Call us at</div>
                 <div className="text-lg font-semibold">{sampleListing.phone}</div>
+                </div>
               </div>
             </CardHeader>
             <CardContent className="grid gap-2">

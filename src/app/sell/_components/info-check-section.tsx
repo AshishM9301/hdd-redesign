@@ -47,7 +47,7 @@ export default function InfoCheckSection() {
       <p className="text-muted-foreground mb-6 text-lg">
         Info Check helps you provide the information buyers want. Listings with
         &quot;Info Checked&quot; appear first on our website. Check out a{" "}
-        <Link href="#" className="text-primary hover:text-primary/80 underline">
+        <Link href="/sell/listing-sample" className="text-primary hover:text-primary/80 underline">
           sample listing
         </Link>{" "}
         for an example.

@@ -9,6 +9,7 @@ import {
   FileImage,
   ArrowRightLeft,
   DollarSign,
+  BookOpen,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -30,7 +31,8 @@ const listingItems = [
     href: "#",
     gradient: "from-green-500/20 to-green-600/20",
   },
-  { 
+
+  {
     id: 3,
     title: "VIEW FAQ",
     icon: HelpCircle,

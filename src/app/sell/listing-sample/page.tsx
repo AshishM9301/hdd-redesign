@@ -300,8 +300,8 @@ export default function SampleListingPage() {
         </div>
       </div>
 
-      <div className="mb-6 overflow-hidden rounded-xl border bg-muted/40">
-        <div className="bg-linear-to-r from-muted/80 via-muted/40 to-muted/80 px-4 py-3 text-center text-sm font-semibold text-foreground">
+      <div className="mb-6 overflow-hidden rounded-full border bg-black border-yellow-400">
+        <div className="bg-linear-to-r from-yellow-400/80 via-yellow-400/20 to-yellow-400/80 px-4 py-3 text-center text-sm font-semibold text-foreground backdrop-blur-sm">
           THIS IS A SAMPLE LISTING ONLY
         </div>
       </div>
@@ -739,8 +739,8 @@ export default function SampleListingPage() {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader className="pb-3">
+          <Card className="gap-0">
+            <CardHeader className="pb-1">
               <CardTitle className="text-base">Quick Links</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2 text-sm">
@@ -752,7 +752,7 @@ export default function SampleListingPage() {
                 <Link
                   key={link.label}
                   href={link.href}
-                  className="block text-primary underline-offset-4 hover:underline"
+                  className="block text-yellow-700 underline-offset-4 hover:underline"
                 >
                   {link.label}
                 </Link>
@@ -760,12 +760,16 @@ export default function SampleListingPage() {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base">Location</CardTitle>
-            </CardHeader>
-            <CardContent className="flex items-start gap-2 text-sm">
-              <MapPin className="mt-0.5 h-4 w-4 text-muted-foreground" />
+          <Card className="gap-0 bg-gradient-to-br from-blue-100/40 via-blue-200/50 via-blue-200/10 to-transparent py-0 border-none" 
+          style={{
+            backgroundImage:
+              " url(/images/folded-paper-world-map-with-red-pin.png)",
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "110% -10%",
+            backgroundSize: "160px",
+          }}>
+            <CardContent className="flex items-center gap-2 text-sm backdrop-blur-sm px-4 py-3 bg-black/50 rounded-lg h-full">
+              <MapPin className="size-9 text-white" />
               <div>
                 <div className="font-semibold">
                   {sampleListing.city}, {sampleListing.stateProvince}

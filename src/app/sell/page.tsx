@@ -2,6 +2,7 @@ import React from "react";
 import ListingBoxes from "./_components/listing-boxes";
 import InfoCheckSection from "./_components/info-check-section";
 import VideosSection from "./_components/videos-section";
+import Link from "next/link";
 
 const SellPage = () => {
   return (
@@ -38,7 +39,7 @@ const SellPage = () => {
         </h2>
         <ListingBoxes />
         <p className="text-muted-foreground mt-6">
-          View our Listing Guide to make sure you include everything.
+          View our <Link href="/sell/guide" className="text-primary hover:text-primary/80 underline">Listing Guide</Link> to make sure you include everything.
         </p>
       </section>
 

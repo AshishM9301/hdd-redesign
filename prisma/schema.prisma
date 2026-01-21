@@ -43,6 +43,20 @@ enum StorageProvider {
   RAILWAY
 }
 
+enum TradeInStatus {
+  PENDING
+  IN_REVIEW
+  OFFER_SENT
+  CLOSED
+}
+
+enum ValueRequestStatus {
+  PENDING
+  IN_REVIEW
+  VALUED
+  CLOSED
+}
+
 model Post {
   id        String   @id @default(cuid())
   name      String
@@ -73,6 +87,8 @@ model User {
   reviewedConnectionRequests ListingConnectionRequest[] @relation("ConnectionRequestReviewer")
   mediaUploadRequests       MediaUploadRequest[]       @relation("MediaUploadRequester")
   reviewedMediaUploadRequests MediaUploadRequest[]     @relation("MediaUploadReviewedBy")
+  tradeInRequests        TradeInRequest[]
+  valueRequests          ValueRequest[]
 
   @@unique([email])
   @@map("user")
@@ -308,4 +324,59 @@ model MediaUploadRequest {
   @@index([userId])
   @@index([listingId])
   @@index([cancellationToken])
+}
+
+model TradeInRequest {
+  id               String         @id @default(cuid())
+  referenceNumber  String         @unique
+  name             String
+  company          String?
+  phone            String
+  email            String
+  preferredLanguage String
+  category         String
+  manufacturer     String?
+  model            String?
+  year             String?
+  hours            String?
+  condition        String?
+  country          String?
+  stateProvince    String?
+  message          String
+  status           TradeInStatus  @default(PENDING)
+  userId           String?
+  user             User?          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  @@index([email])
+  @@index([status])
+  @@index([referenceNumber])
+  @@map("trade_in_request")
+}
+
+model ValueRequest {
+  id               String              @id @default(cuid())
+  referenceNumber  String              @unique
+  name             String
+  company          String?
+  phone            String
+  email            String
+  preferredLanguage String
+  manufacturer     String?
+  model            String?
+  year             String?
+  hours            String?
+  description      String
+  files            Json?
+  status           ValueRequestStatus  @default(PENDING)
+  userId           String?
+  user             User?               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+
+  @@index([email])
+  @@index([status])
+  @@index([referenceNumber])
+  @@map("value_request")
 }

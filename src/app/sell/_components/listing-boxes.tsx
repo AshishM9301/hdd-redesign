@@ -48,14 +48,14 @@ const listingItems = [
     id: 5,
     title: "TRADE IN EQUIPMENT",
     icon: ArrowRightLeft,
-    href: "#",
+    href: "/sell/trade-in",
     gradient: "from-red-500/20 to-red-600/20",
   },
   {
     id: 6,
     title: "VALUE MY EQUIPMENT",
     icon: DollarSign,
-    href: "#",
+    href: "/sell/value-equipment",
     gradient: "from-yellow-500/20 to-yellow-600/20",
   },
 ];

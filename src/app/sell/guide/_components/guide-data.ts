@@ -839,7 +839,7 @@ export const sampleListingData = {
 
 // Helper function to get step data
 export function getStepData(stepNumber: number) {
-  return guideSteps[stepNumber - 1] || null;
+  return guideSteps[stepNumber - 1] ?? null;
 }
 
 // Condition options with descriptions

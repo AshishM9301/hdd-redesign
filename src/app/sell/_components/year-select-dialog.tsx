@@ -68,11 +68,11 @@ export function YearSelectDialog({
                 onClick={() => handleSelect(year)}
                 className={cn(
                   "flex w-24 items-center justify-between rounded-md px-4 py-4 text-sm transition-colors",
-                  "hover:bg-accent hover:text-accent-foreground",
+                  "hover:bg-accent hover:text-accent-foreground ",
                   value === year && "bg-primary text-primary-foreground hover:bg-primary/90",
                 )}
               >
-                <span>{year}</span>
+                <span className="text-center">{year}</span>
                 {value === year && <CheckIcon className="h-4 w-4" />}
               </button>
             ))}

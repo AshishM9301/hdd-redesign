@@ -15,6 +15,8 @@ import {
   Package,
   MessageSquare,
   CheckCircle2,
+  HelpCircle,
+  Sparkles,
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -103,41 +105,106 @@ export function RequestMoreInfoForm({ data }: { data: RequestMoreInfoData }) {
   }
 
   return (
-    <div className="min-h-screen">
-      <div className="absolute inset-0 z-1 h-full w-full bg-gradient-to-r from-white/50 to-white/20 fixed" />
-      {/* Background Pattern */}
-      <div className="absolute inset-0 -z-0 h-full w-full bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] fixed" />
-      
-      <div className="relative mx-auto z-3 flex w-full max-w-5xl flex-col gap-8 px-4 py-8 md:px-8 md:py-16">
-        {/* Back Button */}
-        <div className="flex items-center">
-          <Button
-            asChild
-            variant="ghost"
-            className="group gap-2 transition-all hover:translate-x-[-2px]"
-          >
-            <Link href={data.backHref}>
-              <ArrowLeft className="size-4 transition-transform group-hover:-translate-x-1" />
-              Back
-            </Link>
-          </Button>
-        </div>
+    <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <section className="relative mb-12 overflow-hidden rounded-2xl border border-primary/10 bg-gradient-to-br from-primary/20 via-background to-primary/20 p-8 sm:p-10 lg:p-12">
 
-        {/* Main Card */}
-        <Card className="border-0 shadow-2xl backdrop-blur-sm transition-all hover:shadow-3xl">
-          <CardHeader className="space-y-2 border-b bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 pb-8 pt-8 text-center text-white">
-            <div className="mx-auto mb-2 flex h-16 w-16 items-center justify-center rounded-full bg-white/10 backdrop-blur-sm">
-              <MessageSquare className="size-8 text-white" />
+        <div className="relative z-10">
+          <div className="mb-4 flex items-center gap-3">
+            <div className="flex size-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
+              <MessageSquare className="size-6" />
             </div>
-            <CardTitle className="text-3xl font-extrabold tracking-tight md:text-4xl">
-              REQUEST MORE INFO
-            </CardTitle>
-            <p className="mt-2 text-sm text-slate-300">
-              Fill out the form below and we&apos;ll get back to you shortly
-            </p>
-          </CardHeader>
+            <Sparkles className="size-5 text-primary/60" />
+          </div>
+          <h1 className="text-foreground mb-3 text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
+            REQUEST MORE INFO
+          </h1>
+          <p className="text-muted-foreground max-w-2xl text-base leading-relaxed sm:text-lg">
+            Fill out the form below and we&apos;ll get back to you shortly
+          </p>
+        </div>
+        <div className="absolute -right-8 -top-8 size-64 rounded-full bg-primary/5 blur-3xl" />
+        <div className="absolute -bottom-8 -left-8 size-64 rounded-full bg-primary/5 blur-3xl" />
+      </section>
 
-          <CardContent className="space-y-8 p-8 md:p-10">
+      <div className="relative mx-auto z-3 flex w-full  flex-col gap-8 ">
+
+
+
+
+
+        <div className="flex flex-row-reverse gap-4">
+          {/* Ways to Contact */}
+          <section className="space-y-6  max-h-[600px] rounded-xl border border-slate-200 bg-white/80 p-8 shadow-lg backdrop-blur-sm max-w-xs ">
+            <div className="flex items-center justify-center gap-3">
+              <div className="h-px flex-1 bg-gradient-to-r from-transparent via-slate-300 to-slate-300" />
+              <h2 className="text-center text-xl font-bold tracking-wide text-slate-800">
+                WAYS TO CONTACT HDD BROKER
+              </h2>
+              <div className="h-px flex-1 bg-gradient-to-l from-transparent via-slate-300 to-slate-300" />
+            </div>
+            <div className="flex flex-col gap-4">
+              <a
+                href="tel:+18669603331"
+                className="group flex flex-col gap-4 rounded-lg border-2 border-slate-200 bg-gradient-to-br from-white to-slate-50 p-6 shadow-sm transition-all hover:scale-[1.02] hover:border-blue-300 hover:shadow-md"
+              >
+                <div className="flex items-end gap-2">
+
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-md transition-transform group-hover:scale-110">
+                    <Phone className="size-5" />
+                  </div>
+                  <div className="text-lg font-medium uppercase tracking-wider text-slate-500">
+                    Phone
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <div className="text-lg font-semibold leading-6 tracking-wide text-slate-900">
+                    +1.866.960.3331
+                  </div>
+                  <div className="text-lg font-semibold leading-6 tracking-wide text-slate-900">
+                    +1.239.237.3744
+                  </div>
+                </div>
+              </a>
+              <a
+                href="mailto:sales@hddbroker.com"
+                className="group flex flex-col gap-4 rounded-lg border-2 border-slate-200 bg-gradient-to-br from-white to-slate-50 p-6 shadow-sm transition-all hover:scale-[1.02] hover:border-amber-300 hover:shadow-md"
+              >
+                <div className="flex items-end gap-2">
+
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-amber-500 to-orange-500 text-white shadow-md transition-transform group-hover:scale-110">
+                    <Mail className="size-5" />
+                  </div>
+                  <div className="text-lg font-medium uppercase tracking-wider text-slate-500">
+                    Email
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <div className="text-lg font-semibold leading-6 tracking-wide text-blue-600 transition-colors group-hover:text-blue-700">
+                    sales@hddbroker.com
+                  </div>
+                </div>
+              </a>
+              <a
+                href="#"
+                className="group flex flex-col gap-4 rounded-lg border-2 border-slate-200 bg-gradient-to-br from-white to-slate-50 p-6 shadow-sm transition-all hover:scale-[1.02] hover:border-slate-300 hover:shadow-md"
+              ><div className="flex items-end gap-2">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-slate-600 to-slate-700 text-white shadow-md transition-transform group-hover:scale-110">
+                    <MessageSquare className="size-5" />
+                  </div>
+                  <div className="text-lg font-medium uppercase tracking-wider text-slate-500">
+                    More Options
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <div className="text-sm font-semibold leading-6 text-slate-900 transition-colors group-hover:text-slate-700">
+                    Other Ways to Contact Us
+                  </div>
+                </div>
+              </a>
+            </div>
+          </section>
+
+          <div className="flex-1 flex flex-col gap-6">
             {/* You Were Looking At */}
             <section className="group relative overflow-hidden rounded-xl border border-slate-200 bg-gradient-to-br from-white to-slate-50/50 p-8 shadow-lg transition-all hover:shadow-xl">
               <div className="absolute right-0 top-0 h-32 w-32 translate-x-12 -translate-y-12 rounded-full bg-gradient-to-br from-amber-400/20 to-orange-400/20 blur-2xl transition-transform group-hover:scale-150" />
@@ -172,72 +239,8 @@ export function RequestMoreInfoForm({ data }: { data: RequestMoreInfoData }) {
               </div>
             </section>
 
-            {/* Ways to Contact */}
-            <section className="space-y-6 rounded-xl border border-slate-200 bg-white/80 p-8 shadow-lg backdrop-blur-sm">
-              <div className="flex items-center justify-center gap-3">
-                <div className="h-px flex-1 bg-gradient-to-r from-transparent via-slate-300 to-slate-300" />
-                <h2 className="text-center text-xl font-bold tracking-wide text-slate-800">
-                  WAYS TO CONTACT HDD BROKER
-                </h2>
-                <div className="h-px flex-1 bg-gradient-to-l from-transparent via-slate-300 to-slate-300" />
-              </div>
-              <div className="grid gap-4 md:grid-cols-3">
-                <a
-                  href="tel:+18669603331"
-                  className="group flex flex-col gap-4 rounded-lg border-2 border-slate-200 bg-gradient-to-br from-white to-slate-50 p-6 shadow-sm transition-all hover:scale-[1.02] hover:border-blue-300 hover:shadow-md"
-                >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-md transition-transform group-hover:scale-110">
-                    <Phone className="size-5" />
-                  </div>
-                  <div className="space-y-1">
-                    <div className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-                      Phone
-                    </div>
-                    <div className="text-sm font-semibold leading-6 text-slate-900">
-                      +1.866.960.3331
-                    </div>
-                    <div className="text-sm font-semibold leading-6 text-slate-900">
-                      +1.239.237.3744
-                    </div>
-                  </div>
-                </a>
-                <a
-                  href="mailto:sales@hddbroker.com"
-                  className="group flex flex-col gap-4 rounded-lg border-2 border-slate-200 bg-gradient-to-br from-white to-slate-50 p-6 shadow-sm transition-all hover:scale-[1.02] hover:border-amber-300 hover:shadow-md"
-                >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 text-white shadow-md transition-transform group-hover:scale-110">
-                    <Mail className="size-5" />
-                  </div>
-                  <div className="space-y-1">
-                    <div className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-                      Email
-                    </div>
-                    <div className="text-sm font-semibold leading-6 text-blue-600 transition-colors group-hover:text-blue-700">
-                      sales@hddbroker.com
-                    </div>
-                  </div>
-                </a>
-                <a
-                  href="#"
-                  className="group flex flex-col gap-4 rounded-lg border-2 border-slate-200 bg-gradient-to-br from-white to-slate-50 p-6 shadow-sm transition-all hover:scale-[1.02] hover:border-slate-300 hover:shadow-md"
-                >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-slate-600 to-slate-700 text-white shadow-md transition-transform group-hover:scale-110">
-                    <MessageSquare className="size-5" />
-                  </div>
-                  <div className="space-y-1">
-                    <div className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-                      More Options
-                    </div>
-                    <div className="text-sm font-semibold leading-6 text-slate-900 transition-colors group-hover:text-slate-700">
-                      Other Ways to Contact Us
-                    </div>
-                  </div>
-                </a>
-              </div>
-            </section>
-
             {/* Form */}
-            <section className="rounded-xl border border-slate-200 bg-black/80 p-8 shadow-lg backdrop-blur-sm">
+            <section className="rounded-xl border border-slate-200 bg-black/80 p-8 shadow-lg backdrop-blur-sm flex-1">
               <div className="mb-8 flex items-center justify-center gap-3">
                 <div className="h-px flex-1 bg-gradient-to-r from-transparent via-slate-300 to-slate-300" />
                 <h2 className="flex items-center gap-2 text-center text-xl font-bold tracking-wide text-yellow-500">
@@ -393,7 +396,7 @@ export function RequestMoreInfoForm({ data }: { data: RequestMoreInfoData }) {
                   <Field data-invalid={!!errors.captcha}>
                     <FieldLabel className="sr-only">Captcha</FieldLabel>
                     <FieldContent>
-                      <div className="flex items-center justify-between rounded-lg border-2 border-slate-200 bg-gradient-to-br from-slate-50 to-white px-6 py-5 transition-all hover:border-slate-300 data-[invalid=true]:border-red-300">
+                      <div className="flex items-center justify-between rounded-lg border-slate-100 bg-gradient-to-br from-yellow-50/60 to-yellow-100/20 px-6 py-5 transition-all hover:border-slate-300 data-[invalid=true]:border-red-300">
                         <div className="flex items-center gap-3">
                           <Checkbox
                             checked={captchaChecked}
@@ -404,20 +407,20 @@ export function RequestMoreInfoForm({ data }: { data: RequestMoreInfoData }) {
                               setValue("captcha", v === true, { shouldValidate: true })
                             }
                           />
-                          <span className="text-sm font-medium text-slate-700">
+                          <span className="text-sm font-medium text-slate-100">
                             I&apos;m not a robot
                           </span>
                         </div>
-                        <div className="flex gap-4 text-xs text-slate-500">
+                        <div className="flex gap-4 text-xs text-yellow-500">
                           <a
                             href="#"
-                            className="transition-colors hover:text-slate-700 hover:underline"
+                            className="transition-colors hover:text-yellow-600 hover:underline"
                           >
                             Privacy
                           </a>
                           <a
                             href="#"
-                            className="transition-colors hover:text-slate-700 hover:underline"
+                            className="transition-colors hover:text-yellow-600 hover:underline"
                           >
                             Terms
                           </a>
@@ -451,10 +454,10 @@ export function RequestMoreInfoForm({ data }: { data: RequestMoreInfoData }) {
                 </FieldGroup>
               </form>
             </section>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
-    </div>
+    </main>
   )
 }
 

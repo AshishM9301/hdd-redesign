@@ -43,6 +43,7 @@ import type {
   TradeInCreateInput,
 } from "@/types/trade-in";
 import { tradeInCreateInput } from "@/types/trade-in";
+import { YearSelectDialog } from "../../_components/year-select-dialog";
 
 type FormValues = z.input<typeof tradeInCreateInput>;
 
@@ -124,10 +125,10 @@ export default function TradeInForm() {
     <Card className="shadow-lg">
       <CardHeader className="space-y-2">
         <div className="flex items-center gap-3 text-primary">
-          <div className="flex size-10 items-center justify-center rounded-lg bg-primary/10">
+          <div className=" inline-flex items-start gap-2 text-xs font-semibold uppercase tracking-wider text-stone-400">
             <Sparkles className="size-5" />
           </div>
-          <p className="text-sm font-semibold uppercase tracking-wide">Trade-In Form</p>
+          <p className="text-sm font-semibold uppercase tracking-wide text-stone-50/90">Trade-In Form</p>
         </div>
         <CardTitle className="text-2xl font-bold">Tell us about your equipment</CardTitle>
         <p className="text-muted-foreground text-sm">
@@ -143,18 +144,18 @@ export default function TradeInForm() {
             autoComplete="off"
             {...form.register("honeypot")}
           />
-          <FieldGroup className="space-y-6">
+          <FieldGroup className="space-y-1">
             <div className="grid gap-6 md:grid-cols-2">
               <Field data-invalid={!!form.formState.errors.name}>
                 <FieldLabel htmlFor="name">Name *</FieldLabel>
-                <FieldContent>
+                <FieldContent className="">
                   <div className="relative">
                     <User className="text-muted-foreground absolute left-3 top-1/2 size-4 -translate-y-1/2" />
                     <Input
                       id="name"
                       placeholder="Jane Doe"
                       autoComplete="name"
-                      className="pl-9"
+                      className="pl-9  focus-visible:ring-yellow-400/30 focus-visible:border-yellow-400"
                       {...form.register("name")}
                     />
                   </div>
@@ -171,7 +172,7 @@ export default function TradeInForm() {
                       id="company"
                       placeholder="Company Name"
                       autoComplete="organization"
-                      className="pl-9"
+                      className="pl-9  focus-visible:ring-yellow-400/30 focus-visible:border-yellow-400"
                       {...form.register("company")}
                     />
                   </div>
@@ -191,7 +192,7 @@ export default function TradeInForm() {
                       type="tel"
                       placeholder="+1 (555) 123-4567"
                       autoComplete="tel"
-                      className="pl-9"
+                      className="pl-9  focus-visible:ring-yellow-400/30 focus-visible:border-yellow-400"
                       {...form.register("phone")}
                     />
                   </div>
@@ -248,7 +249,7 @@ export default function TradeInForm() {
                     <Input
                       id="category"
                       placeholder="Drill / Rig / Reamer"
-                      className="pl-9"
+                      className="pl-9  focus-visible:ring-yellow-400/30 focus-visible:border-yellow-400"
                       {...form.register("category")}
                     />
                   </div>
@@ -262,6 +263,7 @@ export default function TradeInForm() {
                   <Input
                     id="condition"
                     placeholder="New / Used / Needs work"
+                     className="focus-visible:ring-yellow-400/30 focus-visible:border-yellow-400"
                     {...form.register("condition")}
                   />
                   <FieldError errors={[form.formState.errors.condition]} />
@@ -276,6 +278,7 @@ export default function TradeInForm() {
                   <Input
                     id="manufacturer"
                     placeholder="Vermeer, Ditch Witch..."
+                    className="focus-visible:ring-yellow-400/30 focus-visible:border-yellow-400"
                     {...form.register("manufacturer")}
                   />
                   <FieldError errors={[form.formState.errors.manufacturer]} />
@@ -285,7 +288,12 @@ export default function TradeInForm() {
               <Field data-invalid={!!form.formState.errors.model}>
                 <FieldLabel htmlFor="model">Model</FieldLabel>
                 <FieldContent>
-                  <Input id="model" placeholder="Model" {...form.register("model")} />
+                  <Input 
+                    id="model" 
+                    placeholder="Model" 
+                    className="focus-visible:ring-yellow-400/30 focus-visible:border-yellow-400"
+                    {...form.register("model")} 
+                  />
                   <FieldError errors={[form.formState.errors.model]} />
                 </FieldContent>
               </Field>
@@ -294,16 +302,25 @@ export default function TradeInForm() {
             <div className="grid gap-6 md:grid-cols-2">
               <Field data-invalid={!!form.formState.errors.year}>
                 <FieldLabel htmlFor="year">Year</FieldLabel>
-                <FieldContent>
-                  <Input id="year" placeholder="2022" {...form.register("year")} />
-                  <FieldError errors={[form.formState.errors.year]} />
-                </FieldContent>
+                <div className="space-y-1">
+                    <YearSelectDialog
+                      
+                      value={form.watch("year") ?? ""}
+                      onChange={(year: string) => form.setValue("year", year, { shouldValidate: true })}
+                    />
+                    <FieldError errors={[form.formState.errors.year]} />
+                  </div>
               </Field>
 
               <Field data-invalid={!!form.formState.errors.hours}>
                 <FieldLabel htmlFor="hours">Hours</FieldLabel>
                 <FieldContent>
-                  <Input id="hours" placeholder="1024" {...form.register("hours")} />
+                  <Input 
+                    id="hours" 
+                    placeholder="1024" 
+                    className="focus-visible:ring-yellow-400/30 focus-visible:border-yellow-400"
+                    {...form.register("hours")} type="number"
+                  />
                   <FieldError errors={[form.formState.errors.hours]} />
                 </FieldContent>
               </Field>
@@ -318,7 +335,7 @@ export default function TradeInForm() {
                     <Input
                       id="country"
                       placeholder="United States"
-                      className="pl-9"
+                      className="pl-9 focus-visible:ring-yellow-400/30 focus-visible:border-yellow-400"
                       {...form.register("country")}
                     />
                   </div>
@@ -334,7 +351,7 @@ export default function TradeInForm() {
                     <Input
                       id="stateProvince"
                       placeholder="FL / Ontario / NSW"
-                      className="pl-9"
+                      className="pl-9  focus-visible:ring-yellow-400/30 focus-visible:border-yellow-400"
                       {...form.register("stateProvince")}
                     />
                   </div>
@@ -352,7 +369,7 @@ export default function TradeInForm() {
                     id="message"
                     rows={5}
                     placeholder="Include condition, accessories, recent work, and anything that affects value."
-                    className="pl-10"
+                    className="pl-10 h-32 focus-visible:ring-yellow-400/30 focus-visible:border-yellow-400"
                     {...form.register("message")}
                   />
                 </div>
@@ -367,6 +384,7 @@ export default function TradeInForm() {
                     checked={form.watch("consent")}
                     onCheckedChange={(v) => form.setValue("consent", v === true, { shouldValidate: true })}
                     aria-invalid={!!form.formState.errors.consent}
+                    className="data-[state=checked]:bg-yellow-400 data-[state=checked]:text-yellow-900 focus-visible:ring-yellow-400/30 focus-visible:border-yellow-400"
                   />
                   <span>I agree to be contacted about this trade-in request</span>
                 </div>
@@ -379,7 +397,7 @@ export default function TradeInForm() {
             <Field>
               <Button
                 type="submit"
-                className="w-full"
+                className="w-full bg-yellow-400 hover:bg-yellow-500 focus-visible:ring-yellow-400/30 focus-visible:border-yellow-400 transition-all duration-300 text-yellow-900"
                 disabled={mutation.isPending}
                 aria-busy={mutation.isPending}
               >

@@ -142,14 +142,14 @@ export function FAQAccordion({
                     key={item.id}
                     value={itemId}
                     id={itemId}
-                    className="scroll-mt-20 rounded-lg border border-transparent px-4 transition-colors hover:border-border/50 hover:bg-muted/30"
+                    className="scroll-mt-20 rounded-lg border border-transparent px-4 transition-colors hover:border-border/50 hover:bg-yellow-500/30"
                   >
                     <AccordionTrigger
                       className="text-left py-4 hover:no-underline"
                       onClick={() => onItemOpen?.(section.slug, item.id)}
                     >
                       <div className="flex items-start gap-3 pr-4">
-                        <div className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary transition-transform group-hover:scale-110">
+                        <div className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-yellow-500/10 text-yellow-500 transition-transform group-hover:scale-110">
                           <Play className="size-3" />
                         </div>
                         <span className="flex-1 text-base font-medium leading-relaxed">

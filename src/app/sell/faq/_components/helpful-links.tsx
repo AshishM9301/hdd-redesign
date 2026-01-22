@@ -23,8 +23,10 @@ export function HelpfulLinks() {
   const { isAuthenticated, isLoading } = useAuth();
 
   return (
-    <Card className="border-2 shadow-lg">
-      <CardHeader className="">
+    <Card className="border-2 shadow-lg bg-gradient-to-br from-blue-200/60 via-blue-100/20 to-blue-100/5">
+      <div className="h-full backdrop-blur-sm">
+
+      <CardHeader className=" pb-3">
         <CardTitle className="text-foreground flex items-center gap-2 text-lg font-semibold">
           <ExternalLink className="size-5 text-primary" />
           Quick Actions
@@ -35,7 +37,7 @@ export function HelpfulLinks() {
         <div className="space-y-2">
           <Button
             asChild
-            className="w-full justify-start gap-3"
+            className="w-full justify-start gap-3 bg-yellow-700 hover:bg-yellow-800 transition-all duration-300"
             size="lg"
           >
             <Link href="/sell/list">
@@ -88,13 +90,13 @@ export function HelpfulLinks() {
 
         {/* Resources Section */}
         <div className="space-y-2">
-          <p className="text-muted-foreground mb-2 text-sm font-medium">
+          <p className="text-stone-50/90 mb-2 text-sm font-medium ">
             Resources
           </p>
           <Button
             asChild
             variant="ghost"
-            className="w-full justify-start gap-3 text-sm"
+            className="w-full justify-start gap-3 text-sm hover:bg-yellow-400"
             size="sm"
           >
             <Link href="/sell/sample-listing">
@@ -105,7 +107,7 @@ export function HelpfulLinks() {
           <Button
             asChild
             variant="ghost"
-            className="w-full justify-start gap-3 text-sm"
+            className="w-full justify-start gap-3 text-sm hover:bg-yellow-400"
             size="sm"
           >
             <Link href="/sell/value-equipment">
@@ -116,7 +118,7 @@ export function HelpfulLinks() {
           <Button
             asChild
             variant="ghost"
-            className="w-full justify-start gap-3 text-sm"
+            className="w-full justify-start gap-3 text-sm hover:bg-yellow-400"
             size="sm"
           >
             <Link href="/sell/trade-in">
@@ -131,13 +133,13 @@ export function HelpfulLinks() {
 
         {/* Support Section */}
         <div className="space-y-2">
-          <p className="text-muted-foreground mb-2 text-sm font-medium">
+          <p className="text-stone-50/90 mb-2 text-sm font-medium ">
             Need More Help?
           </p>
           <Button
             asChild
             variant="ghost"
-            className="w-full justify-start gap-3 text-sm"
+            className="w-full justify-start gap-3 text-sm hover:bg-yellow-400 transition-all duration-300 "
             size="sm"
           >
             <a href="mailto:listings@hddbroker.com">
@@ -148,7 +150,7 @@ export function HelpfulLinks() {
           <Button
             asChild
             variant="ghost"
-            className="w-full justify-start gap-3 text-sm"
+            className="w-full justify-start gap-3 text-sm hover:bg-yellow-400 transition-all duration-300"
             size="sm"
           >
             <a href="tel:+12392562344">
@@ -158,6 +160,8 @@ export function HelpfulLinks() {
           </Button>
         </div>
       </CardContent>
+      </div>
+
     </Card>
   );
 }

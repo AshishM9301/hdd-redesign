@@ -44,10 +44,10 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
   const [trpcClient] = useState(() =>
     api.createClient({
       links: [
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         loggerLink({
-          enabled: (op) =>
-            process.env.NODE_ENV === "development" ||
-            (op.direction === "down" && op.result instanceof Error),
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
+          enabled: (op: any) => op.result instanceof Error,
         }),
         httpBatchStreamLink({
           transformer: SuperJSON,

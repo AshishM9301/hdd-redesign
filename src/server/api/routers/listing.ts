@@ -2030,6 +2030,115 @@ export const listingRouter = createTRPCRouter({
         message: "Connection request canceled successfully",
       };
     }),
+
+  /**
+   * Create an offer for a listing
+   * Protected - requires authentication
+   */
+  createOffer: protectedProcedure
+    .input(
+      z.object({
+        listingId: z.string().min(1, "Listing ID is required"),
+        offerAmount: z.number().positive("Offer amount must be positive"),
+        phone: z.string().optional(),
+        message: z.string().optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+      const userEmail = ctx.session.user.email;
+      const userName = ctx.session.user.name;
+
+      // Get listing to verify it exists and is available
+      const listing = await ctx.db.listing.findUnique({
+        where: { id: input.listingId },
+        select: {
+          id: true,
+          status: true,
+          availabilityStatus: true,
+          manufacturer: true,
+          model: true,
+          year: true,
+          askingPrice: true,
+          currency: true,
+          userId: true,
+          contactInfo: {
+            select: {
+              contactName: true,
+              email: true,
+              city: true,
+              stateProvince: true,
+              country: true,
+            },
+          },
+        },
+      });
+
+      if (!listing) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Listing not found",
+        });
+      }
+
+      // Check if listing is available for offers
+      const unavailableStatuses = ["SOLD", "RESERVED", "ARCHIVED", "DRAFT"];
+      if (unavailableStatuses.includes(listing.status)) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "This listing is not available for offers",
+        });
+      }
+
+      // Check availability status
+      if (listing.availabilityStatus !== "AVAILABLE") {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "This listing is not currently available",
+        });
+      }
+
+      // Prevent owner from making offers on their own listing
+      if (listing.userId === userId) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "You cannot make an offer on your own listing",
+        });
+      }
+
+      // Create the offer - use user profile data
+      const offer = await ctx.db.offer.create({
+        data: {
+          listingId: input.listingId,
+          userId,
+          offerAmount: input.offerAmount,
+          currency: listing.currency,
+          name: userName ?? "Unknown",
+          email: userEmail?.toLowerCase() ?? "",
+          phone: input.phone,
+          message: input.message,
+          status: "PENDING",
+          expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
+        },
+        include: {
+          listing: {
+            select: {
+              id: true,
+              referenceNumber: true,
+              manufacturer: true,
+              model: true,
+              year: true,
+            },
+          },
+        },
+      });
+
+      return {
+        success: true,
+        message: "Your offer has been submitted successfully",
+        offer,
+      };
+    }),
 });
 
 export type ListingRouter = typeof listingRouter;

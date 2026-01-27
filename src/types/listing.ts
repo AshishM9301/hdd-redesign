@@ -9,13 +9,13 @@ import type {
   ContactInfo,
   ListingDetails,
   MediaAttachment,
-} from "../../generated/prisma";
+} from "@prisma/client";
 import {
   ListingStatus,
   AvailabilityStatus,
   MediaFileType,
   StorageProvider,
-} from "../../generated/prisma";
+} from "@prisma/client";
 
 // Re-export Prisma types
 export type {

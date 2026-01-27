@@ -115,6 +115,7 @@ export default function AdminListingsPage() {
             </SelectItem>
             <SelectItem value={ListingStatus.PUBLISHED}>Published</SelectItem>
             <SelectItem value={ListingStatus.RESERVED}>Reserved</SelectItem>
+            <SelectItem value={ListingStatus.SAMPLE}>Sample</SelectItem>
             <SelectItem value={ListingStatus.SOLD}>Sold</SelectItem>
             <SelectItem value={ListingStatus.ARCHIVED}>Archived</SelectItem>
           </SelectContent>

@@ -4,7 +4,7 @@
  * Background job to automatically expire reservations that have passed their expiry time
  */
 
-import { ListingStatus, AvailabilityStatus } from "../../../generated/prisma";
+import { ListingStatus, AvailabilityStatus } from "@prisma/client";
 import { db } from "@/server/db";
 
 /**

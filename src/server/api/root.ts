@@ -4,6 +4,7 @@ import { adminRouter } from "@/server/api/routers/admin";
 import { mediaUploadRouter } from "@/server/api/routers/media-upload";
 import { tradeInRouter } from "@/server/api/routers/trade-in";
 import { valueRequestRouter } from "@/server/api/routers/value-request";
+import { accountRouter } from "@/server/api/routers/account";
 import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
 
 /**
@@ -18,6 +19,7 @@ export const appRouter = createTRPCRouter({
   mediaUpload: mediaUploadRouter,
   tradeIn: tradeInRouter,
   valueRequest: valueRequestRouter,
+  account: accountRouter,
 });
 
 // export type definition of API

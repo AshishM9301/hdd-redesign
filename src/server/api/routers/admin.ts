@@ -5,17 +5,13 @@
  */
 
 import { z } from "zod";
-import { ListingStatus } from "../../../../generated/prisma";
+import { ListingStatus, MediaFileType, StorageProvider } from "@prisma/client";
 import {
   createTRPCRouter,
   adminProcedure,
 } from "@/server/api/trpc";
 import { env } from "@/env";
 import { TRPCError } from "@trpc/server";
-import {
-  MediaFileType,
-  StorageProvider,
-} from "@prisma/client";
 
 type UploadRequestFile = {
   fileName: string;

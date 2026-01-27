@@ -4,7 +4,7 @@
  * Validates listing status transitions according to business rules
  */
 
-import { ListingStatus, AvailabilityStatus } from "../../../generated/prisma";
+import { ListingStatus, AvailabilityStatus } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 
 /**
@@ -27,6 +27,7 @@ const ALLOWED_TRANSITIONS: Record<ListingStatus, ListingStatus[]> = {
     ListingStatus.SOLD,
     ListingStatus.ARCHIVED,
   ],
+  [ListingStatus.SAMPLE]: [ListingStatus.PUBLISHED, ListingStatus.ARCHIVED],
   [ListingStatus.SOLD]: [ListingStatus.ARCHIVED],
   [ListingStatus.ARCHIVED]: [], // Cannot transition from archived
 } as const;

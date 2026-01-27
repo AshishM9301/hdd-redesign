@@ -16,6 +16,7 @@ const statusConfig: Record<
   PENDING_REVIEW: { label: "Pending Review", variant: "outline" },
   PUBLISHED: { label: "Published", variant: "default" },
   RESERVED: { label: "Reserved", variant: "outline" },
+  SAMPLE: { label: "Sample", variant: "outline" },
   SOLD: { label: "Sold", variant: "destructive" },
   ARCHIVED: { label: "Archived", variant: "secondary" },
 };

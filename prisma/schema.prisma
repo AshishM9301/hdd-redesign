@@ -21,6 +21,7 @@ datasource db {
   PUBLISHED
   RESERVED
   SOLD
+  SAMPLE
   ARCHIVED
 }
 
@@ -89,6 +90,7 @@ model User {
   reviewedMediaUploadRequests MediaUploadRequest[]     @relation("MediaUploadReviewedBy")
   tradeInRequests        TradeInRequest[]
   valueRequests          ValueRequest[]
+  offers                 Offer[]
 
   @@unique([email])
   @@map("user")
@@ -234,6 +236,7 @@ model Listing {
   mediaAttachments       MediaAttachment[]
   connectionRequests     ListingConnectionRequest[]
   mediaUploadRequests    MediaUploadRequest[]
+  offers                 Offer[]
 
   @@index([status, availabilityStatus])
   @@index([availabilityStatus])
@@ -379,4 +382,38 @@ model ValueRequest {
   @@index([status])
   @@index([referenceNumber])
   @@map("value_request")
+}
+
+// Offer Model
+// Stores offers made by buyers on listings
+model Offer {
+  id               String      @id @default(cuid())
+  listingId        String
+  listing          Listing     @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  userId           String?
+  user             User?       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  offerAmount      Decimal     @db.Decimal(10, 2)
+  currency         String      @default("USD")
+  name             String
+  email            String
+  phone            String?
+  message          String?
+  status           OfferStatus @default(PENDING)
+  expiresAt        DateTime?
+  respondedAt      DateTime?
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+
+  @@index([listingId])
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("offer")
+}
+
+enum OfferStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  WITHDRAWN
 }
